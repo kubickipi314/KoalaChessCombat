@@ -10,13 +10,16 @@ public abstract class Character {
     int currentHealth;
     int maxHealth;
 
-    BoardPosition boardPosition;
+    BoardPosition position;
 
     MoveType[] moves;
     int team;
 
-    public Character(TurnService ts) {
+    public Character(TurnService ts, int maxMana, int maxHealth, BoardPosition position) {
         this.ts = ts;
+        this.maxMana = maxMana;
+        this.maxHealth = maxHealth;
+        this.position = position;
     }
 
     public MoveType getMoveType(int idx) {
@@ -28,4 +31,20 @@ public abstract class Character {
     public int getTeam() {
         return team;
     }
+
+    public void increaseMana(int value) {
+        if (value >= 0)
+            currentMana = Math.max(maxMana, currentMana + value);
+        else
+            currentMana = currentMana + value;
+    }
+
+    public void increaseHealth(int value) {
+        if (value >= 0)
+            currentHealth = Math.max(maxHealth, currentHealth + value);
+        else
+            currentHealth += value;
+    }
+
+    public abstract void startTurn();
 }

@@ -3,12 +3,13 @@ package com.io.core;
 import com.io.service.TurnService;
 
 public class SimpleEnemy extends Enemy {
-    public SimpleEnemy(TurnService ts) {
-        super(ts);
+    static int maxMana = 10, maxHealth = 5;
+
+    public SimpleEnemy(TurnService ts, BoardPosition position) {
+        super(ts, maxMana, maxHealth, position);
     }
 
-    public Move getNextMove() {
-        Board board = ts.getBoard();
-        return new Move(new BoardPosition(0, 0), new MoveType(0, MoveEffect.NONE), this);
+    public Move getNextMove(Board board) {
+        return null;
     }
 }

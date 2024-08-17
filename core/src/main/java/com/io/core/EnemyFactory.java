@@ -9,15 +9,15 @@ public class EnemyFactory {
         this.ts = ts;
     }
 
-    public Enemy create() {
-        return new SimpleEnemy(ts);
+    public Enemy create(BoardPosition position) {
+        return new SimpleEnemy(ts, position);
     }
 
     public Enemy[] createMultiple(int count) {
         // Temporary! Probably will just create from some config (e.g. .json file)
         Enemy[] enemies = new Enemy[count];
         for (int i = 0; i < count; ++i)
-            enemies[i] = create();
+            enemies[i] = create(new BoardPosition(i, 0));
         return enemies;
     }
 }

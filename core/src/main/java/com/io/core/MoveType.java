@@ -1,4 +1,4 @@
 package com.io.core;
 
-public record MoveType(int cost, MoveEffect speacialEffect) {
+public record MoveType(int cost, int damage, MoveEffect specialEffect) {
 }

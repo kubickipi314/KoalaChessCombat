@@ -19,17 +19,21 @@ public class GameViewModel {
         this.ts = new TurnService();
         this.gs = new GameService();
 
-        gs.initialize(ts);
+        gs.initialize(this, ts);
 
         EnemyFactory enemyFactory = new EnemyFactory(ts);
         Enemy[] enemies = enemyFactory.createMultiple(10);
         List<Character> characters = Arrays.asList(enemies);
         characters.add(gs.getPlayer());
+
         ts.initialize(gs, characters);
     }
 
     public void onCellClick(int x, int y) {
-        if (moveType == null) return;
+        if (moveType == null) {
+            System.out.println("Select move type.");
+            return;
+        }
 
         BoardPosition position = new BoardPosition(x, y);
         if (!gs.getPlayer().PlayMove(position, moveType)) {
@@ -39,5 +43,19 @@ public class GameViewModel {
 
     public void onMoveTypeClick(int moveTypeIdx) {
         moveType = gs.getPlayer().getMoveType(moveTypeIdx);
+    }
+
+    public void startTurn() {
+        // enable UI
+    }
+
+    public void onEndTurnClicked() {
+        ts.endTurn();
+
+        // disable UI
+    }
+
+    public void endGame(GameResult gameResult) {
+        System.out.println("Game ended, You " + gameResult.toString());
     }
 }
