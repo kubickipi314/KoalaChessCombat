@@ -1,43 +1,113 @@
 package com.io.viewmodel;
 
-
-import com.io.core.Character;
-import com.io.core.*;
-import com.io.service.GameService;
-import com.io.service.TurnService;
-
-import java.util.Arrays;
-import java.util.List;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.io.view.GameView;
+import com.io.view.TextureManager;
 
 public class GameViewModel {
-    final GameService gs;
-    final TurnService ts;
 
-    MoveType moveType;
+    //private GameModel gameModel;
 
-    public GameViewModel() {
-        this.ts = new TurnService();
-        this.gs = new GameService();
+    private final SpriteBatch batch;
+    private BoardTile[][] board;
+    private ChessTile[] chessBoard;
 
-        gs.initialize(ts);
+    private static int ROWS = 5;
+    private static int COLS = 5;
+    private float boardSize;
+    private float tileSize;
 
-        EnemyFactory enemyFactory = new EnemyFactory(ts);
-        Enemy[] enemies = enemyFactory.createMultiple(10);
-        List<Character> characters = Arrays.asList(enemies);
-        characters.add(gs.getPlayer());
-        ts.initialize(gs, characters);
+
+    private TextureManager tm;
+
+    private OrthographicCamera camera;
+    private Viewport viewport;
+
+    private PlayerViewModel player;
+
+
+//    private boolean isMoving = false;
+//    private float elapsedTime = 0;
+//    private float startPosX, startPosY;
+//    private float targetPosX, targetPosY;
+
+    public GameViewModel(GameView gameView) {
+
+        batch = new SpriteBatch();
+
+        tm = new TextureManager();
+        tm.load();
+
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(COLS, ROWS, camera); // Initial dimensions of the viewport
+
+        board = new BoardTile[ROWS][COLS];
+
+        chessBoard = new ChessTile[5];
+
+        initializeTiles();
     }
 
-    public void onCellClick(int x, int y) {
-        if (moveType == null) return;
+    private void initializeTiles() {
+        float windowWidth = viewport.getWorldWidth();
+        float windowHeight = viewport.getWorldHeight();
+        boardSize = Math.min(windowWidth, windowHeight) * 0.8f;
+        tileSize = boardSize / Math.max(ROWS,COLS);
 
-        BoardPosition position = new BoardPosition(x, y);
-        if (!gs.getPlayer().PlayMove(position, moveType)) {
-            System.out.println("Player failed to make move.");
+        float boardX = (windowWidth - boardSize) / 2;
+        float boardY = (windowHeight - boardSize) / 2;
+
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < ROWS; col++) {
+                float x = boardX + col * tileSize;
+                float y = boardY + row * tileSize;
+                Vector2 position = new Vector2(x,y);
+                board[row][col] = new BoardTile(tm, position, tileSize);
+            }
         }
+
+        float x = boardX + 2 * tileSize;
+        float y = boardY + 0 * tileSize;
+        Vector2 position = new Vector2(x,y);
+        player = new PlayerViewModel(tm, position, tileSize);
+
+        System.out.println("initialized");
     }
 
-    public void onMoveTypeClick(int moveTypeIdx) {
-        moveType = gs.getPlayer().getMoveType(moveTypeIdx);
+    public void update(){
+
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+
+        Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+        viewport.unproject(mouseWorldCoords);
+
+        float mouseX = mouseWorldCoords.x;
+        float mouseY = mouseWorldCoords.y;
+
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                board[row][col].update(new Vector2(mouseX,mouseY));
+            }
+        }
+
+    }
+
+    public void render() {
+        batch.begin();
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                board[row][col].render(batch);
+            }
+        }
+
+        player.draw(batch);
+
+        batch.end();
     }
 }

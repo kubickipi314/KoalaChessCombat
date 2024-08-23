@@ -1,7 +1,7 @@
 package com.io;
 
 import com.badlogic.gdx.Game;
-import com.io.view.GameScreen;
+import com.io.screens.GameScreen;
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
