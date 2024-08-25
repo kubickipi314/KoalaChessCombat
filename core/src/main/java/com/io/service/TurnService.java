@@ -1,9 +1,9 @@
 package com.io.service;
 
-import com.io.core.Board;
-import com.io.core.Character;
 import com.io.core.GameResult;
-import com.io.core.Move;
+import com.io.core.board.Board;
+import com.io.core.character.Character;
+import com.io.core.moves.MoveDTO;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -23,18 +23,17 @@ public class TurnService {
         this.gs = gs;
 
         turnQueue = new LinkedList<>(characters);
-        board = new Board(gs.roomWidth, gs.roomHeight);
+        board = new Board(gs.getRoomWidth(), gs.getRoomHeight());
     }
 
-    public boolean tryMakeMove(Move move) {
+    public boolean tryMakeMove(MoveDTO moveDTO) {
         // check if given move is valid
-        Character character = move.character();
-        if (turnQueue.peek() != character) {
-            System.out.println("TS: Tried to played move, on wrong turn!");
+        if (turnQueue.peek() != moveDTO.character()) {
+            System.out.println("TS: Tried to played move on wrong turn!");
             return false;
         }
 
-        if (!board.tryMakeMove(move)) return false;
+        if (!board.tryMakeMove(moveDTO)) return false;
 
         GameResult gameResult = checkEndGameCondition();
         if (gameResult != GameResult.NONE)

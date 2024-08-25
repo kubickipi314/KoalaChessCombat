@@ -1,6 +1,11 @@
-package com.io.core;
+package com.io.core.character;
 
+import com.io.core.board.BoardPosition;
+import com.io.core.moves.KingMove;
+import com.io.core.moves.Move;
 import com.io.service.TurnService;
+
+import java.util.ArrayList;
 
 public class EnemyFactory {
     TurnService ts;
@@ -10,7 +15,9 @@ public class EnemyFactory {
     }
 
     public Enemy create(BoardPosition position) {
-        return new SimpleEnemy(ts, position);
+        var moves = new ArrayList<Move>();
+        moves.add(new KingMove(1, 1));
+        return new SimpleEnemy(ts, position, moves);
     }
 
     public Enemy[] createMultiple(int count) {

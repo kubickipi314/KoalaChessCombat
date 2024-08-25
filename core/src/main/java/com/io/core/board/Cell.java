@@ -1,7 +1,9 @@
-package com.io.core;
+package com.io.core.board;
+
+import com.io.core.character.Character;
 
 public class Cell {
-    private final boolean isBlocked;
+    public final boolean isBlocked;
     private Character character;
 
     public Cell(boolean isBlocked) {
@@ -14,9 +16,5 @@ public class Cell {
 
     public void setCharacter(Character character) {
         this.character = character;
-    }
-
-    public boolean isBlocked() {
-        return isBlocked;
     }
 }
