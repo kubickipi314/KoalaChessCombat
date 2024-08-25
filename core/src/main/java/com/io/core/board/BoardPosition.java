@@ -1,4 +1,4 @@
-package com.io.core;
+package com.io.core.board;
 
 public record BoardPosition(int x, int y) {
 }
