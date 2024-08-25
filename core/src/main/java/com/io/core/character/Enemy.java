@@ -15,25 +15,18 @@ public abstract class Enemy extends Character {
 
     @Override
     public void startTurn() {
-        while (playMove()) ;
+        while (true) {
+            Board board = ts.getBoard();
+            MoveDTO moveDTO = getNextMove(board);
+            // if enemy wants to end turn
+            if (moveDTO == null) break;
 
+            if (!ts.tryMakeMove(moveDTO)) {
+                throw new Error("Enemy failed to make a valid move.");
+            }
+        }
         ts.endTurn();
     }
 
     abstract MoveDTO getNextMove(Board board);
-
-    boolean playMove() {
-        Board board = ts.getBoard();
-        MoveDTO moveDTO = getNextMove(board);
-
-        // if enemy wants to end turn
-        if (moveDTO == null) return false;
-
-        if (!ts.tryMakeMove(moveDTO)) {
-            System.out.println("Enemy failed to make a valid move.");
-            return false;
-        }
-
-        return true;
-    }
 }

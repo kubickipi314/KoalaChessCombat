@@ -25,9 +25,9 @@ public class Board {
         if (attackedCharacter != null && character.getTeam() == attackedCharacter.getTeam()) return false;
         if (!move.isMoveValid(character.getPosition(), movePosition, this)) return false;
 
-        character.increaseMana(-move.getCost());
+        character.changeMana(-move.getCost());
         if (attackedCharacter != null) {
-            attackedCharacter.increaseHealth(-move.getDamage());
+            attackedCharacter.changeHealth(-move.getDamage());
         }
         if (attackedCharacter == null || attackedCharacter.getCurrentHealth() < 0) {
             destinationCell.setCharacter(character);

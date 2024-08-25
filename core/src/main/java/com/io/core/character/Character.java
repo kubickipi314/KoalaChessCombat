@@ -6,6 +6,9 @@ import com.io.service.TurnService;
 
 import java.util.List;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 public abstract class Character {
     protected TurnService ts;
 
@@ -13,9 +16,9 @@ public abstract class Character {
     protected final List<Move> moves;
 
     protected int currentMana;
-    protected int maxMana;
+    protected final int maxMana;
     protected int currentHealth;
-    protected int maxHealth;
+    protected final int maxHealth;
 
     protected BoardPosition position;
 
@@ -39,22 +42,16 @@ public abstract class Character {
         return currentMana;
     }
 
-    public void increaseMana(int value) {
-        if (value >= 0)
-            currentMana = Math.max(maxMana, currentMana + value);
-        else
-            currentMana = currentMana + value;
+    public void changeMana(int value) {
+        currentMana = max(min(maxMana, currentMana + value), 0);
     }
 
     public int getCurrentHealth() {
         return currentHealth;
     }
 
-    public void increaseHealth(int value) {
-        if (value >= 0)
-            currentHealth = Math.max(maxHealth, currentHealth + value);
-        else
-            currentHealth += value;
+    public void changeHealth(int value) {
+        currentHealth = max(min(maxHealth, currentHealth + value), 0);
     }
 
     public BoardPosition getPosition() {
