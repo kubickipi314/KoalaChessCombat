@@ -37,7 +37,19 @@ public class Board {
         return true;
     }
 
+    //works only for rectangular board can be changed in the future
+    public boolean isValidCell(BoardPosition position) {
+        if (position.x() < 0 || position.x() >= this.boardWidth) return false;
+        if (position.y() < 0 || position.y() >= this.boardHeight) return false;
+        if (getCell(position).isBlocked) return false;
+        return true;
+    }
+
     public Cell getCell(BoardPosition position) {
+        if (!isValidCell(position)) {
+            //TODO change error handling
+            throw new Error();
+        }
         return board[position.y()][position.x()];
     }
 }
