@@ -10,7 +10,7 @@ public class RookMove implements Move {
 
     private final int cost, damage;
 
-    RookMove(int cost, int damage) {
+    public RookMove(int cost, int damage) {
         this.cost = cost;
         this.damage = damage;
     }
