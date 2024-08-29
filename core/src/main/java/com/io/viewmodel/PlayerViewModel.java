@@ -15,6 +15,6 @@ public class PlayerViewModel {
     }
 
     public void draw(SpriteBatch batch) {
-
+        playerView.draw(batch);
     }
 }

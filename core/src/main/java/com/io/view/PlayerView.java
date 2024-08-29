@@ -20,4 +20,5 @@ public class PlayerView {
     public void draw(SpriteBatch batch) {
         sprite.draw(batch);
     }
+
 }

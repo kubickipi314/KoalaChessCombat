@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 public class BoardTileView {
     private Texture markedCover;
     private Texture availableCover;
+    private Vector2 position;
     private boolean isMarked;
     private boolean isAvailable;
 
@@ -15,6 +16,7 @@ public class BoardTileView {
     private Sprite availableSprite;
     private Sprite markedSprie;
     public BoardTileView(TextureManager tm, Vector2 position, float size){
+        this.position = position;
         this.markedCover = tm.getMarkedCover();
         this.availableCover = tm.getAvailableCover();
 
@@ -23,10 +25,10 @@ public class BoardTileView {
         tileSprite.setSize(size,size);
 
         availableSprite = new Sprite(tileSprite);
-        availableSprite.setTexture(markedCover);
+        availableSprite.setTexture(availableCover);
 
         markedSprie = new Sprite(tileSprite);
-        markedSprie.setTexture(availableCover);
+        markedSprie.setTexture(markedCover);
 
 
     }
@@ -47,14 +49,25 @@ public class BoardTileView {
         this.isAvailable = isAvailable;
     }
 
+    public void switchAvailable() {
+        this.isAvailable = !this.isAvailable;
+    }
+
     public void setMarked(boolean isMarked){
         this.isMarked = isMarked;
     }
 
     public void draw(SpriteBatch batch){
-        System.out.println("draw :)");
         tileSprite.draw(batch);
         if (isMarked) markedSprie.draw(batch);
         if (isAvailable) availableSprite.draw(batch);
+    }
+
+    public Vector2 getPosition(){
+        return position;
+    }
+
+    public boolean contains(Vector2 point) {
+        return tileSprite.getBoundingRectangle().contains(point.x, point.y);
     }
 }

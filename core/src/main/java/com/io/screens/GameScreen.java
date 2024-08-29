@@ -1,13 +1,8 @@
 package com.io.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.io.view.GameView;
 import com.io.viewmodel.GameViewModel;
 
 /**
@@ -16,16 +11,14 @@ import com.io.viewmodel.GameViewModel;
 public class GameScreen implements Screen {
 
     private GameViewModel gameViewModel;
-    private GameView gameView;
-
-    private OrthographicCamera camera;
-    private Viewport viewport;
 
     @Override
     public void show() {
         System.out.println("show...");
-        gameView = new GameView();
-        gameViewModel = new GameViewModel(gameView);
+
+        //Gdx.graphics.setWindowedMode(1200, 900);
+
+        gameViewModel = new GameViewModel();
     }
 
     @Override
@@ -40,7 +33,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // Resize your screen here. The parameters represent the new window size.
     }
 
     @Override

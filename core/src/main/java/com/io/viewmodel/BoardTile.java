@@ -9,10 +9,10 @@ public class BoardTile {
     private Vector2 position;
     private float size;
     private BoardTileView boardTileView;
-    public BoardTile(TextureManager rscManager, Vector2 position, float size){
+    public BoardTile(TextureManager tm, Vector2 position, float size){
         this.position = position;
 
-        boardTileView = new BoardTileView(rscManager, position, size);
+        boardTileView = new BoardTileView(tm, position, size);
     }
 
     public void update(Vector2 mousePosition) {
