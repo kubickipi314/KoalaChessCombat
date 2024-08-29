@@ -26,3 +26,6 @@ ui/uiskin.atlas
 ui/uiskin.json
 ui/uiskin.png
 ui/font-subtitle.fnt
+sounds/sword_sound_1.mp3
+sounds/move_sound_1.mp3
+sounds/select_sound_1.mp3

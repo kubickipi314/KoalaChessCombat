@@ -16,7 +16,10 @@ public class GameScreen implements Screen {
     public void show() {
         System.out.println("show...");
 
-        //Gdx.graphics.setWindowedMode(1200, 900);
+        int width = Gdx.graphics.getWidth();
+        int height = Gdx.graphics.getHeight();
+
+        Gdx.graphics.setWindowedMode(width*2, height*2);
 
         gameViewModel = new GameViewModel();
     }

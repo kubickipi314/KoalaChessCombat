@@ -38,7 +38,7 @@ public class GameViewModel {
     private float TILE_SIZE;
 
     private final TextureManager tm;
-
+    private final SoundManager sm;
 
 
     private int playerX;
@@ -54,6 +54,7 @@ public class GameViewModel {
         batch = new SpriteBatch();
 
         tm = new TextureManager();
+        sm = new SoundManager();
 
 
         board = new BoardTileView[ROWS][COLS];
@@ -61,7 +62,6 @@ public class GameViewModel {
 
         playerX = 2;
         playerY = 0;
-
 
         initializeBoardTiles();
         initializeChessTiles();
@@ -73,7 +73,7 @@ public class GameViewModel {
         WINDOW_WIDTH = Gdx.graphics.getWidth();
         WINDOW_HEIGHT = Gdx.graphics.getHeight();
         BOARD_SIZE = Math.min(WINDOW_WIDTH, WINDOW_HEIGHT) * 0.5f;
-        TILE_SIZE = BOARD_SIZE / Math.max(ROWS,COLS);
+        TILE_SIZE = BOARD_SIZE / Math.max(ROWS, COLS);
 
         BOARD_X = (WINDOW_WIDTH - BOARD_SIZE) / 2;
         BOARD_Y = (WINDOW_HEIGHT - BOARD_SIZE) / 2;
@@ -82,14 +82,14 @@ public class GameViewModel {
             for (int col = 0; col < ROWS; col++) {
                 float x = BOARD_X + col * TILE_SIZE;
                 float y = BOARD_Y + row * TILE_SIZE;
-                Vector2 position = new Vector2(x,y);
+                Vector2 position = new Vector2(x, y);
                 board[row][col] = new BoardTileView(tm, position, TILE_SIZE);
             }
         }
 
         float x = BOARD_X + playerX * TILE_SIZE;
         float y = BOARD_Y + playerY * TILE_SIZE;
-        Vector2 position = new Vector2(x,y);
+        Vector2 position = new Vector2(x, y);
         player = new PlayerView(tm, position, TILE_SIZE);
 
     }
@@ -104,41 +104,40 @@ public class GameViewModel {
 
         for (int number = 0; number < NUMBER_OF_CHESS; number++) {
             float x = CHESS_BOARD_X + number * TILE_SIZE;
-            Vector2 position = new Vector2(x,CHESS_BOARD_Y);
-            chessBoard[number] = new ChessTileView(tm.getChessTile(), chessPieces[number], selectedPieces[number], position, TILE_SIZE* 0.9f);
+            Vector2 position = new Vector2(x, CHESS_BOARD_Y);
+            chessBoard[number] = new ChessTileView(tm.getChessTile(), chessPieces[number], selectedPieces[number], position, TILE_SIZE);
         }
     }
 
-    public void initializeTopElements(){
+    public void initializeTopElements() {
         float heartBarY = BOARD_Y + (ROWS + 0.9f) * TILE_SIZE;
         Vector2 heartPosition = new Vector2(BOARD_X, heartBarY);
         float barHeight = TILE_SIZE * 9 / 16;
-        healthBar = new HealthBarView(tm,heartPosition,barHeight);
+        healthBar = new HealthBarView(tm, heartPosition, barHeight);
 
         healthBar.setHealth(actualHealth);
 
         float manaBarY = BOARD_Y + (ROWS + 0.2f) * TILE_SIZE;
         Vector2 manaPosition = new Vector2(BOARD_X, manaBarY);
-        manaBar = new ManaBarView(tm,manaPosition,barHeight);
+        manaBar = new ManaBarView(tm, manaPosition, barHeight);
 
         manaBar.setMana(actualMana);
 
         float tourButtonX = BOARD_X + (COLS - 1) * TILE_SIZE;
         Vector2 tourButtonPosition = new Vector2(tourButtonX, manaBarY);
-        tourButton = new TourButton(tm,tourButtonPosition,TILE_SIZE);
+        tourButton = new TourButton(tm, tourButtonPosition, TILE_SIZE);
     }
 
-    public void update(){
+    public void update() {
 
         if (isMoving) {
             updatePlayerPosition();
-        }
-        else {
+        } else {
 
             Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
 
-            float mouseX = mouseWorldCoords.x;
-            float mouseY = WINDOW_HEIGHT - mouseWorldCoords.y;
+            float mouseX = mouseWorldCoords.x / 2;
+            float mouseY = (WINDOW_HEIGHT - mouseWorldCoords.y / 2);
             Vector2 mousePosition = new Vector2(mouseX, mouseY);
 
             if (isMouseInBoard(mouseX, mouseY)) {
@@ -167,6 +166,7 @@ public class GameViewModel {
                                 chessBoard[j].unselect();
                             }
                             chessBoard[i].select();
+                            sm.playSelectSound();
                             break;
                         }
                     }
@@ -178,6 +178,8 @@ public class GameViewModel {
 
                     actualHealth = Math.max(actualHealth - 1, 0);
                     healthBar.setHealth(actualHealth);
+
+                    sm.playSwordSound();
                 }
             }
         }
@@ -193,7 +195,7 @@ public class GameViewModel {
 
         player.draw(batch);
 
-        for (int number = 0; number < NUMBER_OF_CHESS; number++){
+        for (int number = 0; number < NUMBER_OF_CHESS; number++) {
             chessBoard[number].draw(batch);
         }
 
@@ -204,27 +206,27 @@ public class GameViewModel {
         batch.end();
     }
 
-    private boolean isMouseInBoard(float mouseX, float mouseY){
-        return mouseX >= BOARD_X && mouseY >= BOARD_Y &&
-            mouseX <= BOARD_X + BOARD_SIZE && mouseY <= BOARD_Y + BOARD_SIZE;
+    private boolean isMouseInBoard(float mouseX, float mouseY) {
+        return mouseX >= BOARD_X && mouseY >= BOARD_Y && mouseX <= BOARD_X + BOARD_SIZE && mouseY <= BOARD_Y + BOARD_SIZE;
     }
 
-    private boolean isMouseInChessBoard(float mouseX, float mouseY){
-        return mouseX >= CHESS_BOARD_X && mouseY >= CHESS_BOARD_Y &&
-                mouseX <= CHESS_BOARD_X + BOARD_SIZE && mouseY <= CHESS_BOARD_Y + 2*TILE_SIZE;
+    private boolean isMouseInChessBoard(float mouseX, float mouseY) {
+        return mouseX >= CHESS_BOARD_X && mouseY >= CHESS_BOARD_Y && mouseX <= CHESS_BOARD_X + BOARD_SIZE && mouseY <= CHESS_BOARD_Y + 2 * TILE_SIZE;
     }
 
     private void startMoveAnimation(int targetCol, int targetRow) {
         isMoving = true;
         elapsedTime = 0;
 
+        sm.playMoveSound();
+
         float startX = BOARD_X + playerX * TILE_SIZE;
         float startY = BOARD_Y + playerY * TILE_SIZE;
 
-        float targetX = BOARD_X + targetCol* TILE_SIZE;
+        float targetX = BOARD_X + targetCol * TILE_SIZE;
         float targetY = BOARD_Y + targetRow * TILE_SIZE;
 
-        startPosition = new Vector2(startX,startY);
+        startPosition = new Vector2(startX, startY);
         targetPosition = new Vector2(targetX, targetY);
 
         playerX = targetCol;
@@ -246,6 +248,5 @@ public class GameViewModel {
             isMoving = false;
         }
     }
-
 
 }
