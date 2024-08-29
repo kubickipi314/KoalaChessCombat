@@ -197,6 +197,7 @@ public class GameViewModel {
 
         for (int number = 0; number < NUMBER_OF_CHESS; number++) {
             chessBoard[number].draw(batch);
+
         }
 
         healthBar.draw(batch);
@@ -208,6 +209,7 @@ public class GameViewModel {
 
     private boolean isMouseInBoard(float mouseX, float mouseY) {
         return mouseX >= BOARD_X && mouseY >= BOARD_Y && mouseX <= BOARD_X + BOARD_SIZE && mouseY <= BOARD_Y + BOARD_SIZE;
+
     }
 
     private boolean isMouseInChessBoard(float mouseX, float mouseY) {
