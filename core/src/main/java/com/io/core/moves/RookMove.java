@@ -9,6 +9,8 @@ import java.util.List;
 public class RookMove implements Move {
 
     private final int cost, damage;
+    private static final int[] X = {0, 1, -1, 0};
+    private static final int[] Y = {1, 0, 0, -1};
 
     public RookMove(int cost, int damage) {
         this.cost = cost;
@@ -17,41 +19,23 @@ public class RookMove implements Move {
 
     @Override
     public boolean isMoveValid(BoardPosition startPosition, BoardPosition endPosition, Board board) {
-        if (startPosition.x() != endPosition.x() && startPosition.y() != endPosition.y()) {
-            return false;
-        }
-        int min, max, c;
-        boolean isXEqual = startPosition.x() == endPosition.x();
-        if (isXEqual) {
-            min = Math.min(startPosition.y(), endPosition.y());
-            max = Math.max(startPosition.y(), endPosition.y());
-            c = startPosition.x();
-        } else {
-            min = Math.min(startPosition.x(), endPosition.x());
-            max = Math.max(startPosition.x(), endPosition.x());
-            c = startPosition.x();
-        }
-        for (int i = min; i < max; i++) {
-            if (board.getCell(isXEqual ? new BoardPosition(c, i) : new BoardPosition(i, c)).isBlocked) return false;
-        }
+        if (!board.isValidCell(startPosition) || !board.isValidCell(endPosition)) return false;
+        if (startPosition == endPosition) return false;
 
-        return true;
+        int dx = endPosition.x() - startPosition.x();
+        int dy = endPosition.y() - startPosition.y();
+        if (dx != 0 && dy != 0) return false;
+
+        return MovesUtils.isValidRayMove((int) Math.signum(dx), (int) Math.signum(dy), Integer.MAX_VALUE, startPosition, endPosition, board);
     }
 
     @Override
     public List<BoardPosition> getAccessibleCells(BoardPosition position, Board board) {
-
         var accessibleCells = new ArrayList<BoardPosition>();
 
-        for (int i = 0; i < board.boardHeight; i++) {
-            if (i == position.y()) continue;
-            accessibleCells.add(new BoardPosition(position.x(), i));
+        for (int i = 0; i < X.length; i++) {
+            accessibleCells.addAll(MovesUtils.getRayAccessibleCells(X[i], Y[i], Integer.MAX_VALUE, board, position));
         }
-        for (int i = 0; i < board.boardWidth; i++) {
-            if (i == position.x()) continue;
-            accessibleCells.add(new BoardPosition(i, position.y()));
-        }
-
         return accessibleCells;
     }
 
