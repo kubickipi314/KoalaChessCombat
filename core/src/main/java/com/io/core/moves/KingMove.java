@@ -12,6 +12,10 @@ import static java.lang.Math.abs;
 public class KingMove implements Move {
     private final int cost, damage;
 
+    private static final int[] X = {1, 1, -1, -1, 0, 1, -1, 0};
+    private static final int[] Y = {1, -1, 1, -1, 1, 0, 0, -1};
+    private static final int maxReach = 1;
+
     public KingMove(int cost, int damage) {
         this.cost = cost;
         this.damage = damage;
@@ -23,7 +27,7 @@ public class KingMove implements Move {
         if (cell.isBlocked) return false;
 
         if (abs(startPosition.x() - endPosition.x()) <= 1 ||
-            abs(startPosition.y() - endPosition.y()) <= 1)
+                abs(startPosition.y() - endPosition.y()) <= 1)
             return false;
 
         return true;
@@ -31,16 +35,12 @@ public class KingMove implements Move {
 
     @Override
     public List<BoardPosition> getAccessibleCells(BoardPosition position, Board board) {
-        var accessibleList = new ArrayList<BoardPosition>();
-        for (int x = position.x() - 1; x <= position.x() + 1; x++) {
-            for (int y = position.y() - 1; x <= position.y() + 1; y++) {
-                var movePosition = new BoardPosition(x, y);
-                if (isMoveValid(position, movePosition, board)) {
-                    accessibleList.add(new BoardPosition(x, y));
-                }
-            }
+        var accessibleCells = new ArrayList<BoardPosition>();
+
+        for (int i = 0; i < X.length; i++) {
+            accessibleCells.addAll(MovesUtils.getRayAccessibleCells(X[i], Y[i], maxReach, board, position));
         }
-        return accessibleList;
+        return accessibleCells;
     }
 
     @Override

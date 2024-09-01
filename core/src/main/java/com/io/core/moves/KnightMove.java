@@ -10,7 +10,7 @@ public class KnightMove implements Move {
 
     private final int cost, damage;
 
-    private static final int maxRange = 1;
+    private static final int maxReach = 1;
     private static final int[] X = {1, 2, 2, 1, -1, -2, -2, -1};
     private static final int[] Y = {2, 1, -1, -2, -2, -1, 1, 2};
 
@@ -25,8 +25,8 @@ public class KnightMove implements Move {
         int dx = Integer.signum(endPosition.x() - startPosition.x());
         int dy = Integer.signum(endPosition.y() - startPosition.y());
 
-        return MovesUtils.isValidRayMove(dx, 2 * dy, maxRange, startPosition, endPosition, board) ||
-                MovesUtils.isValidRayMove(2 * dx, dy, maxRange, startPosition, endPosition, board);
+        return MovesUtils.isValidRayMove(dx, 2 * dy, maxReach, startPosition, endPosition, board) ||
+                MovesUtils.isValidRayMove(2 * dx, dy, maxReach, startPosition, endPosition, board);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class KnightMove implements Move {
         var accessibleCells = new ArrayList<BoardPosition>();
 
         for (int i = 0; i < X.length; i++) {
-            accessibleCells.addAll(MovesUtils.getRayAccessibleCells(X[i], Y[i], maxRange, board, position));
+            accessibleCells.addAll(MovesUtils.getRayAccessibleCells(X[i], Y[i], maxReach, board, position));
         }
         return accessibleCells;
     }
