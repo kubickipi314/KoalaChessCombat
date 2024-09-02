@@ -1,8 +1,9 @@
-package com.io.view;
+package com.io.view.characters;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.io.view.assets_managers.TextureManager;
 
 public class PlayerView {
     private final Sprite sprite;

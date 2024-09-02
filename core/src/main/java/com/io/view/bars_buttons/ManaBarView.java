@@ -1,9 +1,9 @@
-package com.io.view;
+package com.io.view.bars_buttons;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.io.view.assets_managers.TextureManager;
 
 public class ManaBarView {
 

@@ -1,4 +1,4 @@
-package com.io.view;
+package com.io.view.tiles;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;

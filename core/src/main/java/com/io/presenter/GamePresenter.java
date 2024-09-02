@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.core.GameResult;
-import com.io.view.*;
+import com.io.view.bars_buttons.TourButton;
 
 public class GamePresenter {
     private final SpriteBatch batch;
@@ -18,7 +18,7 @@ public class GamePresenter {
     protected final float windowHeight;
 
 
-    public GamePresenter(PlayerPresenter player, TextureManager tm, SoundManager sm) {
+    public GamePresenter(PlayerPresenter player) {
         batch = new SpriteBatch();
         this.player = player;
         windowHeight = Gdx.graphics.getHeight();

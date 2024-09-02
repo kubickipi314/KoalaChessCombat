@@ -5,9 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.view.ChessTileView;
-import com.io.view.SoundManager;
-import com.io.view.TextureManager;
+import com.io.view.tiles.ChessTileView;
+import com.io.view.assets_managers.SoundManager;
+import com.io.view.assets_managers.TextureManager;
 
 
 public class ChessPresenter {

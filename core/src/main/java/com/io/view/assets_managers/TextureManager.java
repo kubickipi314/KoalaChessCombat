@@ -1,4 +1,4 @@
-package com.io.view;
+package com.io.view.assets_managers;
 
 import com.badlogic.gdx.graphics.Texture;
 

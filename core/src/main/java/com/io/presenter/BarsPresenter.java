@@ -2,7 +2,11 @@ package com.io.presenter;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.view.*;
+import com.io.view.assets_managers.SoundManager;
+import com.io.view.assets_managers.TextureManager;
+import com.io.view.bars_buttons.HealthBarView;
+import com.io.view.bars_buttons.ManaBarView;
+import com.io.view.bars_buttons.TourButton;
 
 public class BarsPresenter {
     private final HealthBarView healthBar;

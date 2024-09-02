@@ -1,10 +1,9 @@
 package com.io.presenter;
 
-import com.io.view.SoundManager;
-import com.io.view.TextureManager;
+import com.io.view.assets_managers.SoundManager;
+import com.io.view.assets_managers.TextureManager;
 
 public class GamePresenterFactory {
-    private static final int NUMBER_OF_CHESS = 5;
     private final GamePresenter gamePresenter;
 
     public GamePresenterFactory(int rows, int cols) {
@@ -19,7 +18,7 @@ public class GamePresenterFactory {
 
         PlayerPresenter player = new PlayerPresenter(tm, sm, cm, barsPresenter);
 
-        gamePresenter = new GamePresenter(player, tm, sm);
+        gamePresenter = new GamePresenter(player);
         gamePresenter.setBoardPresenter(boardPresenter);
         gamePresenter.setChessPresenter(chessPresenter);
         gamePresenter.setBarsPresenter(barsPresenter);

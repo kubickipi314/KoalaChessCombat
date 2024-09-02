@@ -3,9 +3,9 @@ package com.io.presenter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.view.PlayerView;
-import com.io.view.SoundManager;
-import com.io.view.TextureManager;
+import com.io.view.characters.PlayerView;
+import com.io.view.assets_managers.SoundManager;
+import com.io.view.assets_managers.TextureManager;
 
 public class PlayerPresenter {
 
@@ -21,7 +21,7 @@ public class PlayerPresenter {
     private float elapsedTime = 0;
     private Vector2 startPosition;
     private Vector2 targetPosition;
-    private SoundManager sm;
+    private final SoundManager sm;
 
     private final float boardX;
     private final float boardY;

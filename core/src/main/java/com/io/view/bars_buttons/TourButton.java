@@ -1,10 +1,9 @@
-package com.io.view;
+package com.io.view.bars_buttons;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-
-import java.util.Vector;
+import com.io.view.assets_managers.TextureManager;
 
 public class TourButton {
     Sprite button;

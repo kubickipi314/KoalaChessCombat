@@ -1,4 +1,4 @@
-package com.io.view;
+package com.io.view.assets_managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
