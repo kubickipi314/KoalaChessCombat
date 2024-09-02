@@ -1,3 +1,4 @@
+textures/characters/monkey.png
 textures/characters/koala.png
 textures/characters/minix.png
 textures/figures/queen.png
@@ -5,12 +6,12 @@ textures/figures/bishop.png
 textures/figures/rock.png
 textures/figures/king.png
 textures/figures/knight.png
-textures/tiles/chess_tile.png
 textures/tiles/tile.png
 textures/tiles/marked_cover.png
 textures/tiles/available_cover.png
 textures/bars/bar_background.png
 textures/bars/heart.png
+textures/bars/enemy_health.png
 textures/bars/next_tour_button.png
 textures/bars/mana.png
 textures/selected_figures/queen.png
@@ -26,6 +27,8 @@ ui/uiskin.atlas
 ui/uiskin.json
 ui/uiskin.png
 ui/font-subtitle.fnt
+sounds/roar_1.mp3
 sounds/sword_sound_1.mp3
 sounds/move_sound_1.mp3
+sounds/roar_2.mp3
 sounds/select_sound_1.mp3

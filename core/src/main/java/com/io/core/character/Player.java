@@ -4,16 +4,16 @@ import com.io.core.board.BoardPosition;
 import com.io.core.moves.Move;
 import com.io.core.moves.MoveDTO;
 import com.io.service.TurnService;
-import com.io.viewmodel.GameViewModel;
+import com.io.presenter.GamePresenter;
 
 import java.util.List;
 
 public class Player extends Character {
     static int maxMana = 10, maxHealth = 5;
 
-    GameViewModel gvm;
+    GamePresenter gvm;
 
-    public Player(TurnService ts, GameViewModel gvm, BoardPosition position, List<Move> moves) {
+    public Player(TurnService ts, GamePresenter gvm, BoardPosition position, List<Move> moves) {
         super(ts, maxMana, maxHealth, position, 0, moves);
 
         this.gvm = gvm;

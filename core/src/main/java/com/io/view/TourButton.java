@@ -17,7 +17,9 @@ public class TourButton {
         button.draw(batch);
     }
 
-    public boolean contains(float mouseX, float mouseY) {
+    public boolean contains(Vector2 mousePosition) {
+        float mouseX = mousePosition.x;
+        float mouseY = mousePosition.y;
         return button.getBoundingRectangle().contains(mouseX, mouseY);
     }
 }

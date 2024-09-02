@@ -3,35 +3,29 @@ package com.io.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.io.viewmodel.GameViewModel;
+import com.io.presenter.GamePresenter;
+import com.io.presenter.GamePresenterFactory;
 
 /**
  * First screen of the application. Displayed after the application is created.
  */
 public class GameScreen implements Screen {
 
-    private GameViewModel gameViewModel;
+    private GamePresenter gamePresenter;
 
     @Override
     public void show() {
-        System.out.println("show...");
-
-        int width = Gdx.graphics.getWidth();
-        int height = Gdx.graphics.getHeight();
-
-        Gdx.graphics.setWindowedMode(width*2, height*2);
-
-        gameViewModel = new GameViewModel();
+        GamePresenterFactory gpFactory = new GamePresenterFactory(5, 7);
+        gamePresenter = gpFactory.getGamePresenter();
     }
 
     @Override
     public void render(float delta) {
-        gameViewModel.update();
+        gamePresenter.update();
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        gameViewModel.render();
-
+        gamePresenter.render();
     }
 
     @Override

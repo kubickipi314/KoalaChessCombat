@@ -6,19 +6,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class BoardTileView {
-    private Texture markedCover;
-    private Texture availableCover;
-    private Vector2 position;
+    private final Vector2 position;
     private boolean isMarked;
     private boolean isAvailable;
 
-    private Sprite tileSprite;
-    private Sprite availableSprite;
-    private Sprite markedSprie;
+    private final Sprite tileSprite;
+    private final Sprite availableSprite;
+    private final Sprite markedSprie;
     public BoardTileView(TextureManager tm, Vector2 position, float size){
         this.position = position;
-        this.markedCover = tm.getMarkedCover();
-        this.availableCover = tm.getAvailableCover();
+        Texture markedCover = tm.getMarkedCover();
+        Texture availableCover = tm.getAvailableCover();
 
         tileSprite = new Sprite(tm.getNormalTile());
         tileSprite.setPosition(position.x,position.y);
@@ -30,19 +28,6 @@ public class BoardTileView {
         markedSprie = new Sprite(tileSprite);
         markedSprie.setTexture(markedCover);
 
-
-    }
-
-    public void changePosition(Vector2 position){
-        tileSprite.setPosition(position.x, position.y);
-        availableSprite.setPosition(position.x, position.y);
-        markedSprie.setPosition(position.x, position.y);
-    }
-
-    public void changeSize(float size){
-        tileSprite.setSize(size,size);
-        availableSprite.setSize(size,size);
-        markedSprie.setSize(size,size);
     }
 
     public void setAvailable(boolean isAvailable){
