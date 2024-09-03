@@ -8,9 +8,12 @@ import com.io.view.tiles.BoardTileView;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
 
+import java.util.List;
+
 public class BoardPresenter {
     private final BoardTileView[][] board;
     private PlayerPresenter player;
+    private EnemyPresenter enemy;
 
     private int actualRow;
     private int actualCol;
@@ -21,6 +24,7 @@ public class BoardPresenter {
     private final int cols;
     private final float boardWidth;
     private final float boardHeight;
+    private List<int[]> availableTiles;
 
     public BoardPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm) {
         rows = cm.getRows();
@@ -50,6 +54,10 @@ public class BoardPresenter {
         this.player = player;
     }
 
+    public void setEnemy(EnemyPresenter enemy) {
+        this.enemy = enemy;
+    }
+
     public void handleInput(Vector2 mousePosition) {
 
         board[actualRow][actualCol].setMarked(false);
@@ -62,6 +70,7 @@ public class BoardPresenter {
             }
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 player.startMoveAnimation(actualCol, actualRow);
+                enemy.move();
             }
         }
     }
@@ -89,6 +98,18 @@ public class BoardPresenter {
             for (int col = 0; col < cols; col++) {
                 board[row][col].draw(batch);
             }
+        }
+    }
+
+    public void setAvailableTiles(List<int[]> availableTiles) {
+        if (this.availableTiles != null) {
+            for (int[] pair : this.availableTiles) {
+                board[pair[0]][pair[1]].setAvailable(false);
+            }
+        }
+        this.availableTiles = availableTiles;
+        for (int[] pair : this.availableTiles) {
+            board[pair[0]][pair[1]].setAvailable(true);
         }
     }
 }

@@ -15,7 +15,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        GamePresenterFactory gpFactory = new GamePresenterFactory(5, 7);
+        GamePresenterFactory gpFactory = new GamePresenterFactory(7, 5);
         gamePresenter = gpFactory.getGamePresenter();
     }
 

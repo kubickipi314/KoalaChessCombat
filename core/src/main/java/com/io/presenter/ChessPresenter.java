@@ -9,6 +9,10 @@ import com.io.view.tiles.ChessTileView;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 
 public class ChessPresenter {
     private final ChessTileView[] chessBoard;
@@ -16,9 +20,8 @@ public class ChessPresenter {
     private final float chessBoardX;
     private final float chessBoardY;
     private final float tileSize;
-
     SoundManager sm;
-
+    private BoardPresenter boardPresenter;
 
     public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm) {
         chessBoard = new ChessTileView[NUMBER_OF_CHESS];
@@ -37,10 +40,15 @@ public class ChessPresenter {
         }
     }
 
-    public void handleInput(Vector2 mousePosition){
+    public void setBoard(BoardPresenter boardPresenter) {
+        this.boardPresenter = boardPresenter;
+    }
+
+    public void handleInput(Vector2 mousePosition) {
         if (isMouseInChessBoard(mousePosition)) {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 changeChessPiece(mousePosition);
+                setAvailablePieces();
             }
         }
     }
@@ -51,7 +59,7 @@ public class ChessPresenter {
         return mouseX >= chessBoardX && mouseY >= chessBoardY && mouseX <= chessBoardX + tileSize * NUMBER_OF_CHESS && mouseY <= chessBoardY + 2 * tileSize;
     }
 
-    private void changeChessPiece(Vector2 mousePosition){
+    private void changeChessPiece(Vector2 mousePosition) {
         for (int i = 0; i < NUMBER_OF_CHESS; i++) {
             if (chessBoard[i].contains(mousePosition)) {
                 for (int j = 0; j < NUMBER_OF_CHESS; j++) {
@@ -64,7 +72,17 @@ public class ChessPresenter {
         }
     }
 
-    public void render(SpriteBatch batch){
+    private void setAvailablePieces() {
+        List<int[]> availableTiles = new ArrayList<>();
+
+        Random random = new Random();
+        availableTiles.add(new int[]{random.nextInt(5), random.nextInt(5)});
+        availableTiles.add(new int[]{random.nextInt(5), random.nextInt(5)});
+        availableTiles.add(new int[]{random.nextInt(5), random.nextInt(5)});
+        boardPresenter.setAvailableTiles(availableTiles);
+    }
+
+    public void render(SpriteBatch batch) {
         for (int number = 0; number < NUMBER_OF_CHESS; number++) {
             chessBoard[number].draw(batch);
         }

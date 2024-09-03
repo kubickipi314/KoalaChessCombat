@@ -3,6 +3,8 @@ package com.io.presenter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.io.view.bars_buttons.HealthBarView;
+import com.io.view.bars_buttons.ManaBarView;
 import com.io.view.characters.PlayerView;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
@@ -28,14 +30,14 @@ public class PlayerPresenter {
     private final float tileSize;
 
     private final PlayerView playerView;
-    private final BarsPresenter barsPresenter;
+    private HealthBarView healthBar;
+    private ManaBarView manaBar;
 
 
-    public PlayerPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, BarsPresenter barsPresenter) {
+    public PlayerPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm) {
         boardX = cm.getBoardX();
         boardY = cm.getBoardY();
         tileSize = cm.getTileSize();
-        this.barsPresenter = barsPresenter;
         this.sm = sm;
 
         posX = 2;
@@ -95,12 +97,19 @@ public class PlayerPresenter {
 
     public void increaseMana(int i) {
         mana = Math.min(mana + i, MAX_MANA);
-        barsPresenter.setMana(mana);
+        manaBar.setMana(mana);
     }
 
     public void decreaseHealth(int i) {
         health = Math.max(health - i, 0);
-        barsPresenter.setHealth(health);
+        healthBar.setHealth(health);
     }
 
+    public void setManaBar(ManaBarView manaBar) {
+        this.manaBar = manaBar;
+    }
+
+    public void setHealthBar(HealthBarView healthBar) {
+        this.healthBar = healthBar;
+    }
 }

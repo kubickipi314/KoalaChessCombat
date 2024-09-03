@@ -11,11 +11,12 @@ public class ManaBarView {
     int manaNumber = 4;
     Sprite backgroudSprite;
     Sprite[] manaSprites;
-    public ManaBarView(TextureManager tm, Vector2 position, float barHeight){
+
+    public ManaBarView(TextureManager tm, Vector2 position, float barHeight) {
 
         float barLength = barHeight * 7;
         backgroudSprite = new Sprite(tm.getBarBackground());
-        backgroudSprite.setPosition(position.x,position.y);
+        backgroudSprite.setPosition(position.x, position.y);
         backgroudSprite.setSize(barLength, barHeight);
 
 
@@ -30,9 +31,9 @@ public class ManaBarView {
 
     }
 
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch) {
         backgroudSprite.draw(batch);
-        for (int i = 0; i < manaNumber; i++){
+        for (int i = 0; i < manaNumber; i++) {
             manaSprites[i].draw(batch);
         }
 

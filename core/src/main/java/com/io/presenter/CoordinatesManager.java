@@ -12,7 +12,7 @@ public class CoordinatesManager {
     private final float boardX;
     private final float boardY;
 
-    public CoordinatesManager(int rows, int cols){
+    public CoordinatesManager(int rows, int cols) {
         windowWidth = Gdx.graphics.getWidth();
         windowHeight = Gdx.graphics.getHeight();
 
@@ -30,21 +30,27 @@ public class CoordinatesManager {
     public float getBoardX() {
         return boardX;
     }
+
     public float getBoardY() {
         return boardY;
     }
+
     public int getRows() {
         return rows;
     }
+
     public int getCols() {
         return cols;
     }
-    public float getChessBoardX(){
+
+    public float getChessBoardX() {
         return (windowWidth - tileSize * NUMBER_OF_CHESS) / 2;
     }
-    public float getChessBoardY(){
+
+    public float getChessBoardY() {
         return boardY - 2 * tileSize;
     }
+
     public float getTileSize() {
         return tileSize;
     }

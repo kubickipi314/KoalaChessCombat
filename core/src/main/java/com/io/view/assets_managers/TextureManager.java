@@ -19,7 +19,7 @@ public class TextureManager {
     private final Texture tourButton;
     private final Texture enemyHealth;
 
-    public TextureManager(){
+    public TextureManager() {
         chess = new ArrayList<>();
         selectedChess = new ArrayList<>();
 
@@ -27,8 +27,8 @@ public class TextureManager {
         markedCover = new Texture("textures/tiles/marked_cover.png");
         availableCover = new Texture("textures/tiles/available_cover.png");
 
-        player = new Texture("textures/characters/minix.png");
-        monkey = new Texture("textures/characters/monkey.png");
+        player = new Texture("textures/characters/koala.png");
+        monkey = new Texture("textures/characters/minix.png");
 
         chess.add(new Texture("textures/figures/king.png"));
         chess.add(new Texture("textures/figures/bishop.png"));
@@ -55,13 +55,15 @@ public class TextureManager {
     public Texture getPlayer() {
         return player;
     }
-    public Texture getMonkey() {
+
+    public Texture getEnemy() {
         return monkey;
     }
 
-    public Texture[] getChessArray(){
+    public Texture[] getChessArray() {
         return chess.toArray(new Texture[0]);
     }
+
     public Texture[] getSelectedPieces() {
         return selectedChess.toArray(new Texture[0]);
     }
@@ -69,28 +71,35 @@ public class TextureManager {
     public Texture getNormalTile() {
         return normalTile;
     }
+
     public Texture getMarkedCover() {
         return markedCover;
     }
+
     public Texture getAvailableCover() {
         return availableCover;
     }
 
-    public Texture getBarBackground(){
+    public Texture getBarBackground() {
         return barBackground;
     }
-    public Texture getHeart(){
+
+    public Texture getHeart() {
         return heart;
     }
-    public Texture getMana(){
+
+    public Texture getMana() {
         return mana;
     }
-    public Texture getTourButton(){
+
+    public Texture getTourButton() {
         return tourButton;
     }
+
     public Texture getEnemyHealth() {
         return enemyHealth;
     }
+
     public void dispose() {
     }
 

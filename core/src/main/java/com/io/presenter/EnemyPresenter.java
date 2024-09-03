@@ -3,37 +3,43 @@ package com.io.presenter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.io.view.bars_buttons.HealthBarView;
+import com.io.view.bars_buttons.ManaBarView;
 import com.io.view.characters.EnemyView;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
 
-
 public class EnemyPresenter {
-    private final SoundManager sm;
-    private int health = 8;
-    private final int MAX_HEALTH = 8;
+
+    private int health = 5;
+    private final int MAX_HEALTH = 5;
 
     private int posX;
     private int posY;
-    private final EnemyView enemyView;
 
     private boolean isMoving;
     private float elapsedTime = 0;
     private Vector2 startPosition;
     private Vector2 targetPosition;
+    private final SoundManager sm;
 
     private final float boardX;
     private final float boardY;
     private final float tileSize;
 
-    public EnemyPresenter(TextureManager tm, SoundManager sm, float tileSize, float boardX, float boardY){
-        posX = 5;
-        posY = 4;
-        isMoving = false;
+    private final EnemyView enemyView;
+    private int moveState = 0;
+
+
+    public EnemyPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm) {
+        boardX = cm.getBoardX();
+        boardY = cm.getBoardY();
+        tileSize = cm.getTileSize();
         this.sm = sm;
-        this.boardX = boardX;
-        this.boardY = boardY;
-        this.tileSize = tileSize;
+
+        posX = 3;
+        posY = 3;
+        isMoving = false;
 
         float x = boardX + posX * tileSize;
         float y = boardY + posY * tileSize;
@@ -77,19 +83,30 @@ public class EnemyPresenter {
         }
     }
 
-    public void render(SpriteBatch batch){
+    public void render(SpriteBatch batch) {
         enemyView.draw(batch);
     }
 
-    public boolean isMoving(){
+    public boolean isMoving() {
         return isMoving;
     }
 
-    public int getHealth() {
-        return health;
+
+    public void setHealth(int newHealth) {
+        health = newHealth;
+        enemyView.changeHealth((float) health / MAX_HEALTH);
     }
 
-    public void decreaseHealth(int i) {
-        health = Math.min(health - i, 0);
+    public void decreaseHealth(int value) {
+        health = Math.max(health - value, 0);
+        enemyView.changeHealth((float) health / MAX_HEALTH);
+    }
+
+    public void move() {
+        if (moveState == 0) startMoveAnimation(posX + 1, posY);
+        if (moveState == 1) startMoveAnimation(posX, posY - 1);
+        if (moveState == 2) startMoveAnimation(posX - 1, posY);
+        if (moveState == 3) startMoveAnimation(posX, posY + 1);
+        moveState = (moveState + 1) % 4;
     }
 }

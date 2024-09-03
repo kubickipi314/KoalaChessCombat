@@ -16,9 +16,15 @@ public class GamePresenterFactory {
         BoardPresenter boardPresenter = new BoardPresenter(tm, sm, cm);
         ChessPresenter chessPresenter = new ChessPresenter(tm, sm, cm);
 
-        PlayerPresenter player = new PlayerPresenter(tm, sm, cm, barsPresenter);
+        PlayerPresenter player = new PlayerPresenter(tm, sm, cm);
+        player.setManaBar(barsPresenter.getManaBar());
+        player.setHealthBar(barsPresenter.getHealthBar());
 
-        gamePresenter = new GamePresenter(player);
+        EnemyPresenter enemy = new EnemyPresenter(tm, sm, cm);
+
+        EnemyFactory enemyFactory = new EnemyFactory(tm, sm, cm);
+
+        gamePresenter = new GamePresenter(player, enemy);
         gamePresenter.setBoardPresenter(boardPresenter);
         gamePresenter.setChessPresenter(chessPresenter);
         gamePresenter.setBarsPresenter(barsPresenter);

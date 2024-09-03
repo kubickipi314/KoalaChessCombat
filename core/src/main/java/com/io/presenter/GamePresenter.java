@@ -14,31 +14,38 @@ public class GamePresenter {
     private BarsPresenter barsPresenter;
     private TourButton tourButton;
     private final PlayerPresenter player;
-
+    private final EnemyPresenter enemy;
     protected final float windowHeight;
 
 
-    public GamePresenter(PlayerPresenter player) {
+    public GamePresenter(PlayerPresenter player, EnemyPresenter enemy) {
         batch = new SpriteBatch();
         this.player = player;
+        this.enemy = enemy;
         windowHeight = Gdx.graphics.getHeight();
     }
-    public void setBoardPresenter(BoardPresenter boardPresenter){
+
+    public void setBoardPresenter(BoardPresenter boardPresenter) {
         this.boardPresenter = boardPresenter;
-        boardPresenter.setPlayer(this.player);
+        boardPresenter.setPlayer(player);
+        boardPresenter.setEnemy(enemy);
     }
-    public void setChessPresenter(ChessPresenter chessPresenter){
+
+    public void setChessPresenter(ChessPresenter chessPresenter) {
         this.chessPresenter = chessPresenter;
+        chessPresenter.setBoard(boardPresenter);
     }
-    public void setBarsPresenter(BarsPresenter barsPresenter){
+
+    public void setBarsPresenter(BarsPresenter barsPresenter) {
         this.barsPresenter = barsPresenter;
         tourButton = barsPresenter.getTourButton();
     }
 
     public void update() {
 
-        if (player.isMoving()) {
-            player.updatePlayerPosition();
+        if (player.isMoving() || enemy.isMoving()) {
+            if (player.isMoving()) player.updatePlayerPosition();
+            if (enemy.isMoving()) enemy.updatePlayerPosition();
         } else {
             Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             float mouseX = mouseWorldCoords.x;
@@ -56,6 +63,7 @@ public class GamePresenter {
         boardPresenter.render(batch);
 
         player.render(batch);
+        enemy.render(batch);
 
         chessPresenter.render(batch);
 
@@ -67,9 +75,11 @@ public class GamePresenter {
     private void handleTourButton(Vector2 mousePosition) {
         if (tourButton.contains(mousePosition)) {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                player.increaseMana(2);
+                player.increaseMana(1);
                 player.decreaseHealth(1);
-                //sm.playSwordSound();
+                barsPresenter.playSwordSound();
+                enemy.move();
+                enemy.decreaseHealth(1);
             }
         }
     }

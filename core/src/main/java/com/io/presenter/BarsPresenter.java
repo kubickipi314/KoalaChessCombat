@@ -12,8 +12,10 @@ public class BarsPresenter {
     private final HealthBarView healthBar;
     private final ManaBarView manaBar;
     private final TourButton tourButton;
+    private final SoundManager sm;
 
     public BarsPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm) {
+        this.sm = sm;
         float tileSize = cm.getTileSize();
         float boardX = cm.getBoardX();
         float boardY = cm.getBoardY();
@@ -34,20 +36,24 @@ public class BarsPresenter {
         tourButton = new TourButton(tm, tourButtonPosition, tileSize);
     }
 
-    public void setHealth(int newHealth){
-        healthBar.setHealth(newHealth);
+    public HealthBarView getHealthBar() {
+        return healthBar;
     }
 
-    public void setMana(int newMana){
-        manaBar.setMana(newMana);
+    public ManaBarView getManaBar() {
+        return manaBar;
     }
 
-    public void render(SpriteBatch batch){
+    public void render(SpriteBatch batch) {
         healthBar.draw(batch);
         manaBar.draw(batch);
     }
 
-    public TourButton getTourButton(){
+    public TourButton getTourButton() {
         return tourButton;
+    }
+
+    public void playSwordSound() {
+        sm.playSwordSound();
     }
 }

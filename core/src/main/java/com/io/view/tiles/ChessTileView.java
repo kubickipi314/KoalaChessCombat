@@ -10,28 +10,28 @@ public class ChessTileView {
     private final Texture selectedTexture;
     private final Sprite figureSprite;
 
-    public ChessTileView(Texture normal, Texture selected, Vector2 position, float size){
+    public ChessTileView(Texture normal, Texture selected, Vector2 position, float size) {
         figureSprite = new Sprite(normal);
-        figureSprite.setPosition(position.x,position.y);
-        figureSprite.setSize(size,2 * size);
+        figureSprite.setPosition(position.x, position.y);
+        figureSprite.setSize(size, 2 * size);
 
         this.normalTexture = normal;
         this.selectedTexture = selected;
     }
 
-    public void select(){
+    public void select() {
         figureSprite.setTexture(selectedTexture);
     }
 
-    public void unselect(){
+    public void unselect() {
         figureSprite.setTexture(normalTexture);
     }
 
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch) {
         figureSprite.draw(batch);
     }
 
     public boolean contains(Vector2 mousePosition) {
-        return figureSprite.getBoundingRectangle().contains(mousePosition.x,mousePosition.y);
+        return figureSprite.getBoundingRectangle().contains(mousePosition.x, mousePosition.y);
     }
 }

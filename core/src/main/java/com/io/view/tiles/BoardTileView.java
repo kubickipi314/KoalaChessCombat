@@ -14,14 +14,15 @@ public class BoardTileView {
     private final Sprite tileSprite;
     private final Sprite availableSprite;
     private final Sprite markedSprie;
-    public BoardTileView(TextureManager tm, Vector2 position, float size){
+
+    public BoardTileView(TextureManager tm, Vector2 position, float size) {
         this.position = position;
         Texture markedCover = tm.getMarkedCover();
         Texture availableCover = tm.getAvailableCover();
 
         tileSprite = new Sprite(tm.getNormalTile());
-        tileSprite.setPosition(position.x,position.y);
-        tileSprite.setSize(size,size);
+        tileSprite.setPosition(position.x, position.y);
+        tileSprite.setSize(size, size);
 
         availableSprite = new Sprite(tileSprite);
         availableSprite.setTexture(availableCover);
@@ -31,7 +32,7 @@ public class BoardTileView {
 
     }
 
-    public void setAvailable(boolean isAvailable){
+    public void setAvailable(boolean isAvailable) {
         this.isAvailable = isAvailable;
     }
 
@@ -39,17 +40,17 @@ public class BoardTileView {
         this.isAvailable = !this.isAvailable;
     }
 
-    public void setMarked(boolean isMarked){
+    public void setMarked(boolean isMarked) {
         this.isMarked = isMarked;
     }
 
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch) {
         tileSprite.draw(batch);
         if (isMarked) markedSprie.draw(batch);
         if (isAvailable) availableSprite.draw(batch);
     }
 
-    public Vector2 getPosition(){
+    public Vector2 getPosition() {
         return position;
     }
 
