@@ -13,7 +13,7 @@ public class GamePresenterFactory {
         CoordinatesManager cm = new CoordinatesManager(rows, cols);
 
         BarsPresenter barsPresenter = new BarsPresenter(tm, sm, cm);
-        BoardPresenter boardPresenter = new BoardPresenter(tm, sm, cm);
+        BoardPresenter boardPresenter = new BoardPresenter(tm, cm);
         ChessPresenter chessPresenter = new ChessPresenter(tm, sm, cm);
 
         PlayerPresenter player = new PlayerPresenter(tm, sm, cm);
@@ -21,8 +21,6 @@ public class GamePresenterFactory {
         player.setHealthBar(barsPresenter.getHealthBar());
 
         EnemyPresenter enemy = new EnemyPresenter(tm, sm, cm);
-
-        EnemyFactory enemyFactory = new EnemyFactory(tm, sm, cm);
 
         gamePresenter = new GamePresenter(player, enemy);
         gamePresenter.setBoardPresenter(boardPresenter);

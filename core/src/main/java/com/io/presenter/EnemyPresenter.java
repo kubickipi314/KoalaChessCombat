@@ -3,21 +3,18 @@ package com.io.presenter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.view.bars_buttons.HealthBarView;
-import com.io.view.bars_buttons.ManaBarView;
 import com.io.view.characters.EnemyView;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
 
 public class EnemyPresenter {
-
     private int health = 5;
     private final int MAX_HEALTH = 5;
 
     private int posX;
     private int posY;
 
-    private boolean isMoving;
+    private boolean isActive;
     private float elapsedTime = 0;
     private Vector2 startPosition;
     private Vector2 targetPosition;
@@ -39,7 +36,7 @@ public class EnemyPresenter {
 
         posX = 3;
         posY = 3;
-        isMoving = false;
+        isActive = false;
 
         float x = boardX + posX * tileSize;
         float y = boardY + posY * tileSize;
@@ -48,7 +45,7 @@ public class EnemyPresenter {
     }
 
     public void startMoveAnimation(int targetCol, int targetRow) {
-        isMoving = true;
+        isActive = true;
         elapsedTime = 0;
 
         sm.playMoveSound();
@@ -66,7 +63,7 @@ public class EnemyPresenter {
         posY = targetRow;
     }
 
-    public void updatePlayerPosition() {
+    public void updatePosition() {
         elapsedTime += Gdx.graphics.getDeltaTime();
         float animationDuration = 0.5f;
         float progress = Math.min(1.0f, elapsedTime / animationDuration);
@@ -79,7 +76,7 @@ public class EnemyPresenter {
         enemyView.changePosition(currentPosition);
 
         if (progress >= 1.0f) {
-            isMoving = false;
+            isActive = false;
         }
     }
 
@@ -87,19 +84,14 @@ public class EnemyPresenter {
         enemyView.draw(batch);
     }
 
-    public boolean isMoving() {
-        return isMoving;
-    }
-
-
-    public void setHealth(int newHealth) {
-        health = newHealth;
-        enemyView.changeHealth((float) health / MAX_HEALTH);
+    public boolean isActive() {
+        return isActive;
     }
 
     public void decreaseHealth(int value) {
         health = Math.max(health - value, 0);
         enemyView.changeHealth((float) health / MAX_HEALTH);
+        sm.playRoarSound();
     }
 
     public void move() {
@@ -109,4 +101,11 @@ public class EnemyPresenter {
         if (moveState == 3) startMoveAnimation(posX, posY + 1);
         moveState = (moveState + 1) % 4;
     }
+    public int getPosX() {
+        return posX;
+    }
+    public int getPosY() {
+        return posY;
+    }
+
 }

@@ -100,7 +100,4 @@ public class TextureManager {
         return enemyHealth;
     }
 
-    public void dispose() {
-    }
-
 }

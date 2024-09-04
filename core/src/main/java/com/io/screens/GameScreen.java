@@ -15,8 +15,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        GamePresenterFactory gpFactory = new GamePresenterFactory(7, 5);
+        GamePresenterFactory gpFactory = new GamePresenterFactory(5, 6);
         gamePresenter = gpFactory.getGamePresenter();
+        Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1);
     }
 
     @Override

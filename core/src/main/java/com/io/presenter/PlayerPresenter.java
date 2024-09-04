@@ -19,7 +19,7 @@ public class PlayerPresenter {
     private int posX;
     private int posY;
 
-    private boolean isMoving;
+    private boolean isActive;
     private float elapsedTime = 0;
     private Vector2 startPosition;
     private Vector2 targetPosition;
@@ -42,7 +42,7 @@ public class PlayerPresenter {
 
         posX = 2;
         posY = 1;
-        isMoving = false;
+        isActive = false;
 
         float x = boardX + posX * tileSize;
         float y = boardY + posY * tileSize;
@@ -51,7 +51,7 @@ public class PlayerPresenter {
     }
 
     public void startMoveAnimation(int targetCol, int targetRow) {
-        isMoving = true;
+        isActive = true;
         elapsedTime = 0;
 
         sm.playMoveSound();
@@ -69,7 +69,7 @@ public class PlayerPresenter {
         posY = targetRow;
     }
 
-    public void updatePlayerPosition() {
+    public void updatePosition() {
         elapsedTime += Gdx.graphics.getDeltaTime();
         float animationDuration = 0.5f;
         float progress = Math.min(1.0f, elapsedTime / animationDuration);
@@ -82,7 +82,7 @@ public class PlayerPresenter {
         playerView.changePosition(currentPosition);
 
         if (progress >= 1.0f) {
-            isMoving = false;
+            isActive = false;
         }
     }
 
@@ -90,13 +90,18 @@ public class PlayerPresenter {
         playerView.draw(batch);
     }
 
-    public boolean isMoving() {
-        return isMoving;
+    public boolean isActive() {
+        return isActive;
     }
 
 
     public void increaseMana(int i) {
         mana = Math.min(mana + i, MAX_MANA);
+        manaBar.setMana(mana);
+    }
+
+    public void decreaseMana(int i){
+        mana = Math.max(mana - i, 0);
         manaBar.setMana(mana);
     }
 

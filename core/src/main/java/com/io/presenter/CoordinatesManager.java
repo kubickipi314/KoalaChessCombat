@@ -5,16 +5,17 @@ import com.badlogic.gdx.Gdx;
 public class CoordinatesManager {
     private final int rows;
     private final int cols;
-    private final int NUMBER_OF_CHESS = 5;
+    private final int NUMBER_OF_CHESS;
     private final float windowWidth;
-    private final float windowHeight;
     private final float tileSize;
     private final float boardX;
     private final float boardY;
 
     public CoordinatesManager(int rows, int cols) {
         windowWidth = Gdx.graphics.getWidth();
-        windowHeight = Gdx.graphics.getHeight();
+        float windowHeight = Gdx.graphics.getHeight();
+
+        NUMBER_OF_CHESS = 5;
 
         this.rows = rows;
         this.cols = cols;

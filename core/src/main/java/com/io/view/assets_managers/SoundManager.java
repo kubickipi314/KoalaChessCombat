@@ -4,14 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
 public class SoundManager {
-    Sound move;
-    Sound select;
-    Sound sword;
-
+    private final Sound move;
+    private final Sound select;
+    private final Sound sword;
+    private final Sound roar;
     public SoundManager() {
         move = Gdx.audio.newSound(Gdx.files.internal("sounds/move_sound_1.mp3"));
         select = Gdx.audio.newSound(Gdx.files.internal("sounds/select_sound_1.mp3"));
         sword = Gdx.audio.newSound(Gdx.files.internal("sounds/sword_sound_1.mp3"));
+        roar = Gdx.audio.newSound(Gdx.files.internal("sounds/roar_1.mp3"));
     }
 
 
@@ -25,5 +26,8 @@ public class SoundManager {
 
     public void playSwordSound() {
         sword.play();
+    }
+    public void playRoarSound() {
+        roar.play();
     }
 }

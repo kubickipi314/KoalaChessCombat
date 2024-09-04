@@ -42,11 +42,17 @@ public class GamePresenter {
     }
 
     public void update() {
+        boolean active = false;
+        if (player.isActive()){
+            player.updatePosition();
+            active = true;
+        }
+        if (enemy.isActive()) {
+            enemy.updatePosition();
+            active = true;
+        }
 
-        if (player.isMoving() || enemy.isMoving()) {
-            if (player.isMoving()) player.updatePlayerPosition();
-            if (enemy.isMoving()) enemy.updatePlayerPosition();
-        } else {
+        if (!active) {
             Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             float mouseX = mouseWorldCoords.x;
             float mouseY = (windowHeight - mouseWorldCoords.y);
@@ -75,11 +81,10 @@ public class GamePresenter {
     private void handleTourButton(Vector2 mousePosition) {
         if (tourButton.contains(mousePosition)) {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                player.increaseMana(1);
+                player.increaseMana(5);
                 player.decreaseHealth(1);
                 barsPresenter.playSwordSound();
                 enemy.move();
-                enemy.decreaseHealth(1);
             }
         }
     }
