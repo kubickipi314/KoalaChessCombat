@@ -5,7 +5,7 @@ import com.io.core.board.BoardPosition;
 import com.io.core.character.Player;
 import com.io.core.moves.KingMove;
 import com.io.core.moves.Move;
-import com.io.viewmodel.GameViewModel;
+import com.io.presenter.GamePresenter;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ public class GameService {
     final static int DEFAULT_ROOM_WIDTH = 10;
     final static int DEFAULT_ROOM_HEIGHT = 10;
 
-    private GameViewModel gvm;
+    private GamePresenter gvm;
     private TurnService ts;
 
     private int roomWidth = DEFAULT_ROOM_WIDTH;
@@ -23,7 +23,7 @@ public class GameService {
     public GameService() {
     }
 
-    public void initialize(GameViewModel gvm, TurnService ts) {
+    public void initialize(GamePresenter gvm, TurnService ts) {
         this.gvm = gvm;
         this.ts = ts;
 
@@ -33,7 +33,7 @@ public class GameService {
         this.player = new Player(ts, gvm, playerStartingPosition, moves);
     }
 
-    public void initialize(GameViewModel gvm, TurnService ts, int roomWidth, int roomHeight) {
+    public void initialize(GamePresenter gvm, TurnService ts, int roomWidth, int roomHeight) {
         initialize(gvm, ts);
         this.roomWidth = roomWidth;
         this.roomHeight = roomHeight;
