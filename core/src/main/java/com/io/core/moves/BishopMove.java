@@ -2,35 +2,28 @@ package com.io.core.moves;
 
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
-import com.io.core.board.Cell;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.abs;
+public class BishopMove implements Move {
 
-public class KingMove implements Move {
     private final int cost, damage;
+    private static final int[] X = {1, 1, -1, -1};
+    private static final int[] Y = {1, -1, 1, -1};
+    private static final int maxReach = Integer.MAX_VALUE;
 
-    private static final int[] X = {1, 1, -1, -1, 0, 1, -1, 0};
-    private static final int[] Y = {1, -1, 1, -1, 1, 0, 0, -1};
-    private static final int maxReach = 1;
-
-    public KingMove(int cost, int damage) {
+    public BishopMove(int cost, int damage) {
         this.cost = cost;
         this.damage = damage;
     }
 
     @Override
     public boolean isMoveValid(BoardPosition startPosition, BoardPosition endPosition, Board board) {
-        Cell cell = board.getCell(endPosition);
-        if (cell.isBlocked) return false;
-
-        if (abs(startPosition.x() - endPosition.x()) <= 1 ||
-                abs(startPosition.y() - endPosition.y()) <= 1)
-            return false;
-
-        return true;
+        if (startPosition.x() == endPosition.x() || startPosition.y() == endPosition.y()) return false;
+        int x = endPosition.x() > startPosition.x() ? 1 : -1;
+        int y = endPosition.y() > startPosition.y() ? 1 : -1;
+        return MovesUtils.isValidRayMove(x, y, maxReach, startPosition, endPosition, board);
     }
 
     @Override
@@ -52,5 +45,4 @@ public class KingMove implements Move {
     public int getDamage() {
         return damage;
     }
-
 }

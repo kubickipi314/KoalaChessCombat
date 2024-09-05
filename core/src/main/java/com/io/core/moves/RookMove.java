@@ -2,35 +2,32 @@ package com.io.core.moves;
 
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
-import com.io.core.board.Cell;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.abs;
+public class RookMove implements Move {
 
-public class KingMove implements Move {
     private final int cost, damage;
+    private static final int[] X = {0, 1, -1, 0};
+    private static final int[] Y = {1, 0, 0, -1};
+    private static final int maxReach = Integer.MAX_VALUE;
 
-    private static final int[] X = {1, 1, -1, -1, 0, 1, -1, 0};
-    private static final int[] Y = {1, -1, 1, -1, 1, 0, 0, -1};
-    private static final int maxReach = 1;
-
-    public KingMove(int cost, int damage) {
+    public RookMove(int cost, int damage) {
         this.cost = cost;
         this.damage = damage;
     }
 
     @Override
     public boolean isMoveValid(BoardPosition startPosition, BoardPosition endPosition, Board board) {
-        Cell cell = board.getCell(endPosition);
-        if (cell.isBlocked) return false;
+        if (!board.isValidCell(startPosition) || !board.isValidCell(endPosition)) return false;
+        if (startPosition == endPosition) return false;
 
-        if (abs(startPosition.x() - endPosition.x()) <= 1 ||
-                abs(startPosition.y() - endPosition.y()) <= 1)
-            return false;
+        int dx = endPosition.x() - startPosition.x();
+        int dy = endPosition.y() - startPosition.y();
+        if (dx != 0 && dy != 0) return false;
 
-        return true;
+        return MovesUtils.isValidRayMove((int) Math.signum(dx), (int) Math.signum(dy), maxReach, startPosition, endPosition, board);
     }
 
     @Override
@@ -52,5 +49,4 @@ public class KingMove implements Move {
     public int getDamage() {
         return damage;
     }
-
 }
