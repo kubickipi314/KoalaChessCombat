@@ -6,6 +6,8 @@ import com.io.core.board.BoardPosition;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.io.core.moves.MoveType.KNIGHT;
+
 public class KnightMove implements Move {
 
     private final int cost, damage;
@@ -13,6 +15,7 @@ public class KnightMove implements Move {
     private static final int maxReach = 1;
     private static final int[] X = {1, 2, 2, 1, -1, -2, -2, -1};
     private static final int[] Y = {2, 1, -1, -2, -2, -1, 1, 2};
+    private static final MoveType type = KNIGHT;
 
     public KnightMove(int cost, int damage) {
         this.cost = cost;
@@ -37,6 +40,11 @@ public class KnightMove implements Move {
             accessibleCells.addAll(MovesUtils.getRayAccessibleCells(X[i], Y[i], maxReach, board, position));
         }
         return accessibleCells;
+    }
+
+    @Override
+    public MoveType getType() {
+        return type;
     }
 
     @Override

@@ -15,10 +15,10 @@ import com.io.view.bars_buttons.TourButton;
 
 public class GamePresenter {
     private final SpriteBatch batch;
-    private BoardPresenter boardPresenter;
-    private ChessPresenter chessPresenter;
-    private BarsPresenter barsPresenter;
-    private TourButton tourButton;
+    private final BoardPresenter boardPresenter;
+    private final ChessPresenter chessPresenter;
+    private final BarsPresenter barsPresenter;
+    private final TourButton tourButton;
     private final PlayerPresenter player;
     //private final EnemyPresenter enemy;
     protected final float windowHeight;
@@ -26,7 +26,7 @@ public class GamePresenter {
     private final TextureManager tm = new TextureManager();
     private final SoundManager sm = new SoundManager();
 
-    private GameService gameService;
+    private final GameService gameService;
 
 
     public GamePresenter(GameService gameService) {
@@ -39,8 +39,9 @@ public class GamePresenter {
 
         this.barsPresenter = new BarsPresenter(tm, sm, cm);
         //this.enemy = new EnemyPresenter(tm, sm, cm);
-        this.chessPresenter = new ChessPresenter(tm, sm, cm);
+
         this.boardPresenter = new BoardPresenter(tm, cm, this);
+        this.chessPresenter = new ChessPresenter(tm, sm, cm, this.boardPresenter, this);
         this.tourButton = barsPresenter.getTourButton();
 
         boardPresenter.setPlayer(player);
@@ -66,6 +67,8 @@ public class GamePresenter {
             player.startMoveAnimation(playerModel.getPosition().x(), playerModel.getPosition().y());
             barsPresenter.setMana(playerModel.getCurrentMana());
             barsPresenter.setHealth(playerModel.getCurrentHealth());
+            chessPresenter.setMoves(playerModel.getMoves());
+            chessPresenter.selectMove(gameService.getChosenMove());
 
             Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             float mouseX = mouseWorldCoords.x;
@@ -91,6 +94,10 @@ public class GamePresenter {
         barsPresenter.render(batch);
         tourButton.draw(batch);
         batch.end();
+    }
+
+    public void choseMove(int chosenMove) {
+        gameService.setMove(chosenMove);
     }
 
     private void handleTourButton(Vector2 mousePosition) {

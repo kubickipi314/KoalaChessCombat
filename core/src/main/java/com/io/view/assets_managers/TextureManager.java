@@ -1,9 +1,12 @@
 package com.io.view.assets_managers;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.io.core.moves.MoveType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumMap;
+import java.util.Map;
+
+import static com.io.core.moves.MoveType.*;
 
 public class TextureManager {
     private final Texture normalTile;
@@ -11,8 +14,8 @@ public class TextureManager {
     private final Texture availableCover;
     private final Texture player;
     private final Texture monkey;
-    private final List<Texture> chess;
-    private final List<Texture> selectedChess;
+    private final Map<MoveType, Texture> chess;
+    private final Map<MoveType, Texture> selectedChess;
     private final Texture barBackground;
     private final Texture heart;
     private final Texture mana;
@@ -20,8 +23,8 @@ public class TextureManager {
     private final Texture enemyHealth;
 
     public TextureManager() {
-        chess = new ArrayList<>();
-        selectedChess = new ArrayList<>();
+        chess = new EnumMap<>(MoveType.class);
+        selectedChess = new EnumMap<>(MoveType.class);
 
         normalTile = new Texture("textures/tiles/tile.png");
         markedCover = new Texture("textures/tiles/marked_cover.png");
@@ -30,17 +33,17 @@ public class TextureManager {
         player = new Texture("textures/characters/koala.png");
         monkey = new Texture("textures/characters/minix.png");
 
-        chess.add(new Texture("textures/figures/king.png"));
-        chess.add(new Texture("textures/figures/bishop.png"));
-        chess.add(new Texture("textures/figures/knight.png"));
-        chess.add(new Texture("textures/figures/rock.png"));
-        chess.add(new Texture("textures/figures/queen.png"));
+        chess.put(KING, new Texture("textures/figures/king.png"));
+        chess.put(BISHOP, new Texture("textures/figures/bishop.png"));
+        chess.put(KNIGHT, new Texture("textures/figures/knight.png"));
+        chess.put(ROOK, new Texture("textures/figures/rock.png"));
+        chess.put(QUEEN, new Texture("textures/figures/queen.png"));
 
-        selectedChess.add(new Texture("textures/selected_figures/king.png"));
-        selectedChess.add(new Texture("textures/selected_figures/bishop.png"));
-        selectedChess.add(new Texture("textures/selected_figures/knight.png"));
-        selectedChess.add(new Texture("textures/selected_figures/rock.png"));
-        selectedChess.add(new Texture("textures/selected_figures/queen.png"));
+        selectedChess.put(KING, new Texture("textures/selected_figures/king.png"));
+        selectedChess.put(BISHOP, new Texture("textures/selected_figures/bishop.png"));
+        selectedChess.put(KNIGHT, new Texture("textures/selected_figures/knight.png"));
+        selectedChess.put(ROOK, new Texture("textures/selected_figures/rock.png"));
+        selectedChess.put(QUEEN, new Texture("textures/selected_figures/queen.png"));
 
         barBackground = new Texture("textures/bars/bar_background.png");
         heart = new Texture("textures/bars/heart.png");
@@ -60,12 +63,12 @@ public class TextureManager {
         return monkey;
     }
 
-    public Texture[] getChessArray() {
-        return chess.toArray(new Texture[0]);
+    public Texture getChessTexture(MoveType move) {
+        return chess.get(move);
     }
 
-    public Texture[] getSelectedPieces() {
-        return selectedChess.toArray(new Texture[0]);
+    public Texture getSelectedTexture(MoveType move) {
+        return selectedChess.get(move);
     }
 
     public Texture getNormalTile() {

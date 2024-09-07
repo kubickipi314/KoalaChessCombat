@@ -7,6 +7,7 @@ import com.io.core.board.Cell;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.io.core.moves.MoveType.KING;
 import static java.lang.Math.abs;
 
 public class KingMove implements Move {
@@ -15,6 +16,7 @@ public class KingMove implements Move {
     private static final int[] X = {1, 1, -1, -1, 0, 1, -1, 0};
     private static final int[] Y = {1, -1, 1, -1, 1, 0, 0, -1};
     private static final int maxReach = 1;
+    private static final MoveType type = KING;
 
     public KingMove(int cost, int damage) {
         this.cost = cost;
@@ -41,6 +43,11 @@ public class KingMove implements Move {
             accessibleCells.addAll(MovesUtils.getRayAccessibleCells(X[i], Y[i], maxReach, board, position));
         }
         return accessibleCells;
+    }
+
+    @Override
+    public MoveType getType() {
+        return type;
     }
 
     @Override

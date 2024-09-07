@@ -6,12 +6,15 @@ import com.io.core.board.BoardPosition;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.io.core.moves.MoveType.ROOK;
+
 public class RookMove implements Move {
 
     private final int cost, damage;
     private static final int[] X = {0, 1, -1, 0};
     private static final int[] Y = {1, 0, 0, -1};
     private static final int maxReach = Integer.MAX_VALUE;
+    private static final MoveType type = ROOK;
 
     public RookMove(int cost, int damage) {
         this.cost = cost;
@@ -38,6 +41,11 @@ public class RookMove implements Move {
             accessibleCells.addAll(MovesUtils.getRayAccessibleCells(X[i], Y[i], maxReach, board, position));
         }
         return accessibleCells;
+    }
+
+    @Override
+    public MoveType getType() {
+        return type;
     }
 
     @Override

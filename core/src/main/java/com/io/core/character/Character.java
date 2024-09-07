@@ -37,6 +37,10 @@ public abstract class Character {
         return moves.get(idx);
     }
 
+    public List<Move> getMoves() {
+        return moves;
+    }
+
     public abstract void startTurn();
 
 
