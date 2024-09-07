@@ -4,10 +4,7 @@ import com.io.CONST;
 import com.io.core.GameResult;
 import com.io.core.board.BoardPosition;
 import com.io.core.character.Player;
-import com.io.core.moves.KingMove;
-import com.io.core.moves.KnightMove;
-import com.io.core.moves.Move;
-import com.io.core.moves.RookMove;
+import com.io.core.moves.*;
 import com.io.presenter.GamePresenter;
 
 import java.util.ArrayList;
@@ -28,8 +25,10 @@ public class GameService {
         BoardPosition playerStartingPosition = new BoardPosition(1, 0);
         var moves = new ArrayList<Move>();
         moves.add(new KingMove(1, 1));
-        moves.add(new KnightMove(3, 1));
-        moves.add(new RookMove(5, 1));
+        moves.add(new KnightMove(1, 1));
+        moves.add(new RookMove(1, 1));
+        moves.add(new BishopMove(1, 1));
+        moves.add(new QueenMove(1, 1));
         this.player = new Player(ts, gvm, playerStartingPosition, moves);
         ts.initialize(this, Collections.singletonList(this.player));
     }

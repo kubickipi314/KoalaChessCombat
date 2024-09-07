@@ -23,14 +23,14 @@ public class RookMove implements Move {
 
     @Override
     public boolean isMoveValid(BoardPosition startPosition, BoardPosition endPosition, Board board) {
-        if (!board.isValidCell(startPosition) || !board.isValidCell(endPosition)) return false;
+        if (!board.isValidCell(endPosition)) return false;
         if (startPosition == endPosition) return false;
 
         int dx = endPosition.x() - startPosition.x();
         int dy = endPosition.y() - startPosition.y();
         if (dx != 0 && dy != 0) return false;
-
-        return MovesUtils.isValidRayMove((int) Math.signum(dx), (int) Math.signum(dy), maxReach, startPosition, endPosition, board);
+        
+        return MovesUtils.isValidRayMove(Integer.signum(dx), Integer.signum(dy), maxReach, startPosition, endPosition, board);
     }
 
     @Override
