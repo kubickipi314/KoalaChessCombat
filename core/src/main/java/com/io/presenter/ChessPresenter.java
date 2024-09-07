@@ -9,9 +9,7 @@ import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
 import com.io.view.tiles.ChessTileView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 public class ChessPresenter {
@@ -106,16 +104,6 @@ public class ChessPresenter {
         System.out.println("selected " + i);
         System.out.println(chessBoard[i]);
         chessBoard[i].select();
-    }
-
-    private void setAvailablePieces() {
-        List<int[]> availableTiles = new ArrayList<>();
-
-        Random random = new Random();
-        availableTiles.add(new int[]{random.nextInt(5), random.nextInt(5)});
-        availableTiles.add(new int[]{random.nextInt(5), random.nextInt(5)});
-        availableTiles.add(new int[]{random.nextInt(5), random.nextInt(5)});
-        boardPresenter.setAvailableTiles(availableTiles);
     }
 
     public void render(SpriteBatch batch) {

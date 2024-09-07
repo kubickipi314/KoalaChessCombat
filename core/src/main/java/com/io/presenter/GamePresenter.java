@@ -27,6 +27,10 @@ public class GamePresenter {
     private final SoundManager sm = new SoundManager();
 
     private final GameService gameService;
+    private boolean updated = true;
+
+    BoardPosition lastBoardPosition = new BoardPosition(-1, -1);
+    int lastChosenMove = -1;
 
 
     public GamePresenter(GameService gameService) {
@@ -54,21 +58,30 @@ public class GamePresenter {
         if (player.isActive()) {
             player.updatePosition();
             active = true;
+            updated = true;
         }
 //        if (enemy.isActive()) {
 //            enemy.updatePosition();
 //            active = true;
+//            updated = true;
 //        }
 
         if (!active) {
 
             // temporary solution presenter might need more information
+
             Player playerModel = gameService.getPlayer();
             player.startMoveAnimation(playerModel.getPosition().x(), playerModel.getPosition().y());
+            if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != gameService.getChosenMove()) {
+                boardPresenter.setAvailableTiles(playerModel.getMove(gameService.getChosenMove()).getAccessibleCells(playerModel.getPosition(), gameService.getBoard()));
+                lastBoardPosition = playerModel.getPosition();
+                lastChosenMove = gameService.getChosenMove();
+            }
             barsPresenter.setMana(playerModel.getCurrentMana());
             barsPresenter.setHealth(playerModel.getCurrentHealth());
             chessPresenter.setMoves(playerModel.getMoves());
             chessPresenter.selectMove(gameService.getChosenMove());
+
 
             Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             float mouseX = mouseWorldCoords.x;
@@ -77,8 +90,9 @@ public class GamePresenter {
 
             boardPresenter.handleInput(mousePosition);
             chessPresenter.handleInput(mousePosition);
-            handleTourButton(mousePosition);
 
+            handleTourButton(mousePosition);
+            updated = false;
         }
     }
 

@@ -24,7 +24,7 @@ public class BoardPresenter {
     private final int cols;
     private final float boardWidth;
     private final float boardHeight;
-    private List<int[]> availableTiles;
+    private List<BoardPosition> availableTiles;
     private final GamePresenter gp;
 
     public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gp) {
@@ -103,15 +103,15 @@ public class BoardPresenter {
         }
     }
 
-    public void setAvailableTiles(List<int[]> availableTiles) {
+    public void setAvailableTiles(List<BoardPosition> availableTiles) {
         if (this.availableTiles != null) {
-            for (int[] pair : this.availableTiles) {
-                board[pair[0]][pair[1]].setAvailable(false);
+            for (var pair : this.availableTiles) {
+                board[pair.y()][pair.x()].setAvailable(false);
             }
         }
         this.availableTiles = availableTiles;
-        for (int[] pair : this.availableTiles) {
-            board[pair[0]][pair[1]].setAvailable(true);
+        for (var pair : this.availableTiles) {
+            board[pair.y()][pair.x()].setAvailable(true);
         }
     }
 }

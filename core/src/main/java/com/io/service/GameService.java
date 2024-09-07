@@ -2,6 +2,7 @@ package com.io.service;
 
 import com.io.CONST;
 import com.io.core.GameResult;
+import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
 import com.io.core.character.Player;
 import com.io.core.moves.*;
@@ -64,5 +65,9 @@ public class GameService {
 
     public int getRoomHeight() {
         return roomHeight;
+    }
+
+    public Board getBoard() {
+        return ts.getBoard();
     }
 }
