@@ -1,5 +1,6 @@
 package com.io.service;
 
+import com.io.CONST;
 import com.io.core.GameResult;
 import com.io.core.board.BoardPosition;
 import com.io.core.character.Player;
@@ -8,40 +9,37 @@ import com.io.core.moves.Move;
 import com.io.presenter.GamePresenter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GameService {
-    final static int DEFAULT_ROOM_WIDTH = 10;
-    final static int DEFAULT_ROOM_HEIGHT = 10;
 
     private GamePresenter gvm;
-    private TurnService ts;
+    private final TurnService ts;
 
-    private int roomWidth = DEFAULT_ROOM_WIDTH;
-    private int roomHeight = DEFAULT_ROOM_HEIGHT;
+    private int roomWidth = CONST.DEFAULT_ROOM_WIDTH;
+    private int roomHeight = CONST.DEFAULT_ROOM_HEIGHT;
     private Player player;
 
     public GameService() {
-    }
-
-    public void initialize(GamePresenter gvm, TurnService ts) {
-        this.gvm = gvm;
-        this.ts = ts;
-
+        ts = new TurnService();
         BoardPosition playerStartingPosition = new BoardPosition(1, 0);
         var moves = new ArrayList<Move>();
         moves.add(new KingMove(1, 1));
         this.player = new Player(ts, gvm, playerStartingPosition, moves);
-    }
-
-    public void initialize(GamePresenter gvm, TurnService ts, int roomWidth, int roomHeight) {
-        initialize(gvm, ts);
-        this.roomWidth = roomWidth;
-        this.roomHeight = roomHeight;
+        ts.initialize(this, Collections.singletonList(this.player));
     }
 
     public void endGame(GameResult gameResult) {
         // stop game
         gvm.endGame(gameResult);
+    }
+
+    public boolean movePlayer(BoardPosition boardPosition) {
+        return player.PlayMove(boardPosition, 0);
+    }
+
+    public void increaseMana(int mana) {
+        player.changeMana(mana);
     }
 
     public Player getPlayer() {

@@ -26,6 +26,8 @@ public abstract class Character {
         this.ts = ts;
         this.maxMana = maxMana;
         this.maxHealth = maxHealth;
+        this.currentHealth = maxHealth;
+        this.currentMana = maxMana;
         this.position = position;
         this.team = team;
         this.moves = moves;

@@ -3,12 +3,13 @@ package com.io.view.bars_buttons;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.io.CONST;
 import com.io.view.assets_managers.TextureManager;
 
 public class HealthBarView {
 
-    final int MAX_HEART_NUMBER = 10;
-    int heartNumber = 8;
+    final int MAX_HEART_NUMBER = CONST.MAX_PLAYER_HEALTH;
+    int heartNumber;
     Sprite backgroudSprite;
     Sprite[] heartSprites;
 

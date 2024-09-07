@@ -26,8 +26,8 @@ public class KingMove implements Move {
         Cell cell = board.getCell(endPosition);
         if (cell.isBlocked) return false;
 
-        if (abs(startPosition.x() - endPosition.x()) <= 1 ||
-                abs(startPosition.y() - endPosition.y()) <= 1)
+        if (abs(startPosition.x() - endPosition.x()) > 1 ||
+                abs(startPosition.y() - endPosition.y()) > 1)
             return false;
 
         return true;

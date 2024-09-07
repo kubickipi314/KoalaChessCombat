@@ -36,12 +36,12 @@ public class BarsPresenter {
         tourButton = new TourButton(tm, tourButtonPosition, tileSize);
     }
 
-    public HealthBarView getHealthBar() {
-        return healthBar;
+    public void setHealth(int i) {
+        healthBar.setHealth(i);
     }
 
-    public ManaBarView getManaBar() {
-        return manaBar;
+    public void setMana(int i) {
+        manaBar.setMana(i);
     }
 
     public void render(SpriteBatch batch) {
