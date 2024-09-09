@@ -12,8 +12,6 @@ import java.util.List;
 
 public class BoardPresenter {
     private final BoardTileView[][] board;
-    private PlayerPresenter player;
-    private EnemyPresenter enemy;
 
     private int actualRow;
     private int actualCol;
@@ -52,13 +50,6 @@ public class BoardPresenter {
         }
     }
 
-    public void setPlayer(PlayerPresenter player) {
-        this.player = player;
-    }
-
-    public void setEnemy(EnemyPresenter enemy) {
-        this.enemy = enemy;
-    }
 
     public void handleInput(Vector2 mousePosition) {
 

@@ -12,17 +12,17 @@ import java.util.List;
 public class Player extends Character {
     static int maxMana = CONST.MAX_PLAYER_MANA, maxHealth = CONST.MAX_PLAYER_HEALTH;
 
-    GamePresenter gvm;
+    GamePresenter gp;
 
-    public Player(TurnService ts, GamePresenter gvm, BoardPosition position, List<Move> moves) {
+    public Player(TurnService ts, GamePresenter gp, BoardPosition position, List<Move> moves) {
         super(ts, maxMana, maxHealth, position, 0, moves);
-        this.gvm = gvm;
+        this.gp = gp;
 
     }
 
     @Override
     public void startTurn() {
-        gvm.startTurn();
+        gp.startTurn();
     }
 
     public boolean PlayMove(BoardPosition movePosition, int moveIdx) {

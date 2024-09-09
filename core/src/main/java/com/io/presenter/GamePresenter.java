@@ -27,7 +27,6 @@ public class GamePresenter {
     private final SoundManager sm = new SoundManager();
 
     private final GameService gameService;
-    private boolean updated = true;
 
     BoardPosition lastBoardPosition = new BoardPosition(-1, -1);
     int lastChosenMove = -1;
@@ -45,11 +44,9 @@ public class GamePresenter {
         //this.enemy = new EnemyPresenter(tm, sm, cm);
 
         this.boardPresenter = new BoardPresenter(tm, cm, this);
-        this.chessPresenter = new ChessPresenter(tm, sm, cm, this.boardPresenter, this);
+        this.chessPresenter = new ChessPresenter(tm, sm, cm, this);
         this.tourButton = barsPresenter.getTourButton();
 
-        boardPresenter.setPlayer(player);
-        //boardPresenter.setEnemy(enemy);
         windowHeight = Gdx.graphics.getHeight();
     }
 
@@ -58,12 +55,10 @@ public class GamePresenter {
         if (player.isActive()) {
             player.updatePosition();
             active = true;
-            updated = true;
         }
 //        if (enemy.isActive()) {
 //            enemy.updatePosition();
 //            active = true;
-//            updated = true;
 //        }
 
         if (!active) {
@@ -92,7 +87,6 @@ public class GamePresenter {
             chessPresenter.handleInput(mousePosition);
 
             handleTourButton(mousePosition);
-            updated = false;
         }
     }
 
