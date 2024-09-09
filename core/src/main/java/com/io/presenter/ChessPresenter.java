@@ -26,12 +26,12 @@ public class ChessPresenter {
     private int selectedMove = -1;
 
 
-    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gp) {
+    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gamePresenter) {
         chessBoard = new ChessTileView[numberOfMoves];
         this.sm = sm;
         this.cm = cm;
         this.tm = tm;
-        this.gamePresenter = gp;
+        this.gamePresenter = gamePresenter;
     }
 
 
