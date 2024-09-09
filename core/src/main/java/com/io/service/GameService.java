@@ -13,12 +13,12 @@ import java.util.Collections;
 
 public class GameService {
 
-    private GamePresenter gvm;
+    private GamePresenter gamePresenter;
     private final TurnService ts;
 
     private int roomWidth = CONST.DEFAULT_ROOM_WIDTH;
     private int roomHeight = CONST.DEFAULT_ROOM_HEIGHT;
-    private Player player;
+    private final Player player;
     private int chosenMove = 0;
 
     public GameService() {
@@ -30,17 +30,16 @@ public class GameService {
         moves.add(new RookMove(1, 1));
         moves.add(new BishopMove(1, 1));
         moves.add(new QueenMove(1, 1));
-        this.player = new Player(ts, gvm, playerStartingPosition, moves);
+        this.player = new Player(ts, gamePresenter, playerStartingPosition, moves);
         ts.initialize(this, Collections.singletonList(this.player));
     }
 
     public void endGame(GameResult gameResult) {
-        // stop game
-        gvm.endGame(gameResult);
+        gamePresenter.endGame(gameResult);
     }
 
-    public boolean movePlayer(BoardPosition boardPosition) {
-        return player.PlayMove(boardPosition, chosenMove);
+    public void movePlayer(BoardPosition boardPosition) {
+        player.PlayMove(boardPosition, chosenMove);
     }
 
     public void setMove(int chosenMove) {

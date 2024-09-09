@@ -20,36 +20,32 @@ public class GamePresenter {
     private final BarsPresenter barsPresenter;
     private final TourButton tourButton;
     private final PlayerPresenter player;
-    //private final EnemyPresenter enemy;
     protected final float windowHeight;
-    private final CoordinatesManager cm;
-    private final TextureManager tm = new TextureManager();
-    private final SoundManager sm = new SoundManager();
 
-    private final GameService gameService;
+    private final GameService gs;
     private boolean updated = true;
 
     BoardPosition lastBoardPosition = new BoardPosition(-1, -1);
     int lastChosenMove = -1;
 
 
-    public GamePresenter(GameService gameService) {
-        BoardPosition startingPosition = gameService.getPlayer().getPosition();
+    public GamePresenter(GameService gs) {
+        BoardPosition startingPosition = gs.getPlayer().getPosition();
 
         batch = new SpriteBatch();
-        this.gameService = gameService;
-        this.cm = new CoordinatesManager(gameService.getRoomHeight(), gameService.getRoomWidth());
+        this.gs = gs;
+        CoordinatesManager cm = new CoordinatesManager(gs.getRoomHeight(), gs.getRoomWidth());
+        TextureManager tm = new TextureManager();
+        SoundManager sm = new SoundManager();
         this.player = new PlayerPresenter(tm, sm, cm, startingPosition);
 
         this.barsPresenter = new BarsPresenter(tm, sm, cm);
         //this.enemy = new EnemyPresenter(tm, sm, cm);
 
         this.boardPresenter = new BoardPresenter(tm, cm, this);
-        this.chessPresenter = new ChessPresenter(tm, sm, cm, this.boardPresenter, this);
+        this.chessPresenter = new ChessPresenter(tm, sm, cm, this);
         this.tourButton = barsPresenter.getTourButton();
 
-        boardPresenter.setPlayer(player);
-        //boardPresenter.setEnemy(enemy);
         windowHeight = Gdx.graphics.getHeight();
     }
 
@@ -60,27 +56,22 @@ public class GamePresenter {
             active = true;
             updated = true;
         }
-//        if (enemy.isActive()) {
-//            enemy.updatePosition();
-//            active = true;
-//            updated = true;
-//        }
 
         if (!active) {
 
             // temporary solution presenter might need more information
 
-            Player playerModel = gameService.getPlayer();
+            Player playerModel = gs.getPlayer();
             player.startMoveAnimation(playerModel.getPosition().x(), playerModel.getPosition().y());
-            if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != gameService.getChosenMove()) {
-                boardPresenter.setAvailableTiles(playerModel.getMove(gameService.getChosenMove()).getAccessibleCells(playerModel.getPosition(), gameService.getBoard()));
+            if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != gs.getChosenMove()) {
+                boardPresenter.setAvailableTiles(playerModel.getMove(gs.getChosenMove()).getAccessibleCells(playerModel.getPosition(), gs.getBoard()));
                 lastBoardPosition = playerModel.getPosition();
-                lastChosenMove = gameService.getChosenMove();
+                lastChosenMove = gs.getChosenMove();
             }
             barsPresenter.setMana(playerModel.getCurrentMana());
             barsPresenter.setHealth(playerModel.getCurrentHealth());
             chessPresenter.setMoves(playerModel.getMoves());
-            chessPresenter.selectMove(gameService.getChosenMove());
+            chessPresenter.selectMove(gs.getChosenMove());
 
 
             Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
@@ -111,21 +102,21 @@ public class GamePresenter {
     }
 
     public void choseMove(int chosenMove) {
-        gameService.setMove(chosenMove);
+        gs.setMove(chosenMove);
     }
 
     private void handleTourButton(Vector2 mousePosition) {
         if (tourButton.contains(mousePosition)) {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                gameService.increaseMana(CONST.DEFAULT_INCREASE_AMOUNT);
+                gs.increaseMana(CONST.DEFAULT_INCREASE_AMOUNT);
                 barsPresenter.playSwordSound();
                 //enemy.move();
             }
         }
     }
 
-    public boolean movePlayer(BoardPosition boardPosition) {
-        return gameService.movePlayer(boardPosition);
+    public void movePlayer(BoardPosition boardPosition) {
+        gs.movePlayer(boardPosition);
     }
 
     public void endGame(GameResult gameResult) {

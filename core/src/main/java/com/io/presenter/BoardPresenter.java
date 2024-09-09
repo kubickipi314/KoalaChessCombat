@@ -12,9 +12,6 @@ import java.util.List;
 
 public class BoardPresenter {
     private final BoardTileView[][] board;
-    private PlayerPresenter player;
-    private EnemyPresenter enemy;
-
     private int actualRow;
     private int actualCol;
 
@@ -25,12 +22,12 @@ public class BoardPresenter {
     private final float boardWidth;
     private final float boardHeight;
     private List<BoardPosition> availableTiles;
-    private final GamePresenter gp;
+    private final GamePresenter gamePresenter;
 
-    public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gp) {
+    public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gamePresenter) {
         rows = cm.getRows();
         cols = cm.getCols();
-        this.gp = gp;
+        this.gamePresenter = gamePresenter;
 
         board = new BoardTileView[rows][cols];
 
@@ -52,14 +49,6 @@ public class BoardPresenter {
         }
     }
 
-    public void setPlayer(PlayerPresenter player) {
-        this.player = player;
-    }
-
-    public void setEnemy(EnemyPresenter enemy) {
-        this.enemy = enemy;
-    }
-
     public void handleInput(Vector2 mousePosition) {
 
         board[actualRow][actualCol].setMarked(false);
@@ -72,7 +61,7 @@ public class BoardPresenter {
             }
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 System.out.println("clicked");
-                gp.movePlayer(new BoardPosition(actualCol, actualRow));
+                gamePresenter.movePlayer(new BoardPosition(actualCol, actualRow));
             }
         }
     }

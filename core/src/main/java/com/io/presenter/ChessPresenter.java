@@ -21,19 +21,17 @@ public class ChessPresenter {
     private List<Move> moves;
     private final SoundManager sm;
     private final CoordinatesManager cm;
-    private final BoardPresenter boardPresenter;
     private final TextureManager tm;
-    private final GamePresenter gp;
+    private final GamePresenter gamePresenter;
     private int selectedMove = -1;
 
 
-    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, BoardPresenter boardPresenter, GamePresenter gp) {
+    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gp) {
         chessBoard = new ChessTileView[chessNumber];
         this.sm = sm;
         this.cm = cm;
         this.tm = tm;
-        this.gp = gp;
-        this.boardPresenter = boardPresenter;
+        this.gamePresenter = gp;
     }
 
 
@@ -41,7 +39,7 @@ public class ChessPresenter {
         if (isMouseInChessBoard(mousePosition)) {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
 
-                gp.choseMove(getActualTile(mousePosition));
+                gamePresenter.choseMove(getActualTile(mousePosition));
                 sm.playSelectSound();
             }
         }
@@ -82,19 +80,6 @@ public class ChessPresenter {
         return mouseX >= chessBoardX && mouseY >= chessBoardY && mouseX <= chessBoardX + tileSize * chessNumber && mouseY <= chessBoardY + 2 * tileSize;
     }
 
-    private void changeChessPiece(Vector2 mousePosition) {
-        for (int i = 0; i < chessBoard.length; i++) {
-            if (chessBoard[i].contains(mousePosition)) {
-                for (int j = 0; j < chessNumber; j++) {
-                    chessBoard[j].unselect();
-                }
-                chessBoard[i].select();
-                sm.playSelectSound();
-                break;
-            }
-        }
-    }
-
     public void selectMove(int i) {
         if (i == selectedMove) return;
         selectedMove = i;
@@ -107,8 +92,8 @@ public class ChessPresenter {
     }
 
     public void render(SpriteBatch batch) {
-        for (int number = 0; number < chessBoard.length; number++) {
-            chessBoard[number].draw(batch);
+        for (ChessTileView chessTileView : chessBoard) {
+            chessTileView.draw(batch);
         }
     }
 }

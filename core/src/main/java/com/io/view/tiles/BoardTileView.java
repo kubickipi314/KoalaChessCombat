@@ -13,7 +13,7 @@ public class BoardTileView {
 
     private final Sprite tileSprite;
     private final Sprite availableSprite;
-    private final Sprite markedSprie;
+    private final Sprite markedSprite;
 
     public BoardTileView(TextureManager tm, Vector2 position, float size) {
         this.position = position;
@@ -27,8 +27,8 @@ public class BoardTileView {
         availableSprite = new Sprite(tileSprite);
         availableSprite.setTexture(availableCover);
 
-        markedSprie = new Sprite(tileSprite);
-        markedSprie.setTexture(markedCover);
+        markedSprite = new Sprite(tileSprite);
+        markedSprite.setTexture(markedCover);
 
     }
 
@@ -46,7 +46,7 @@ public class BoardTileView {
 
     public void draw(SpriteBatch batch) {
         tileSprite.draw(batch);
-        if (isMarked) markedSprie.draw(batch);
+        if (isMarked) markedSprite.draw(batch);
         if (isAvailable) availableSprite.draw(batch);
     }
 
