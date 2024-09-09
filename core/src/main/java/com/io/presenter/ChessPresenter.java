@@ -27,7 +27,7 @@ public class ChessPresenter {
 
 
     public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gp) {
-        chessBoard = new ChessTileView[chessNumber];
+        chessBoard = new ChessTileView[numberOfMoves];
         this.sm = sm;
         this.cm = cm;
         this.tm = tm;
