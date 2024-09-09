@@ -3,12 +3,13 @@ package com.io.view.bars_buttons;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.io.CONST;
 import com.io.view.assets_managers.TextureManager;
 
 public class ManaBarView {
 
-    final int MAX_MANA_NUMBER = 12;
-    int manaNumber = 4;
+    final int MAX_MANA_NUMBER = CONST.MAX_PLAYER_MANA;
+    int manaNumber;
     Sprite backgroudSprite;
     Sprite[] manaSprites;
 

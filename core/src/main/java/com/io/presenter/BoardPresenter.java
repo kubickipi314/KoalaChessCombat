@@ -4,15 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.view.tiles.BoardTileView;
+import com.io.core.board.BoardPosition;
 import com.io.view.assets_managers.TextureManager;
+import com.io.view.tiles.BoardTileView;
 
 import java.util.List;
 
 public class BoardPresenter {
     private final BoardTileView[][] board;
-    private PlayerPresenter player;
-    private EnemyPresenter enemy;
 
     private int actualRow;
     private int actualCol;
@@ -23,11 +22,13 @@ public class BoardPresenter {
     private final int cols;
     private final float boardWidth;
     private final float boardHeight;
-    private List<int[]> availableTiles;
+    private List<BoardPosition> availableTiles;
+    private final GamePresenter gp;
 
-    public BoardPresenter(TextureManager tm, CoordinatesManager cm) {
+    public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gp) {
         rows = cm.getRows();
         cols = cm.getCols();
+        this.gp = gp;
 
         board = new BoardTileView[rows][cols];
 
@@ -49,13 +50,6 @@ public class BoardPresenter {
         }
     }
 
-    public void setPlayer(PlayerPresenter player) {
-        this.player = player;
-    }
-
-    public void setEnemy(EnemyPresenter enemy) {
-        this.enemy = enemy;
-    }
 
     public void handleInput(Vector2 mousePosition) {
 
@@ -68,12 +62,8 @@ public class BoardPresenter {
                 board[actualRow][actualCol].switchAvailable();
             }
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                player.startMoveAnimation(actualCol, actualRow);
-                player.decreaseMana(2);
-                if (enemy.getPosX() == actualCol && enemy.getPosY() == actualRow) {
-                    enemy.move();
-                    enemy.decreaseHealth(1);
-                }
+                System.out.println("clicked");
+                gp.movePlayer(new BoardPosition(actualCol, actualRow));
             }
         }
     }
@@ -104,15 +94,15 @@ public class BoardPresenter {
         }
     }
 
-    public void setAvailableTiles(List<int[]> availableTiles) {
+    public void setAvailableTiles(List<BoardPosition> availableTiles) {
         if (this.availableTiles != null) {
-            for (int[] pair : this.availableTiles) {
-                board[pair[0]][pair[1]].setAvailable(false);
+            for (var pair : this.availableTiles) {
+                board[pair.y()][pair.x()].setAvailable(false);
             }
         }
         this.availableTiles = availableTiles;
-        for (int[] pair : this.availableTiles) {
-            board[pair[0]][pair[1]].setAvailable(true);
+        for (var pair : this.availableTiles) {
+            board[pair.y()][pair.x()].setAvailable(true);
         }
     }
 }

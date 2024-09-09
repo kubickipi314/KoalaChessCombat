@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 public class CoordinatesManager {
     private final int rows;
     private final int cols;
-    private final int NUMBER_OF_CHESS;
+    private int chessNumber;
     private final float windowWidth;
     private final float tileSize;
     private final float boardX;
@@ -15,7 +15,7 @@ public class CoordinatesManager {
         windowWidth = Gdx.graphics.getWidth();
         float windowHeight = Gdx.graphics.getHeight();
 
-        NUMBER_OF_CHESS = 5;
+        chessNumber = 5;
 
         this.rows = rows;
         this.cols = cols;
@@ -26,6 +26,10 @@ public class CoordinatesManager {
 
         boardX = (windowWidth - boardWidth) / 2;
         boardY = (windowHeight - boardHeight) / 2;
+    }
+
+    public void setChessNumber(int chessNumber) {
+        this.chessNumber = chessNumber;
     }
 
     public float getBoardX() {
@@ -45,7 +49,7 @@ public class CoordinatesManager {
     }
 
     public float getChessBoardX() {
-        return (windowWidth - tileSize * NUMBER_OF_CHESS) / 2;
+        return (windowWidth - tileSize * chessNumber) / 2;
     }
 
     public float getChessBoardY() {

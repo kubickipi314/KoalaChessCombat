@@ -23,19 +23,19 @@ public final class MovesUtils {
     public static boolean isValidRayMove(int x, int y, int maxReach, BoardPosition startPosition, BoardPosition endPosition, Board board) {
         if (startPosition == endPosition) return false;
         if (!onRay(x, y, startPosition, endPosition)) return false;
-
         int currentX = startPosition.x();
-        int currentY = startPosition.x();
+        int currentY = startPosition.y();
         int count = 0;
         while (count < maxReach) {
             count++;
             currentX += x;
             currentY += y;
             var currentPosition = new BoardPosition(currentX, currentY);
+            if (currentPosition.equals(endPosition)) return true;
             if (!board.isValidCell(currentPosition)) return false;
-            if (board.getCell(currentPosition).getCharacter() != null) break;
+            if (board.getCell(currentPosition).getCharacter() != null) return false;
         }
-        return count >= maxReach;
+        return false;
     }
 
     public static ArrayList<BoardPosition> getRayAccessibleCells(int x, int y, int maxReach, Board board, BoardPosition startPosition) {

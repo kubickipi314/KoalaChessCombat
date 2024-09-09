@@ -8,6 +8,11 @@ public class Board {
 
     public Board(int width, int height) {
         this.board = new Cell[height][width];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                board[i][j] = new Cell(false);
+            }
+        }
         boardWidth = width;
         boardHeight = height;
     }
@@ -16,15 +21,19 @@ public class Board {
         var move = moveDTO.move();
         var movePosition = moveDTO.boardPosition();
         var character = moveDTO.character();
-
         // check if move is valid, if no return false
         var destinationCell = getCell(movePosition);
+        var startCell = getCell(character.getPosition());
+
         var attackedCharacter = destinationCell.getCharacter();
+        System.out.print("try move " + move + " " + character + " attacks " + attackedCharacter + "\n");
+        System.out.println("from " + character.getPosition() + " to " + movePosition);
 
         if (character.getCurrentMana() < move.getCost()) return false;
         if (attackedCharacter != null && character.getTeam() == attackedCharacter.getTeam()) return false;
         if (!move.isMoveValid(character.getPosition(), movePosition, this)) return false;
 
+        System.out.println("valid move\n");
         character.changeMana(-move.getCost());
         if (attackedCharacter != null) {
             attackedCharacter.changeHealth(-move.getDamage());
@@ -32,6 +41,7 @@ public class Board {
         if (attackedCharacter == null || attackedCharacter.getCurrentHealth() < 0) {
             destinationCell.setCharacter(character);
             character.setPosition(movePosition);
+            startCell.setCharacter(null);
         }
 
         return true;
@@ -46,10 +56,6 @@ public class Board {
     }
 
     public Cell getCell(BoardPosition position) {
-        if (!isValidCell(position)) {
-            //TODO change error handling
-            throw new Error();
-        }
-        return board[position.y()][position.x()];
+        return board[position.x()][position.y()];
     }
 }

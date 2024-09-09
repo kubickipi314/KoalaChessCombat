@@ -3,18 +3,12 @@ package com.io.presenter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.view.bars_buttons.HealthBarView;
-import com.io.view.bars_buttons.ManaBarView;
-import com.io.view.characters.PlayerView;
+import com.io.core.board.BoardPosition;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
+import com.io.view.characters.PlayerView;
 
 public class PlayerPresenter {
-
-    private int mana = 5;
-    private int health = 8;
-    private final int MAX_MANA = 12;
-    private final int MAX_HEALTH = 10;
 
     private int posX;
     private int posY;
@@ -30,18 +24,16 @@ public class PlayerPresenter {
     private final float tileSize;
 
     private final PlayerView playerView;
-    private HealthBarView healthBar;
-    private ManaBarView manaBar;
 
 
-    public PlayerPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm) {
+    public PlayerPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, BoardPosition start) {
         boardX = cm.getBoardX();
         boardY = cm.getBoardY();
         tileSize = cm.getTileSize();
         this.sm = sm;
 
-        posX = 2;
-        posY = 1;
+        posX = start.x();
+        posY = start.y();
         isActive = false;
 
         float x = boardX + posX * tileSize;
@@ -50,7 +42,8 @@ public class PlayerPresenter {
         playerView = new PlayerView(tm, position, tileSize);
     }
 
-    public void startMoveAnimation(int targetCol, int targetRow) {
+    public boolean startMoveAnimation(int targetCol, int targetRow) {
+        if (targetCol == posX && targetRow == posY) return false;
         isActive = true;
         elapsedTime = 0;
 
@@ -67,6 +60,7 @@ public class PlayerPresenter {
 
         posX = targetCol;
         posY = targetRow;
+        return true;
     }
 
     public void updatePosition() {
@@ -92,29 +86,5 @@ public class PlayerPresenter {
 
     public boolean isActive() {
         return isActive;
-    }
-
-
-    public void increaseMana(int i) {
-        mana = Math.min(mana + i, MAX_MANA);
-        manaBar.setMana(mana);
-    }
-
-    public void decreaseMana(int i){
-        mana = Math.max(mana - i, 0);
-        manaBar.setMana(mana);
-    }
-
-    public void decreaseHealth(int i) {
-        health = Math.max(health - i, 0);
-        healthBar.setHealth(health);
-    }
-
-    public void setManaBar(ManaBarView manaBar) {
-        this.manaBar = manaBar;
-    }
-
-    public void setHealthBar(HealthBarView healthBar) {
-        this.healthBar = healthBar;
     }
 }
