@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ChessPresenter {
     private ChessTileView[] chessBoard;
-    private int chessNumber = 0;
+    private int numberOfMoves = 0;
     private float chessBoardX;
     private float chessBoardY;
     private float tileSize;
@@ -46,7 +46,7 @@ public class ChessPresenter {
     }
 
     private int getActualTile(Vector2 mousePosition) {
-        for (int tile = 0; tile < chessBoard.length; tile++) {
+        for (int tile = 0; tile < numberOfMoves; tile++) {
             if (chessBoard[tile].contains(mousePosition)) {
                 return tile;
             }
@@ -56,34 +56,35 @@ public class ChessPresenter {
 
     public void setMoves(List<Move> moves) {
         if (moves.equals(this.moves)) return;
+
         this.moves = moves;
+        numberOfMoves = moves.size();
+        cm.setChessNumber(numberOfMoves);
 
-        chessNumber = moves.size();
-        cm.setChessNumber(moves.size());
-
-        chessBoard = new ChessTileView[chessNumber];
+        chessBoard = new ChessTileView[numberOfMoves];
         chessBoardX = cm.getChessBoardX();
         chessBoardY = cm.getChessBoardY();
         tileSize = cm.getTileSize();
 
-        for (int number = 0; number < chessBoard.length; number++) {
+        for (int number = 0; number < numberOfMoves; number++) {
             float x = chessBoardX + number * tileSize;
             Vector2 position = new Vector2(x, chessBoardY);
-            chessBoard[number] = new ChessTileView(tm.getChessTexture(moves.get(number).getType()),
-                    tm.getSelectedTexture(moves.get(number).getType()), position, tileSize);
+            var type = moves.get(number).getType();
+            chessBoard[number] = new ChessTileView(tm.getChessTexture(type),
+                    tm.getSelectedTexture(type), position, tileSize);
         }
     }
 
     private boolean isMouseInChessBoard(Vector2 mousePosition) {
         float mouseX = mousePosition.x;
         float mouseY = mousePosition.y;
-        return mouseX >= chessBoardX && mouseY >= chessBoardY && mouseX <= chessBoardX + tileSize * chessNumber && mouseY <= chessBoardY + 2 * tileSize;
+        return mouseX >= chessBoardX && mouseY >= chessBoardY && mouseX <= chessBoardX + tileSize * numberOfMoves && mouseY <= chessBoardY + 2 * tileSize;
     }
 
     public void selectMove(int i) {
         if (i == selectedMove) return;
         selectedMove = i;
-        for (int j = 0; j < chessNumber; j++) {
+        for (int j = 0; j < numberOfMoves; j++) {
             chessBoard[j].unselect();
         }
         System.out.println("selected " + i);

@@ -1,6 +1,6 @@
 package com.io;
 
-public class CONST {
+public final class CONST {
     private CONST() {
         throw new UnsupportedOperationException("This is a constants class and cannot be instantiated");
     }

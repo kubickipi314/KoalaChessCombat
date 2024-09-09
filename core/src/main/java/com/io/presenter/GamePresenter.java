@@ -23,7 +23,6 @@ public class GamePresenter {
     protected final float windowHeight;
 
     private final GameService gs;
-    private boolean updated = true;
 
     BoardPosition lastBoardPosition = new BoardPosition(-1, -1);
     int lastChosenMove = -1;
@@ -54,7 +53,6 @@ public class GamePresenter {
         if (player.isActive()) {
             player.updatePosition();
             active = true;
-            updated = true;
         }
 
         if (!active) {
@@ -83,7 +81,6 @@ public class GamePresenter {
             chessPresenter.handleInput(mousePosition);
 
             handleTourButton(mousePosition);
-            updated = false;
         }
     }
 

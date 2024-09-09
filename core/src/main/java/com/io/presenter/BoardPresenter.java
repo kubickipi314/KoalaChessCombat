@@ -12,6 +12,7 @@ import java.util.List;
 
 public class BoardPresenter {
     private final BoardTileView[][] board;
+
     private int actualRow;
     private int actualCol;
 
@@ -48,6 +49,8 @@ public class BoardPresenter {
             }
         }
     }
+
+
 
     public void handleInput(Vector2 mousePosition) {
 

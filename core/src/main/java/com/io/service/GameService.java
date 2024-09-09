@@ -21,8 +21,8 @@ public class GameService {
     private final Player player;
     private int chosenMove = 0;
 
-    public GameService() {
-        ts = new TurnService();
+    public GameService(TurnService ts) {
+        this.ts = ts;
         BoardPosition playerStartingPosition = new BoardPosition(1, 0);
         var moves = new ArrayList<Move>();
         moves.add(new KingMove(1, 1));
