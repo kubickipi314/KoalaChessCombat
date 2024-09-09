@@ -23,12 +23,12 @@ public class BoardPresenter {
     private final float boardWidth;
     private final float boardHeight;
     private List<BoardPosition> availableTiles;
-    private final GamePresenter gp;
+    private final GamePresenter gamePresenter;
 
-    public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gp) {
+    public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gamePresenter) {
         rows = cm.getRows();
         cols = cm.getCols();
-        this.gp = gp;
+        this.gamePresenter = gamePresenter;
 
         board = new BoardTileView[rows][cols];
 
@@ -51,6 +51,7 @@ public class BoardPresenter {
     }
 
 
+
     public void handleInput(Vector2 mousePosition) {
 
         board[actualRow][actualCol].setMarked(false);
@@ -63,7 +64,7 @@ public class BoardPresenter {
             }
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 System.out.println("clicked");
-                gp.movePlayer(new BoardPosition(actualCol, actualRow));
+                gamePresenter.movePlayer(new BoardPosition(actualCol, actualRow));
             }
         }
     }

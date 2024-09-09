@@ -42,8 +42,8 @@ public class PlayerPresenter {
         playerView = new PlayerView(tm, position, tileSize);
     }
 
-    public boolean startMoveAnimation(int targetCol, int targetRow) {
-        if (targetCol == posX && targetRow == posY) return false;
+    public void startMoveAnimation(int targetCol, int targetRow) {
+        if (targetCol == posX && targetRow == posY) return;
         isActive = true;
         elapsedTime = 0;
 
@@ -60,7 +60,6 @@ public class PlayerPresenter {
 
         posX = targetCol;
         posY = targetRow;
-        return true;
     }
 
     public void updatePosition() {

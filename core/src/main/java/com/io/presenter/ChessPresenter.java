@@ -22,16 +22,16 @@ public class ChessPresenter {
     private final SoundManager sm;
     private final CoordinatesManager cm;
     private final TextureManager tm;
-    private final GamePresenter gp;
+    private final GamePresenter gamePresenter;
     private int selectedMove = -1;
 
 
-    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gp) {
+    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gamePresenter) {
         chessBoard = new ChessTileView[numberOfMoves];
         this.sm = sm;
         this.cm = cm;
         this.tm = tm;
-        this.gp = gp;
+        this.gamePresenter = gamePresenter;
     }
 
 
@@ -39,7 +39,7 @@ public class ChessPresenter {
         if (isMouseInChessBoard(mousePosition)) {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
 
-                gp.choseMove(getActualTile(mousePosition));
+                gamePresenter.choseMove(getActualTile(mousePosition));
                 sm.playSelectSound();
             }
         }
@@ -81,19 +81,6 @@ public class ChessPresenter {
         return mouseX >= chessBoardX && mouseY >= chessBoardY && mouseX <= chessBoardX + tileSize * numberOfMoves && mouseY <= chessBoardY + 2 * tileSize;
     }
 
-    private void changeChessPiece(Vector2 mousePosition) {
-        for (int i = 0; i < numberOfMoves; i++) {
-            if (chessBoard[i].contains(mousePosition)) {
-                for (int j = 0; j < numberOfMoves; j++) {
-                    chessBoard[j].unselect();
-                }
-                chessBoard[i].select();
-                sm.playSelectSound();
-                break;
-            }
-        }
-    }
-
     public void selectMove(int i) {
         if (i == selectedMove) return;
         selectedMove = i;
@@ -106,8 +93,8 @@ public class ChessPresenter {
     }
 
     public void render(SpriteBatch batch) {
-        for (int number = 0; number < numberOfMoves; number++) {
-            chessBoard[number].draw(batch);
+        for (ChessTileView chessTileView : chessBoard) {
+            chessTileView.draw(batch);
         }
     }
 }
