@@ -14,7 +14,6 @@ public class TextureManager {
     private final Texture normalTile;
     private final Texture markedCover;
     private final Texture availableCover;
-    private final Texture player;
     private final Texture monkey;
     private final Map<MoveType, Texture> chess;
     private final Map<MoveType, Texture> selectedChess;
@@ -22,6 +21,7 @@ public class TextureManager {
     private final Texture heart;
     private final Texture mana;
     private final List<Texture> tourButtons;
+    private final List<Texture> player;
     private final Texture enemyHealth;
 
     public TextureManager() {
@@ -32,7 +32,10 @@ public class TextureManager {
         markedCover = new Texture("textures/tiles/marked_cover.png");
         availableCover = new Texture("textures/tiles/available_cover.png");
 
-        player = new Texture("textures/characters/koala.png");
+        player = new ArrayList<>();
+        player.add(new Texture("textures/characters/koala_0.png"));
+        player.add(new Texture("textures/characters/koala_1.png"));
+        player.add(new Texture("textures/characters/koala_2.png"));
         monkey = new Texture("textures/characters/minix.png");
 
         chess.put(KING, new Texture("textures/figures/king.png"));
@@ -62,8 +65,8 @@ public class TextureManager {
     }
 
 
-    public Texture getPlayer() {
-        return player;
+    public Texture getPlayer(int stateNumber) {
+        return player.get(stateNumber);
     }
 
     public Texture getEnemy() {

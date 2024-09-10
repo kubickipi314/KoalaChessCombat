@@ -14,7 +14,9 @@ public class PlayerPresenter {
     private int posY;
 
     private boolean isActive;
-    private float elapsedTime = 0;
+    private float movementTime = 0;
+    private float stateTime = 0;
+    private int stateNumber = 0;
     private Vector2 startPosition;
     private Vector2 targetPosition;
     private final SoundManager sm;
@@ -42,12 +44,18 @@ public class PlayerPresenter {
         playerView = new PlayerView(tm, position, tileSize);
     }
 
-    public void startMoveAnimation(int targetCol, int targetRow) {
+    public void update(int col, int row) {
+        if (col != posX || row != posY) startMoveAnimation(row, col);
+        updateState();
+    }
+
+    public void startMoveAnimation(int targetRow, int targetCol) {
         if (targetCol == posX && targetRow == posY) return;
         isActive = true;
-        elapsedTime = 0;
+        movementTime = 0;
 
         sm.playMoveSound();
+        playerView.setTexture(2);
 
         float startX = boardX + posX * tileSize;
         float startY = boardY + posY * tileSize;
@@ -63,19 +71,38 @@ public class PlayerPresenter {
     }
 
     public void updatePosition() {
-        elapsedTime += Gdx.graphics.getDeltaTime();
+        movementTime += Gdx.graphics.getDeltaTime();
         float animationDuration = 0.5f;
-        float progress = Math.min(1.0f, elapsedTime / animationDuration);
+        float progress = Math.min(1.0f, movementTime / animationDuration);
 
         float currentX = startPosition.x + (targetPosition.x - startPosition.x) * progress;
         float currentY = startPosition.y + (targetPosition.y - startPosition.y) * progress;
 
         Vector2 currentPosition = new Vector2(currentX, currentY);
 
-        playerView.changePosition(currentPosition);
+        playerView.setPosition(currentPosition);
 
         if (progress >= 1.0f) {
             isActive = false;
+            playerView.setTexture(stateNumber);
+        }
+    }
+
+    private void updateState(){
+        stateTime += Gdx.graphics.getDeltaTime();
+        if (stateNumber == 0) {
+            if (stateTime >= 3.0f) {
+                stateNumber = 1;
+                playerView.setTexture(stateNumber);
+                stateTime = 0f;
+            }
+        }
+        else {
+            if (stateTime >= 0.3f) {
+                stateNumber = 0;
+                playerView.setTexture(stateNumber);
+                stateTime = 0f;
+            }
         }
     }
 

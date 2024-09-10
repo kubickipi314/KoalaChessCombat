@@ -1,6 +1,8 @@
+textures/characters/koala_0.png
 textures/characters/monkey.png
-textures/characters/koala.png
+textures/characters/koala_1.png
 textures/characters/minix.png
+textures/characters/koala_2.png
 textures/figures/queen.png
 textures/figures/bishop.png
 textures/figures/rock.png

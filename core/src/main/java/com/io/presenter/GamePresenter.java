@@ -57,7 +57,10 @@ public class GamePresenter {
             // temporary solution presenter might need more information
 
             Player playerModel = gs.getPlayer();
-            player.startMoveAnimation(playerModel.getPosition().x(), playerModel.getPosition().y());
+            int playerX = playerModel.getPosition().x();
+            int playerY = playerModel.getPosition().y();
+            player.update(playerX,playerY);
+
             if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != gs.getChosenMove()) {
                 boardPresenter.setAvailableTiles(playerModel.getMove(gs.getChosenMove()).getAccessibleCells(playerModel.getPosition(), gs.getBoard()));
                 lastBoardPosition = playerModel.getPosition();
