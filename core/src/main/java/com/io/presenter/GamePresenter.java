@@ -1,7 +1,6 @@
 package com.io.presenter;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.CONST;
@@ -11,7 +10,6 @@ import com.io.core.character.Player;
 import com.io.service.GameService;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
-import com.io.view.bars_buttons.TourButton;
 
 public class GamePresenter {
     private final SpriteBatch batch;
@@ -38,8 +36,7 @@ public class GamePresenter {
         SoundManager sm = new SoundManager();
         this.player = new PlayerPresenter(tm, sm, cm, startingPosition);
 
-        this.barsPresenter = new BarsPresenter(tm, sm, cm);
-        //this.enemy = new EnemyPresenter(tm, sm, cm);
+        this.barsPresenter = new BarsPresenter(tm, cm);
 
         this.boardPresenter = new BoardPresenter(tm, cm, this);
         this.chessPresenter = new ChessPresenter(tm, sm, cm, this);
@@ -88,10 +85,8 @@ public class GamePresenter {
         boardPresenter.render(batch);
 
         player.render(batch);
-        //enemy.render(batch);
 
         chessPresenter.render(batch);
-
         barsPresenter.render(batch);
         buttonsPresenter.render(batch);
         batch.end();

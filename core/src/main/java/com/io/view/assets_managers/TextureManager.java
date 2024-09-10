@@ -102,10 +102,9 @@ public class TextureManager {
         return mana;
     }
 
-    public List<Texture> getTourButton() {
+    public List<Texture> getTourButtons() {
         return tourButtons;
     }
-
 
     public Texture getEnemyHealth() {
         return enemyHealth;

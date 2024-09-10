@@ -11,10 +11,10 @@ import java.util.List;
 public class TourButton {
     private final Sprite button;
     private final List<Texture> textures;
-    private final int buttonState = 0;
+
     public TourButton(TextureManager tm, Vector2 position, float buttonWidth) {
-        textures = tm.getTourButton();
-        button = new Sprite(textures.get(buttonState));
+        textures = tm.getTourButtons();
+        button = new Sprite(textures.get(0));
         button.setPosition(position.x, position.y);
         button.setSize(buttonWidth, buttonWidth * 1.25f);
     }
@@ -28,10 +28,8 @@ public class TourButton {
         float mouseY = mousePosition.y;
         return button.getBoundingRectangle().contains(mouseX, mouseY);
     }
-    public void unmark() {
-        button.setTexture(textures.get(0));
-    }
-    public void mark() {
-        button.setTexture(textures.get(1));
+
+    public void setTexture(int buttonState) {
+        button.setTexture(textures.get(buttonState));
     }
 }
