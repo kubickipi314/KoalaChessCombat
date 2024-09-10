@@ -1,7 +1,6 @@
 package com.io.presenter;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.CONST;
@@ -11,14 +10,13 @@ import com.io.core.character.Player;
 import com.io.service.GameService;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
-import com.io.view.bars_buttons.TourButton;
 
 public class GamePresenter {
     private final SpriteBatch batch;
     private final BoardPresenter boardPresenter;
     private final ChessPresenter chessPresenter;
     private final BarsPresenter barsPresenter;
-    private final TourButton tourButton;
+    private final ButtonsPresenter buttonsPresenter;
     private final PlayerPresenter player;
     protected final float windowHeight;
 
@@ -38,50 +36,55 @@ public class GamePresenter {
         SoundManager sm = new SoundManager();
         this.player = new PlayerPresenter(tm, sm, cm, startingPosition);
 
-        this.barsPresenter = new BarsPresenter(tm, sm, cm);
-        //this.enemy = new EnemyPresenter(tm, sm, cm);
+        this.barsPresenter = new BarsPresenter(tm, cm);
 
         this.boardPresenter = new BoardPresenter(tm, cm, this);
         this.chessPresenter = new ChessPresenter(tm, sm, cm, this);
-        this.tourButton = barsPresenter.getTourButton();
+        this.buttonsPresenter = new ButtonsPresenter(tm, sm, cm, this);
 
         windowHeight = Gdx.graphics.getHeight();
     }
 
     public void update() {
         boolean active = false;
-        if (player.isActive()) {
+        if (player.isMoving()) {
             player.updatePosition();
             active = true;
         }
-
         if (!active) {
+            updateFromModel();
 
-            // temporary solution presenter might need more information
-
-            Player playerModel = gs.getPlayer();
-            player.startMoveAnimation(playerModel.getPosition().x(), playerModel.getPosition().y());
-            if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != gs.getChosenMove()) {
-                boardPresenter.setAvailableTiles(playerModel.getMove(gs.getChosenMove()).getAccessibleCells(playerModel.getPosition(), gs.getBoard()));
-                lastBoardPosition = playerModel.getPosition();
-                lastChosenMove = gs.getChosenMove();
-            }
-            barsPresenter.setMana(playerModel.getCurrentMana());
-            barsPresenter.setHealth(playerModel.getCurrentHealth());
-            chessPresenter.setMoves(playerModel.getMoves());
-            chessPresenter.selectMove(gs.getChosenMove());
-
-
-            Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
-            float mouseX = mouseWorldCoords.x;
-            float mouseY = (windowHeight - mouseWorldCoords.y);
-            Vector2 mousePosition = new Vector2(mouseX, mouseY);
-
+            Vector2 mousePosition = getMousePosition();
             boardPresenter.handleInput(mousePosition);
             chessPresenter.handleInput(mousePosition);
-
-            handleTourButton(mousePosition);
+            buttonsPresenter.handleInput(mousePosition);
         }
+    }
+
+    private void updateFromModel() {
+        // temporary solution presenter might need more information
+
+        Player playerModel = gs.getPlayer();
+        int playerX = playerModel.getPosition().x();
+        int playerY = playerModel.getPosition().y();
+        player.update(playerX, playerY);
+
+        if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != gs.getChosenMove()) {
+            boardPresenter.setAvailableTiles(playerModel.getMove(gs.getChosenMove()).getAccessibleCells(playerModel.getPosition(), gs.getBoard()));
+            lastBoardPosition = playerModel.getPosition();
+            lastChosenMove = gs.getChosenMove();
+        }
+        barsPresenter.setMana(playerModel.getCurrentMana());
+        barsPresenter.setHealth(playerModel.getCurrentHealth());
+        chessPresenter.setMoves(playerModel.getMoves());
+        chessPresenter.selectMove(gs.getChosenMove());
+    }
+
+    private Vector2 getMousePosition() {
+        Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+        float mouseX = mouseWorldCoords.x;
+        float mouseY = (windowHeight - mouseWorldCoords.y);
+        return new Vector2(mouseX, mouseY);
     }
 
     public void render() {
@@ -89,12 +92,10 @@ public class GamePresenter {
         boardPresenter.render(batch);
 
         player.render(batch);
-        //enemy.render(batch);
 
         chessPresenter.render(batch);
-
         barsPresenter.render(batch);
-        tourButton.draw(batch);
+        buttonsPresenter.render(batch);
         batch.end();
     }
 
@@ -102,15 +103,6 @@ public class GamePresenter {
         gs.setMove(chosenMove);
     }
 
-    private void handleTourButton(Vector2 mousePosition) {
-        if (tourButton.contains(mousePosition)) {
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                gs.increaseMana(CONST.DEFAULT_INCREASE_AMOUNT);
-                barsPresenter.playSwordSound();
-                //enemy.move();
-            }
-        }
-    }
 
     public void movePlayer(BoardPosition boardPosition) {
         gs.movePlayer(boardPosition);
@@ -120,5 +112,9 @@ public class GamePresenter {
     }
 
     public void startTurn() {
+    }
+
+    public void increaseMana() {
+        gs.increaseMana(CONST.DEFAULT_INCREASE_AMOUNT);
     }
 }

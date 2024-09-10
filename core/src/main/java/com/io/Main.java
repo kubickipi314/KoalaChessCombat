@@ -15,7 +15,7 @@ public class Main extends Game {
     public void create() {
         TurnService ts = new TurnService();
         GameService gs = new GameService(ts);
-        GamePresenter gp = new GamePresenter(gs);
-        setScreen(new GameScreen(gp));
+        GamePresenter gamePresenter = new GamePresenter(gs);
+        setScreen(new GameScreen(gamePresenter));
     }
 }

@@ -9,6 +9,8 @@ public class ChessTileView {
     private final Texture normalTexture;
     private final Texture selectedTexture;
     private final Sprite figureSprite;
+    private final Vector2 normalPosition;
+    private final Vector2 markedPosition;
 
     public ChessTileView(Texture normal, Texture selected, Vector2 position, float size) {
         figureSprite = new Sprite(normal);
@@ -17,6 +19,9 @@ public class ChessTileView {
 
         this.normalTexture = normal;
         this.selectedTexture = selected;
+
+        this.normalPosition = new Vector2(position.x, position.y);
+        this.markedPosition = new Vector2(position.x, position.y + size / 8);
     }
 
     public void select() {
@@ -33,5 +38,13 @@ public class ChessTileView {
 
     public boolean contains(Vector2 mousePosition) {
         return figureSprite.getBoundingRectangle().contains(mousePosition.x, mousePosition.y);
+    }
+
+    public void unmark() {
+        figureSprite.setPosition(normalPosition.x, normalPosition.y);
+    }
+
+    public void mark() {
+        figureSprite.setPosition(markedPosition.x, markedPosition.y);
     }
 }

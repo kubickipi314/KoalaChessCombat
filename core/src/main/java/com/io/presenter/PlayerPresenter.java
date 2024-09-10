@@ -13,8 +13,10 @@ public class PlayerPresenter {
     private int posX;
     private int posY;
 
-    private boolean isActive;
-    private float elapsedTime = 0;
+    private boolean isMoving;
+    private float movementTime = 0;
+    private float stateTime = 0;
+    private int stateNumber = 0;
     private Vector2 startPosition;
     private Vector2 targetPosition;
     private final SoundManager sm;
@@ -34,7 +36,7 @@ public class PlayerPresenter {
 
         posX = start.x();
         posY = start.y();
-        isActive = false;
+        isMoving = false;
 
         float x = boardX + posX * tileSize;
         float y = boardY + posY * tileSize;
@@ -42,12 +44,18 @@ public class PlayerPresenter {
         playerView = new PlayerView(tm, position, tileSize);
     }
 
-    public void startMoveAnimation(int targetCol, int targetRow) {
+    public void update(int col, int row) {
+        if (col != posX || row != posY) startMoveAnimation(row, col);
+        updateState();
+    }
+
+    public void startMoveAnimation(int targetRow, int targetCol) {
         if (targetCol == posX && targetRow == posY) return;
-        isActive = true;
-        elapsedTime = 0;
+        isMoving = true;
+        movementTime = 0;
 
         sm.playMoveSound();
+        playerView.setTexture(2);
 
         float startX = boardX + posX * tileSize;
         float startY = boardY + posY * tileSize;
@@ -63,19 +71,37 @@ public class PlayerPresenter {
     }
 
     public void updatePosition() {
-        elapsedTime += Gdx.graphics.getDeltaTime();
+        movementTime += Gdx.graphics.getDeltaTime();
         float animationDuration = 0.5f;
-        float progress = Math.min(1.0f, elapsedTime / animationDuration);
+        float progress = Math.min(1.0f, movementTime / animationDuration);
 
         float currentX = startPosition.x + (targetPosition.x - startPosition.x) * progress;
         float currentY = startPosition.y + (targetPosition.y - startPosition.y) * progress;
 
         Vector2 currentPosition = new Vector2(currentX, currentY);
 
-        playerView.changePosition(currentPosition);
+        playerView.setPosition(currentPosition);
 
         if (progress >= 1.0f) {
-            isActive = false;
+            isMoving = false;
+            playerView.setTexture(stateNumber);
+        }
+    }
+
+    private void updateState() {
+        stateTime += Gdx.graphics.getDeltaTime();
+        if (stateNumber == 0) {
+            if (stateTime >= 3.0f) {
+                stateNumber = 1;
+                playerView.setTexture(stateNumber);
+                stateTime = 0f;
+            }
+        } else {
+            if (stateTime >= 0.3f) {
+                stateNumber = 0;
+                playerView.setTexture(stateNumber);
+                stateTime = 0f;
+            }
         }
     }
 
@@ -83,7 +109,7 @@ public class PlayerPresenter {
         playerView.draw(batch);
     }
 
-    public boolean isActive() {
-        return isActive;
+    public boolean isMoving() {
+        return isMoving;
     }
 }

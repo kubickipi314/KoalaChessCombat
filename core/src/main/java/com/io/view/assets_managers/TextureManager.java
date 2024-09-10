@@ -3,7 +3,9 @@ package com.io.view.assets_managers;
 import com.badlogic.gdx.graphics.Texture;
 import com.io.core.moves.MoveType;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.io.core.moves.MoveType.*;
@@ -12,14 +14,14 @@ public class TextureManager {
     private final Texture normalTile;
     private final Texture markedCover;
     private final Texture availableCover;
-    private final Texture player;
     private final Texture monkey;
     private final Map<MoveType, Texture> chess;
     private final Map<MoveType, Texture> selectedChess;
     private final Texture barBackground;
     private final Texture heart;
     private final Texture mana;
-    private final Texture tourButton;
+    private final List<Texture> tourButtons;
+    private final List<Texture> player;
     private final Texture enemyHealth;
 
     public TextureManager() {
@@ -30,7 +32,10 @@ public class TextureManager {
         markedCover = new Texture("textures/tiles/marked_cover.png");
         availableCover = new Texture("textures/tiles/available_cover.png");
 
-        player = new Texture("textures/characters/koala.png");
+        player = new ArrayList<>();
+        player.add(new Texture("textures/characters/koala_0.png"));
+        player.add(new Texture("textures/characters/koala_1.png"));
+        player.add(new Texture("textures/characters/koala_2.png"));
         monkey = new Texture("textures/characters/minix.png");
 
         chess.put(KING, new Texture("textures/figures/king.png"));
@@ -48,15 +53,20 @@ public class TextureManager {
         barBackground = new Texture("textures/bars/bar_background.png");
         heart = new Texture("textures/bars/heart.png");
         mana = new Texture("textures/bars/mana.png");
-        tourButton = new Texture("textures/bars/next_tour_button.png");
+
+        tourButtons = new ArrayList<>();
+        tourButtons.add(new Texture("textures/buttons/tour_button_0.png"));
+        tourButtons.add(new Texture("textures/buttons/tour_button_1.png"));
+        tourButtons.add(new Texture("textures/buttons/tour_button_2.png"));
+        tourButtons.add(new Texture("textures/buttons/tour_button_3.png"));
 
         enemyHealth = new Texture("textures/bars/enemy_health.png");
 
     }
 
 
-    public Texture getPlayer() {
-        return player;
+    public Texture getPlayer(int stateNumber) {
+        return player.get(stateNumber);
     }
 
     public Texture getEnemy() {
@@ -95,8 +105,8 @@ public class TextureManager {
         return mana;
     }
 
-    public Texture getTourButton() {
-        return tourButton;
+    public List<Texture> getTourButtons() {
+        return tourButtons;
     }
 
     public Texture getEnemyHealth() {
