@@ -3,7 +3,9 @@ package com.io.view.assets_managers;
 import com.badlogic.gdx.graphics.Texture;
 import com.io.core.moves.MoveType;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.io.core.moves.MoveType.*;
@@ -19,7 +21,7 @@ public class TextureManager {
     private final Texture barBackground;
     private final Texture heart;
     private final Texture mana;
-    private final Texture tourButton;
+    private final List<Texture> tourButtons;
     private final Texture enemyHealth;
 
     public TextureManager() {
@@ -48,7 +50,12 @@ public class TextureManager {
         barBackground = new Texture("textures/bars/bar_background.png");
         heart = new Texture("textures/bars/heart.png");
         mana = new Texture("textures/bars/mana.png");
-        tourButton = new Texture("textures/bars/next_tour_button.png");
+
+        tourButtons = new ArrayList<>();
+        tourButtons.add(new Texture("textures/buttons/tour_button_0.png"));
+        tourButtons.add(new Texture("textures/buttons/tour_button_1.png"));
+        tourButtons.add(new Texture("textures/buttons/tour_button_2.png"));
+        tourButtons.add(new Texture("textures/buttons/tour_button_3.png"));
 
         enemyHealth = new Texture("textures/bars/enemy_health.png");
 
@@ -95,9 +102,10 @@ public class TextureManager {
         return mana;
     }
 
-    public Texture getTourButton() {
-        return tourButton;
+    public List<Texture> getTourButton() {
+        return tourButtons;
     }
+
 
     public Texture getEnemyHealth() {
         return enemyHealth;

@@ -14,6 +14,9 @@ import java.util.List;
 
 public class ChessPresenter {
     private ChessTileView[] chessBoard;
+
+    private int actualTile;
+
     private int numberOfMoves = 0;
     private float chessBoardX;
     private float chessBoardY;
@@ -36,19 +39,23 @@ public class ChessPresenter {
 
 
     public void handleInput(Vector2 mousePosition) {
-        if (isMouseInChessBoard(mousePosition)) {
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+        chessBoard[actualTile].unmark();
 
-                gamePresenter.choseMove(getActualTile(mousePosition));
+        if (isMouseInChessBoard(mousePosition)) {
+            getActualTile(mousePosition);
+            chessBoard[actualTile].mark();
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                gamePresenter.choseMove(actualTile);
                 sm.playSelectSound();
             }
         }
     }
 
-    private int getActualTile(Vector2 mousePosition) {
+    private void getActualTile(Vector2 mousePosition) {
         for (int tile = 0; tile < numberOfMoves; tile++) {
             if (chessBoard[tile].contains(mousePosition)) {
-                return tile;
+                actualTile = tile;
+                return;
             }
         }
         throw new Error("mousePosition outside any tile but inside chessBoard");

@@ -12,13 +12,16 @@ textures/tiles/available_cover.png
 textures/bars/bar_background.png
 textures/bars/heart.png
 textures/bars/enemy_health.png
-textures/bars/next_tour_button.png
 textures/bars/mana.png
 textures/selected_figures/queen.png
 textures/selected_figures/bishop.png
 textures/selected_figures/rock.png
 textures/selected_figures/king.png
 textures/selected_figures/knight.png
+textures/buttons/tour_button_1.png
+textures/buttons/tour_button_0.png
+textures/buttons/tour_button_3.png
+textures/buttons/tour_button_2.png
 .gitkeep
 ui/font-window.fnt
 ui/font-list.fnt

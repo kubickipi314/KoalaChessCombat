@@ -50,8 +50,6 @@ public class BoardPresenter {
         }
     }
 
-
-
     public void handleInput(Vector2 mousePosition) {
 
         board[actualRow][actualCol].setMarked(false);

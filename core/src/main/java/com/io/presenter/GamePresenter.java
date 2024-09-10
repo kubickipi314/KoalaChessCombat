@@ -18,7 +18,7 @@ public class GamePresenter {
     private final BoardPresenter boardPresenter;
     private final ChessPresenter chessPresenter;
     private final BarsPresenter barsPresenter;
-    private final TourButton tourButton;
+    private final ButtonsPresenter buttonsPresenter;
     private final PlayerPresenter player;
     protected final float windowHeight;
 
@@ -43,7 +43,7 @@ public class GamePresenter {
 
         this.boardPresenter = new BoardPresenter(tm, cm, this);
         this.chessPresenter = new ChessPresenter(tm, sm, cm, this);
-        this.tourButton = barsPresenter.getTourButton();
+        this.buttonsPresenter = new ButtonsPresenter(tm, sm, cm, this);
 
         windowHeight = Gdx.graphics.getHeight();
     }
@@ -79,8 +79,7 @@ public class GamePresenter {
 
             boardPresenter.handleInput(mousePosition);
             chessPresenter.handleInput(mousePosition);
-
-            handleTourButton(mousePosition);
+            buttonsPresenter.handleInput(mousePosition);
         }
     }
 
@@ -94,7 +93,7 @@ public class GamePresenter {
         chessPresenter.render(batch);
 
         barsPresenter.render(batch);
-        tourButton.draw(batch);
+        buttonsPresenter.render(batch);
         batch.end();
     }
 
@@ -102,15 +101,6 @@ public class GamePresenter {
         gs.setMove(chosenMove);
     }
 
-    private void handleTourButton(Vector2 mousePosition) {
-        if (tourButton.contains(mousePosition)) {
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                gs.increaseMana(CONST.DEFAULT_INCREASE_AMOUNT);
-                barsPresenter.playSwordSound();
-                //enemy.move();
-            }
-        }
-    }
 
     public void movePlayer(BoardPosition boardPosition) {
         gs.movePlayer(boardPosition);
@@ -120,5 +110,9 @@ public class GamePresenter {
     }
 
     public void startTurn() {
+    }
+
+    public void increaseMana() {
+        gs.increaseMana(CONST.DEFAULT_INCREASE_AMOUNT);
     }
 }
