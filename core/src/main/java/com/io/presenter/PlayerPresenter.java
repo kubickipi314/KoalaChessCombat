@@ -13,7 +13,7 @@ public class PlayerPresenter {
     private int posX;
     private int posY;
 
-    private boolean isActive;
+    private boolean isMoving;
     private float movementTime = 0;
     private float stateTime = 0;
     private int stateNumber = 0;
@@ -36,7 +36,7 @@ public class PlayerPresenter {
 
         posX = start.x();
         posY = start.y();
-        isActive = false;
+        isMoving = false;
 
         float x = boardX + posX * tileSize;
         float y = boardY + posY * tileSize;
@@ -51,7 +51,7 @@ public class PlayerPresenter {
 
     public void startMoveAnimation(int targetRow, int targetCol) {
         if (targetCol == posX && targetRow == posY) return;
-        isActive = true;
+        isMoving = true;
         movementTime = 0;
 
         sm.playMoveSound();
@@ -83,12 +83,12 @@ public class PlayerPresenter {
         playerView.setPosition(currentPosition);
 
         if (progress >= 1.0f) {
-            isActive = false;
+            isMoving = false;
             playerView.setTexture(stateNumber);
         }
     }
 
-    private void updateState(){
+    private void updateState() {
         stateTime += Gdx.graphics.getDeltaTime();
         if (stateNumber == 0) {
             if (stateTime >= 3.0f) {
@@ -96,8 +96,7 @@ public class PlayerPresenter {
                 playerView.setTexture(stateNumber);
                 stateTime = 0f;
             }
-        }
-        else {
+        } else {
             if (stateTime >= 0.3f) {
                 stateNumber = 0;
                 playerView.setTexture(stateNumber);
@@ -110,7 +109,7 @@ public class PlayerPresenter {
         playerView.draw(batch);
     }
 
-    public boolean isActive() {
-        return isActive;
+    public boolean isMoving() {
+        return isMoving;
     }
 }

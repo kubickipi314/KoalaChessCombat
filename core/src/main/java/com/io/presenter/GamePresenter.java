@@ -47,40 +47,44 @@ public class GamePresenter {
 
     public void update() {
         boolean active = false;
-        if (player.isActive()) {
+        if (player.isMoving()) {
             player.updatePosition();
             active = true;
         }
-
         if (!active) {
+            updateFromModel();
 
-            // temporary solution presenter might need more information
-
-            Player playerModel = gs.getPlayer();
-            int playerX = playerModel.getPosition().x();
-            int playerY = playerModel.getPosition().y();
-            player.update(playerX,playerY);
-
-            if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != gs.getChosenMove()) {
-                boardPresenter.setAvailableTiles(playerModel.getMove(gs.getChosenMove()).getAccessibleCells(playerModel.getPosition(), gs.getBoard()));
-                lastBoardPosition = playerModel.getPosition();
-                lastChosenMove = gs.getChosenMove();
-            }
-            barsPresenter.setMana(playerModel.getCurrentMana());
-            barsPresenter.setHealth(playerModel.getCurrentHealth());
-            chessPresenter.setMoves(playerModel.getMoves());
-            chessPresenter.selectMove(gs.getChosenMove());
-
-
-            Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
-            float mouseX = mouseWorldCoords.x;
-            float mouseY = (windowHeight - mouseWorldCoords.y);
-            Vector2 mousePosition = new Vector2(mouseX, mouseY);
-
+            Vector2 mousePosition = getMousePosition();
             boardPresenter.handleInput(mousePosition);
             chessPresenter.handleInput(mousePosition);
             buttonsPresenter.handleInput(mousePosition);
         }
+    }
+
+    private void updateFromModel() {
+        // temporary solution presenter might need more information
+
+        Player playerModel = gs.getPlayer();
+        int playerX = playerModel.getPosition().x();
+        int playerY = playerModel.getPosition().y();
+        player.update(playerX, playerY);
+
+        if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != gs.getChosenMove()) {
+            boardPresenter.setAvailableTiles(playerModel.getMove(gs.getChosenMove()).getAccessibleCells(playerModel.getPosition(), gs.getBoard()));
+            lastBoardPosition = playerModel.getPosition();
+            lastChosenMove = gs.getChosenMove();
+        }
+        barsPresenter.setMana(playerModel.getCurrentMana());
+        barsPresenter.setHealth(playerModel.getCurrentHealth());
+        chessPresenter.setMoves(playerModel.getMoves());
+        chessPresenter.selectMove(gs.getChosenMove());
+    }
+
+    private Vector2 getMousePosition() {
+        Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+        float mouseX = mouseWorldCoords.x;
+        float mouseY = (windowHeight - mouseWorldCoords.y);
+        return new Vector2(mouseX, mouseY);
     }
 
     public void render() {
