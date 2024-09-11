@@ -20,7 +20,7 @@ public class CoordinatesManager {
         this.rows = rows;
         this.cols = cols;
 
-        tileSize = windowHeight / (rows + 4);
+        tileSize = Math.min(windowHeight / (rows + 4), windowWidth / Math.max((cols + 2), 7));
         float boardWidth = tileSize * cols;
         float boardHeight = tileSize * rows;
 
