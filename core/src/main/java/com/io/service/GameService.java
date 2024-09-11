@@ -12,12 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class GameService {
-
     private GamePresenter gamePresenter;
     private final TurnService ts;
-
-    private int roomWidth = CONST.DEFAULT_ROOM_WIDTH;
-    private int roomHeight = CONST.DEFAULT_ROOM_HEIGHT;
     private final Player player;
     private int chosenMove = 0;
 
@@ -26,10 +22,10 @@ public class GameService {
         BoardPosition playerStartingPosition = new BoardPosition(1, 0);
         var moves = new ArrayList<Move>();
         moves.add(new KingMove(1, 1));
-        moves.add(new KnightMove(1, 1));
-        moves.add(new RookMove(1, 1));
-        moves.add(new BishopMove(1, 1));
-        moves.add(new QueenMove(1, 1));
+        moves.add(new KnightMove(2, 2));
+        moves.add(new RookMove(3, 4));
+        moves.add(new BishopMove(2, 1));
+        moves.add(new QueenMove(5, 5));
         this.player = new Player(ts, gamePresenter, playerStartingPosition, moves);
         ts.initialize(this, Collections.singletonList(this.player));
     }
@@ -59,11 +55,11 @@ public class GameService {
     }
 
     public int getRoomWidth() {
-        return roomWidth;
+        return CONST.DEFAULT_ROOM_WIDTH;
     }
 
     public int getRoomHeight() {
-        return roomHeight;
+        return CONST.DEFAULT_ROOM_HEIGHT;
     }
 
     public Board getBoard() {

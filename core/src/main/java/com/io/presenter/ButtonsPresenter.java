@@ -62,9 +62,9 @@ public class ButtonsPresenter {
         float animationDuration = 0.5f;
         float progress = Math.min(1.0f, elapsedTime / animationDuration);
 
-        if (progress > 0.75f) tourButton.setTexture(1);
-        else if (progress > 0.5f) tourButton.setTexture(2);
-        else if (progress > 0.25f) tourButton.setTexture(3);
+        if (progress > 0.8f) tourButton.setTexture(1);
+        else if (progress > 0.6f) tourButton.setTexture(2);
+        else if (progress > 0.2f) tourButton.setTexture(3);
         else tourButton.setTexture(2);
 
         if (progress >= 1.0f) {

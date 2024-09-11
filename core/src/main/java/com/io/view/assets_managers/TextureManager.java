@@ -22,6 +22,7 @@ public class TextureManager {
     private final Texture mana;
     private final List<Texture> tourButtons;
     private final List<Texture> player;
+    private final List<Texture> digits;
     private final Texture enemyHealth;
 
     public TextureManager() {
@@ -41,13 +42,13 @@ public class TextureManager {
         chess.put(KING, new Texture("textures/figures/king.png"));
         chess.put(BISHOP, new Texture("textures/figures/bishop.png"));
         chess.put(KNIGHT, new Texture("textures/figures/knight.png"));
-        chess.put(ROOK, new Texture("textures/figures/rock.png"));
+        chess.put(ROOK, new Texture("textures/figures/rook.png"));
         chess.put(QUEEN, new Texture("textures/figures/queen.png"));
 
         selectedChess.put(KING, new Texture("textures/selected_figures/king.png"));
         selectedChess.put(BISHOP, new Texture("textures/selected_figures/bishop.png"));
         selectedChess.put(KNIGHT, new Texture("textures/selected_figures/knight.png"));
-        selectedChess.put(ROOK, new Texture("textures/selected_figures/rock.png"));
+        selectedChess.put(ROOK, new Texture("textures/selected_figures/rook.png"));
         selectedChess.put(QUEEN, new Texture("textures/selected_figures/queen.png"));
 
         barBackground = new Texture("textures/bars/bar_background.png");
@@ -59,6 +60,18 @@ public class TextureManager {
         tourButtons.add(new Texture("textures/buttons/tour_button_1.png"));
         tourButtons.add(new Texture("textures/buttons/tour_button_2.png"));
         tourButtons.add(new Texture("textures/buttons/tour_button_3.png"));
+
+        digits = new ArrayList<>();
+        digits.add(new Texture("textures/digits/zero.png"));
+        digits.add(new Texture("textures/digits/one.png"));
+        digits.add(new Texture("textures/digits/two.png"));
+        digits.add(new Texture("textures/digits/three.png"));
+        digits.add(new Texture("textures/digits/four.png"));
+        digits.add(new Texture("textures/digits/five.png"));
+        digits.add(new Texture("textures/digits/six.png"));
+        digits.add(new Texture("textures/digits/seven.png"));
+        digits.add(new Texture("textures/digits/eight.png"));
+        digits.add(new Texture("textures/digits/nine.png"));
 
         enemyHealth = new Texture("textures/bars/enemy_health.png");
 
@@ -73,11 +86,11 @@ public class TextureManager {
         return monkey;
     }
 
-    public Texture getChessTexture(MoveType move) {
+    public Texture getChess(MoveType move) {
         return chess.get(move);
     }
 
-    public Texture getSelectedTexture(MoveType move) {
+    public Texture getSelectedChess(MoveType move) {
         return selectedChess.get(move);
     }
 
@@ -113,4 +126,7 @@ public class TextureManager {
         return enemyHealth;
     }
 
+    public Texture getDigit(int number) {
+        return digits.get(number);
+    }
 }
