@@ -31,7 +31,7 @@ public class ChessTileView {
         costSprite.setColor(blueColor);
 
         damageSprite = new Sprite(normal);
-        damageSprite.setPosition(position.x + size / 2, position.y);
+        damageSprite.setPosition(position.x + size * 0.45f, position.y);
         damageSprite.setSize(size, size);
         damageSprite.setColor(redColor);
 

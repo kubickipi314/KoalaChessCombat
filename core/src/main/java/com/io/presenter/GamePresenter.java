@@ -90,7 +90,6 @@ public class GamePresenter {
     public void render() {
         batch.begin();
         boardPresenter.render(batch);
-
         player.render(batch);
 
         chessPresenter.render(batch);
