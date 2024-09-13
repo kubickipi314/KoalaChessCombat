@@ -10,6 +10,7 @@ public class CoordinatesManager {
     private final float tileSize;
     private final float boardX;
     private final float boardY;
+    private final float barHeight;
 
     public CoordinatesManager(int rows, int cols) {
         windowWidth = Gdx.graphics.getWidth();
@@ -26,6 +27,8 @@ public class CoordinatesManager {
 
         boardX = (windowWidth - boardWidth) / 2;
         boardY = (windowHeight - boardHeight) / 2;
+
+        barHeight = tileSize * 9 / 16;
     }
 
     public void setChessNumber(int chessNumber) {
@@ -56,7 +59,19 @@ public class CoordinatesManager {
         return boardY - 2 * tileSize;
     }
 
+    public float getManaBarY() {
+        return boardY + (rows + 0.2f) * tileSize;
+    }
+
+    public float getHealthBarY() {
+        return boardY + (rows + 0.9f) * tileSize;
+    }
+
     public float getTileSize() {
         return tileSize;
+    }
+
+    public float getBarHeight() {
+        return barHeight;
     }
 }

@@ -27,7 +27,8 @@ public class GamePresenter {
 
 
     public GamePresenter(GameService gs) {
-        BoardPosition startingPosition = gs.getPlayer().getPosition();
+        Player playerModel = gs.getPlayer();
+        BoardPosition startingPosition = playerModel.getPosition();
 
         batch = new SpriteBatch();
         this.gs = gs;
@@ -42,6 +43,7 @@ public class GamePresenter {
         this.chessPresenter = new ChessPresenter(tm, sm, cm, this);
         this.buttonsPresenter = new ButtonsPresenter(tm, sm, cm, this);
 
+        chessPresenter.setMoves(playerModel.getMoves());
         windowHeight = Gdx.graphics.getHeight();
     }
 
@@ -76,7 +78,6 @@ public class GamePresenter {
         }
         barsPresenter.setMana(playerModel.getCurrentMana());
         barsPresenter.setHealth(playerModel.getCurrentHealth());
-        chessPresenter.setMoves(playerModel.getMoves());
         chessPresenter.selectMove(gs.getChosenMove());
     }
 

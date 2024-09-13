@@ -21,14 +21,10 @@ public class ButtonsPresenter {
         this.gamePresenter = gamePresenter;
         float tileSize = cm.getTileSize();
         float boardX = cm.getBoardX();
-        float boardY = cm.getBoardY();
-        float rows = cm.getRows();
         float cols = cm.getCols();
 
-        float manaBarY = boardY + (rows + 0.2f) * tileSize;
-
         float tourButtonX = boardX + (cols - 1) * tileSize;
-        Vector2 tourButtonPosition = new Vector2(tourButtonX, manaBarY);
+        Vector2 tourButtonPosition = new Vector2(tourButtonX, cm.getManaBarY());
         tourButton = new TourButton(tm, tourButtonPosition, tileSize);
 
         isActive = false;
