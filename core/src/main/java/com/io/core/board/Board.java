@@ -8,8 +8,8 @@ public class Board {
 
     public Board(int width, int height) {
         this.board = new Cell[height][width];
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 board[i][j] = new Cell(false);
             }
         }
@@ -56,6 +56,6 @@ public class Board {
     }
 
     public Cell getCell(BoardPosition position) {
-        return board[position.x()][position.y()];
+        return board[position.y()][position.x()];
     }
 }

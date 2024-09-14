@@ -21,14 +21,10 @@ public class ButtonsPresenter {
         this.gamePresenter = gamePresenter;
         float tileSize = cm.getTileSize();
         float boardX = cm.getBoardX();
-        float boardY = cm.getBoardY();
-        float rows = cm.getRows();
         float cols = cm.getCols();
 
-        float manaBarY = boardY + (rows + 0.2f) * tileSize;
-
         float tourButtonX = boardX + (cols - 1) * tileSize;
-        Vector2 tourButtonPosition = new Vector2(tourButtonX, manaBarY);
+        Vector2 tourButtonPosition = new Vector2(tourButtonX, cm.getManaBarY());
         tourButton = new TourButton(tm, tourButtonPosition, tileSize);
 
         isActive = false;
@@ -44,9 +40,9 @@ public class ButtonsPresenter {
             if (tourButton.contains(mousePosition)) {
                 tourButton.setTexture(1);
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    gamePresenter.increaseMana();
                     sm.playSwordSound();
                     startAnimation();
-                    gamePresenter.increaseMana();
                 }
             }
         }
@@ -62,9 +58,9 @@ public class ButtonsPresenter {
         float animationDuration = 0.5f;
         float progress = Math.min(1.0f, elapsedTime / animationDuration);
 
-        if (progress > 0.75f) tourButton.setTexture(1);
-        else if (progress > 0.5f) tourButton.setTexture(2);
-        else if (progress > 0.25f) tourButton.setTexture(3);
+        if (progress > 0.8f) tourButton.setTexture(1);
+        else if (progress > 0.6f) tourButton.setTexture(2);
+        else if (progress > 0.2f) tourButton.setTexture(3);
         else tourButton.setTexture(2);
 
         if (progress >= 1.0f) {
