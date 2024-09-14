@@ -22,7 +22,7 @@ public class GamePresenter {
 
     private final GameService gs;
 
-    BoardPosition lastBoardPosition = new BoardPosition(-1, -1);
+    BoardPosition lastBoardPosition;
     int lastChosenMove = -1;
 
 
@@ -42,6 +42,8 @@ public class GamePresenter {
         this.boardPresenter = new BoardPresenter(tm, cm, this);
         this.chessPresenter = new ChessPresenter(tm, sm, cm, this);
         this.buttonsPresenter = new ButtonsPresenter(tm, sm, cm, this);
+
+        lastBoardPosition = new BoardPosition(-1, -1);
 
         chessPresenter.setMoves(playerModel.getMoves());
         windowHeight = Gdx.graphics.getHeight();

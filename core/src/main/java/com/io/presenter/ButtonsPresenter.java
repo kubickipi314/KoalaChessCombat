@@ -40,9 +40,9 @@ public class ButtonsPresenter {
             if (tourButton.contains(mousePosition)) {
                 tourButton.setTexture(1);
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    gamePresenter.increaseMana();
                     sm.playSwordSound();
                     startAnimation();
-                    gamePresenter.increaseMana();
                 }
             }
         }

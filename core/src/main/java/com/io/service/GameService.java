@@ -14,6 +14,8 @@ import java.util.Collections;
 public class GameService {
     private GamePresenter gamePresenter;
     private final TurnService ts;
+    private int roomWidth = CONST.DEFAULT_ROOM_WIDTH;
+    private int roomHeight = CONST.DEFAULT_ROOM_WIDTH;
     private final Player player;
     private int chosenMove = 0;
 
@@ -55,11 +57,11 @@ public class GameService {
     }
 
     public int getRoomWidth() {
-        return CONST.DEFAULT_ROOM_WIDTH;
+        return roomWidth;
     }
 
     public int getRoomHeight() {
-        return CONST.DEFAULT_ROOM_HEIGHT;
+        return roomHeight;
     }
 
     public Board getBoard() {
