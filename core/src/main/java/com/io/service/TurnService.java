@@ -11,8 +11,8 @@ import java.util.Queue;
 public class TurnService {
     public GameService gs;
 
-    Queue<Character> turnQueue;
-    Board board;
+    private Queue<Character> turnQueue;
+    private Board board;
 
     public void init(GameService gs, List<Character> characters, Board board) {
         this.gs = gs;
@@ -31,18 +31,27 @@ public class TurnService {
     }
 
     public void endTurn() {
-        var currentCharacter = turnQueue.peek();
-        assert currentCharacter != null;
-        currentCharacter.changeMana(1);
+        if (turnQueue.isEmpty()) return;
 
-        turnQueue.add(turnQueue.poll());
+        var currentCharacter = turnQueue.poll();
+        currentCharacter.changeMana(1);
+        turnQueue.add(currentCharacter);
         nextTurn();
     }
 
     void nextTurn() {
-        var currentCharacter = turnQueue.peek();
-        assert currentCharacter != null;
+        if (turnQueue.isEmpty()) return;
 
-        currentCharacter.startTurn();
+        var currentCharacter = turnQueue.peek();
+        if (currentCharacter.isDead()) {
+            turnQueue.poll();
+            nextTurn();
+        } else {
+            currentCharacter.startTurn();
+        }
+    }
+
+    void stop() {
+        turnQueue = new LinkedList<>();
     }
 }

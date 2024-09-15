@@ -39,7 +39,9 @@ public class GameService {
 
         var characters = new ArrayList<>(List.of(
             player,
-            new MeleeEnemy(this, gp, new BoardPosition(3, 3))
+            new MeleeEnemy(this, gp, new BoardPosition(3, 2)),
+            new MeleeEnemy(this, gp, new BoardPosition(3, 3)),
+            new MeleeEnemy(this, gp, new BoardPosition(3, 4))
         ));
 
         board = new Board(roomWidth, roomHeight, characters);
@@ -53,6 +55,7 @@ public class GameService {
 
     void endGame(GameResult gameResult) {
         gp.endGame(gameResult);
+        ts.stop();
     }
 
     public Player getPlayer() {
@@ -86,13 +89,16 @@ public class GameService {
 
     public void endTurn() {
         ts.endTurn();
-
-        GameResult gameResult = checkEndGameCondition();
-        if (gameResult != GameResult.NONE) endGame(gameResult);
     }
 
     public boolean tryMakeMove(MoveDTO move) {
-        return ts.tryMakeMove(move);
+        boolean success = ts.tryMakeMove(move);
+
+        if (success) {
+            GameResult gameResult = checkEndGameCondition();
+            if (gameResult != GameResult.NONE) endGame(gameResult);
+        }
+        return success;
     }
 
 }

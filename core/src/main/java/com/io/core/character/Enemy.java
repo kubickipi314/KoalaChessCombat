@@ -20,7 +20,8 @@ public abstract class Enemy extends Character {
             if (moveDTO == null) break;
 
             if (!gs.tryMakeMove(moveDTO)) {
-                throw new Error("Enemy failed to make a valid move.");
+                System.err.println("Enemy failed to make a valid move\t" + moveDTO.boardPosition() + ' ' + moveDTO.character().getPosition());
+                break;
             }
         }
         gs.endTurn();

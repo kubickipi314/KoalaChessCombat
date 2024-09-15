@@ -6,26 +6,22 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.view.assets_managers.TextureManager;
 
-public class PlayerView {
-    private final Sprite sprite;
-    private final TextureManager tm;
-
+public class PlayerView extends CharacterView{
     public PlayerView(TextureManager tm, Vector2 position, float size) {
-        this.tm = tm;
-        sprite = new Sprite(tm.getPlayer(0));
-        sprite.setPosition(position.x, position.y);
-        sprite.setSize(size, size);
-    }
-
-    public void setPosition(Vector2 newPosition) {
-        sprite.setPosition(newPosition.x, newPosition.y);
+        super(tm, position, size, tm.getPlayer(0));
     }
 
     public void setTexture(int stateNumber) {
-        sprite.setTexture(tm.getPlayer(stateNumber));
+        characterSprite.setTexture(tm.getPlayer(stateNumber));
     }
 
-    public void draw(SpriteBatch batch) {
-        sprite.draw(batch);
+    @Override
+    public void setPosition(Vector2 newPosition) {
+        characterSprite.setPosition(newPosition.x, newPosition.y);
+    }
+
+    @Override
+    public  void draw(SpriteBatch batch) {
+        characterSprite.draw(batch);
     }
 }

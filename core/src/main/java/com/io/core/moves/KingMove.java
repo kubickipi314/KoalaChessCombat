@@ -3,6 +3,7 @@ package com.io.core.moves;
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
 import com.io.core.board.Cell;
+import com.io.core.character.Character;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,17 @@ public class KingMove implements Move {
     }
 
     @Override
-    public boolean isMoveValid(BoardPosition startPosition, BoardPosition endPosition, Board board) {
-        Cell cell = board.getCell(endPosition);
-        if (cell.isBlocked) return false;
+    public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
+        var startPosition = character.getPosition();
+        var cell = board.getCell(endPosition);
+        
+        if (cell.isBlocked)
+            return false;
+        if (cell.getCharacter() != null && cell.getCharacter().getTeam() == character.getTeam())
+            return false;
 
         if (abs(startPosition.x() - endPosition.x()) > 1 ||
-                abs(startPosition.y() - endPosition.y()) > 1)
+            abs(startPosition.y() - endPosition.y()) > 1)
             return false;
 
         return true;

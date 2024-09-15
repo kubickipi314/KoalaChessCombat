@@ -21,18 +21,21 @@ public class ChessPresenter {
 
     private int actualTile;
 
-    private int numberOfMoves = 0;
+    private int numberOfMoves;
     private float chessBoardX;
     private float chessBoardY;
     private float tileSize;
     private List<Move> moves;
 
-    private int selectedMove = 0;
+    private int selectedMove;
 
-    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm) {
+    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, List<Move> moves) {
         this.sm = sm;
         this.cm = cm;
         this.tm = tm;
+
+        setMoves(moves);
+        selectMove(0);
     }
 
     public void handleInput(Vector2 mousePosition) {
@@ -58,7 +61,7 @@ public class ChessPresenter {
         throw new Error("mousePosition outside any tile but inside chessBoard");
     }
 
-    public void setMoves(List<Move> moves) {
+    private void setMoves(List<Move> moves) {
         if (moves.equals(this.moves)) return;
 
         this.moves = moves;
@@ -96,7 +99,6 @@ public class ChessPresenter {
     }
 
     void selectMove(int i) {
-        if (i == selectedMove) return;
         selectedMove = i;
         for (int j = 0; j < numberOfMoves; j++) {
             chessBoard[j].unselect();

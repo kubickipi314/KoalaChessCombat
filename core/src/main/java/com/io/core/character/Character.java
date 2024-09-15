@@ -47,6 +47,10 @@ public abstract class Character {
         return currentHealth;
     }
 
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
     public void changeHealth(int value) {
         currentHealth = max(min(maxHealth, currentHealth + value), 0);
     }
@@ -61,5 +65,9 @@ public abstract class Character {
 
     public int getTeam() {
         return team;
+    }
+
+    public boolean isDead() {
+        return currentHealth <= 0;
     }
 }

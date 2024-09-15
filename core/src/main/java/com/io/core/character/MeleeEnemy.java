@@ -31,7 +31,7 @@ public class MeleeEnemy extends Enemy {
         BoardPosition playerPosition = playerTeamPosition.get(0);
 
         var move = new KingMove(1, 1);
-        if (move.isMoveValid(position, playerPosition, board)) {
+        if (move.isMoveValid(this, playerPosition, board)) {
             return new MoveDTO(move, playerPosition, this);
         } else {
             var movePositionArr = Arrays.asList(new BoardPosition[]{
@@ -44,7 +44,7 @@ public class MeleeEnemy extends Enemy {
 
             var curDistance = distance(playerPosition, position);
             for (var newPosition : movePositionArr) {
-                if (distance(playerPosition, newPosition) < curDistance && move.isMoveValid(position, newPosition, board)) {
+                if (distance(playerPosition, newPosition) < curDistance && move.isMoveValid(this, newPosition, board)) {
                     return new MoveDTO(move, newPosition, this);
                 }
             }

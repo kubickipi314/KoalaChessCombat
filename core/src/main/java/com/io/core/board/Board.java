@@ -54,7 +54,7 @@ public class Board {
 
         if (character.getCurrentMana() < move.getCost()) return false;
         if (attackedCharacter != null && character.getTeam() == attackedCharacter.getTeam()) return false;
-        if (!move.isMoveValid(character.getPosition(), movePosition, this)) return false;
+        if (!move.isMoveValid(character, movePosition, this)) return false;
 
         character.changeMana(-move.getCost());
         if (attackedCharacter != null) {

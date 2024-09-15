@@ -6,12 +6,18 @@ import com.badlogic.gdx.math.Vector2;
 import com.io.core.GameResult;
 import com.io.core.board.BoardPosition;
 import com.io.core.character.Character;
+import com.io.core.character.Enemy;
 import com.io.core.character.Player;
+import com.io.core.moves.Move;
+import com.io.presenter.character.CharacterPresenter;
+import com.io.presenter.character.PlayerPresenter;
+import com.io.presenter.character.EnemyPresenter;
 import com.io.service.GameService;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GamePresenter {
@@ -33,24 +39,29 @@ public class GamePresenter {
         this.gs = gs;
 
         batch = new SpriteBatch();
-        CoordinatesManager cm = new CoordinatesManager(gs.getRoomHeight(), gs.getRoomWidth(), 5); // TODO
+        windowHeight = Gdx.graphics.getHeight();
+
+        playerModel = gs.getPlayer();
+        List<Move> moves = playerModel.getMoves();
+
+        CoordinatesManager cm = new CoordinatesManager(gs.getRoomHeight(), gs.getRoomWidth(), moves.size());
         TextureManager tm = new TextureManager();
         SoundManager sm = new SoundManager();
 
         var characterModels = gs.getCharacters();
         charactersMap = new HashMap<>();
         for (var characterModel : characterModels) {
-            charactersMap.put(characterModel, new CharacterPresenter(tm, sm, cm, characterModel.getPosition()));
+            if (characterModel instanceof Player) {
+                charactersMap.put(characterModel, new PlayerPresenter(tm, sm, cm, characterModel.getPosition()));
+            } else if (characterModel instanceof Enemy) {
+                charactersMap.put(characterModel, new EnemyPresenter(tm, sm, cm, characterModel.getPosition(), characterModel.getMaxHealth()));
+            }
         }
-        playerModel = gs.getPlayer();
 
         this.barsPresenter = new BarsPresenter(tm, cm);
-
         this.boardPresenter = new BoardPresenter(tm, cm, this);
-        this.chessPresenter = new ChessPresenter(tm, sm, cm);
+        this.chessPresenter = new ChessPresenter(tm, sm, cm, moves);
         this.buttonsPresenter = new ButtonsPresenter(tm, sm, cm, this);
-
-        windowHeight = Gdx.graphics.getHeight();
     }
 
     public void update() {
@@ -58,6 +69,9 @@ public class GamePresenter {
             var characterPresenter = charactersMap.get(characterModel);
             if (characterPresenter.isMoving())
                 characterPresenter.updatePosition();
+            if (characterPresenter instanceof EnemyPresenter) {
+                ((EnemyPresenter) characterPresenter).setHealth(characterModel.getCurrentHealth());
+            }
         }
 
         if (!charactersMap.get(playerModel).isMoving()) {
@@ -86,7 +100,6 @@ public class GamePresenter {
         }
         barsPresenter.setMana(playerModel.getCurrentMana());
         barsPresenter.setHealth(playerModel.getCurrentHealth());
-        chessPresenter.setMoves(playerModel.getMoves());
         chessPresenter.selectMove(selectedMove);
     }
 
@@ -121,6 +134,7 @@ public class GamePresenter {
     }
 
     public void endGame(GameResult gameResult) {
+        System.out.println("GAME END\tresult: " + gameResult);
     }
 
     public void startTurn() {
