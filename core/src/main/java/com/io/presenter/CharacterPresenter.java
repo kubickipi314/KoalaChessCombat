@@ -8,10 +8,12 @@ import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
 import com.io.view.characters.PlayerView;
 
-public class PlayerPresenter {
+public class CharacterPresenter {
+    private final SoundManager sm;
+    private final CoordinatesManager cm;
 
-    private int posX;
-    private int posY;
+    private final PlayerView playerView;
+    private BoardPosition boardPosition;
 
     private boolean isMoving;
     private float movementTime = 0;
@@ -19,55 +21,33 @@ public class PlayerPresenter {
     private int stateNumber = 0;
     private Vector2 startPosition;
     private Vector2 targetPosition;
-    private final SoundManager sm;
 
-    private final float boardX;
-    private final float boardY;
-    private final float tileSize;
-
-    private final PlayerView playerView;
-
-
-    public PlayerPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, BoardPosition start) {
-        boardX = cm.getBoardX();
-        boardY = cm.getBoardY();
-        tileSize = cm.getTileSize();
+    public CharacterPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, BoardPosition startBoardPosition) {
         this.sm = sm;
+        this.cm = cm;
 
-        posX = start.x();
-        posY = start.y();
+        playerView = new PlayerView(tm, cm.calculatePosition(startBoardPosition), cm.getTileSize());
+
         isMoving = false;
-
-        float x = boardX + posX * tileSize;
-        float y = boardY + posY * tileSize;
-        Vector2 position = new Vector2(x, y);
-        playerView = new PlayerView(tm, position, tileSize);
+        boardPosition = startBoardPosition;
     }
 
-    public void update(int col, int row) {
-        if (col != posX || row != posY) startMoveAnimation(row, col);
+    public void update(BoardPosition position) {
+        if (position != boardPosition) startMoveAnimation(position);
         updateState();
     }
 
-    public void startMoveAnimation(int targetRow, int targetCol) {
-        if (targetCol == posX && targetRow == posY) return;
+    public void startMoveAnimation(BoardPosition targetBoardPosition) {
+        if (targetBoardPosition == boardPosition) return;
         isMoving = true;
         movementTime = 0;
 
         sm.playMoveSound();
         playerView.setTexture(2);
 
-        float startX = boardX + posX * tileSize;
-        float startY = boardY + posY * tileSize;
-
-        float targetX = boardX + targetCol * tileSize;
-        float targetY = boardY + targetRow * tileSize;
-
-        startPosition = new Vector2(startX, startY);
-        targetPosition = new Vector2(targetX, targetY);
-
-        posX = targetCol;
-        posY = targetRow;
+        startPosition = cm.calculatePosition(boardPosition);
+        targetPosition = cm.calculatePosition(targetBoardPosition);
+        boardPosition = targetBoardPosition;
     }
 
     public void updatePosition() {
@@ -77,9 +57,7 @@ public class PlayerPresenter {
 
         float currentX = startPosition.x + (targetPosition.x - startPosition.x) * progress;
         float currentY = startPosition.y + (targetPosition.y - startPosition.y) * progress;
-
         Vector2 currentPosition = new Vector2(currentX, currentY);
-
         playerView.setPosition(currentPosition);
 
         if (progress >= 1.0f) {

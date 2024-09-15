@@ -14,8 +14,11 @@ public class Main extends Game {
     @Override
     public void create() {
         TurnService ts = new TurnService();
-        GameService gs = new GameService(ts);
-        GamePresenter gamePresenter = new GamePresenter(gs);
-        setScreen(new GameScreen(gamePresenter));
+        GameService gs = new GameService();
+        GamePresenter gp = new GamePresenter();
+        gs.init(ts, gp);
+        gp.init(gs);
+        setScreen(new GameScreen(gp));
+        gs.startGame();
     }
 }

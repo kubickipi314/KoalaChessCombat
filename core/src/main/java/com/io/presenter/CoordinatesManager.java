@@ -1,6 +1,8 @@
 package com.io.presenter;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
+import com.io.core.board.BoardPosition;
 
 public class CoordinatesManager {
     private final int rows;
@@ -11,19 +13,18 @@ public class CoordinatesManager {
     private final float boardX;
     private final float boardY;
 
-    public CoordinatesManager(int rows, int cols) {
+    public CoordinatesManager(int rows, int cols, int chessNumber) {
         windowWidth = Gdx.graphics.getWidth();
         float windowHeight = Gdx.graphics.getHeight();
 
-        chessNumber = 5;
-
         this.rows = rows;
         this.cols = cols;
+        this.chessNumber = chessNumber;
 
         tileSize = windowHeight / (rows + 4);
+
         float boardWidth = tileSize * cols;
         float boardHeight = tileSize * rows;
-
         boardX = (windowWidth - boardWidth) / 2;
         boardY = (windowHeight - boardHeight) / 2;
     }
@@ -58,5 +59,11 @@ public class CoordinatesManager {
 
     public float getTileSize() {
         return tileSize;
+    }
+
+    public Vector2 calculatePosition(BoardPosition bp) {
+        float startX = boardX + bp.x() * tileSize;
+        float startY = boardY + bp.y() * tileSize;
+        return new Vector2(startX, startY);
     }
 }

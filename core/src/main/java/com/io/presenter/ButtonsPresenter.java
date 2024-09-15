@@ -9,21 +9,23 @@ import com.io.view.assets_managers.TextureManager;
 import com.io.view.bars_buttons.TourButton;
 
 public class ButtonsPresenter {
-    private final TourButton tourButton;
     private final SoundManager sm;
-    private final GamePresenter gamePresenter;
+    private final GamePresenter gp;
+
+    private final TourButton tourButton;
+
     private boolean isActive;
     private float elapsedTime;
 
-
-    public ButtonsPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gamePresenter) {
+    public ButtonsPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gp) {
         this.sm = sm;
-        this.gamePresenter = gamePresenter;
-        float tileSize = cm.getTileSize();
-        float boardX = cm.getBoardX();
-        float boardY = cm.getBoardY();
+        this.gp = gp;
+
         float rows = cm.getRows();
         float cols = cm.getCols();
+        float boardX = cm.getBoardX();
+        float boardY = cm.getBoardY();
+        float tileSize = cm.getTileSize();
 
         float manaBarY = boardY + (rows + 0.2f) * tileSize;
 
@@ -38,15 +40,14 @@ public class ButtonsPresenter {
     void handleInput(Vector2 mousePosition) {
         if (isActive) {
             updateAnimation();
-        }
-        else {
+        } else {
             tourButton.setTexture(0);
             if (tourButton.contains(mousePosition)) {
                 tourButton.setTexture(1);
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                     sm.playSwordSound();
                     startAnimation();
-                    gamePresenter.increaseMana();
+                    gp.endTurn();
                 }
             }
         }
@@ -57,7 +58,7 @@ public class ButtonsPresenter {
         elapsedTime = 0;
     }
 
-    private void updateAnimation(){
+    private void updateAnimation() {
         elapsedTime += Gdx.graphics.getDeltaTime();
         float animationDuration = 0.5f;
         float progress = Math.min(1.0f, elapsedTime / animationDuration);
