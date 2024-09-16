@@ -6,7 +6,6 @@ import com.io.core.moves.Move;
 import com.io.core.moves.MoveDTO;
 import com.io.presenter.GamePresenter;
 import com.io.service.GameService;
-import com.io.service.TurnService;
 
 import java.util.List;
 
@@ -20,12 +19,7 @@ public class Player extends Character {
         this.moves = moves;
     }
 
-    @Override
-    public void startTurn() {
-        gp.startTurn();
-    }
-
-    public boolean PlayMove(BoardPosition movePosition, int moveIdx) {
+    public boolean makeNextMove(BoardPosition movePosition, int moveIdx) {
         var moveDTO = new MoveDTO(getMove(moveIdx), movePosition, this);
         return gs.tryMakeMove(moveDTO);
     }

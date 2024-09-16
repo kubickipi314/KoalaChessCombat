@@ -50,7 +50,7 @@ public class GameService {
     }
 
     public void startGame() {
-        ts.nextTurn();
+        gp.startGame();
     }
 
     void endGame(GameResult gameResult) {
@@ -87,8 +87,8 @@ public class GameService {
         return GameResult.NONE;
     }
 
-    public void endTurn() {
-        ts.endTurn();
+    public Character nextTurn() {
+        return ts.nextTurn();
     }
 
     public boolean tryMakeMove(MoveDTO move) {

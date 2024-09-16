@@ -32,9 +32,6 @@ public abstract class Character {
         this.team = team;
     }
 
-    public abstract void startTurn();
-
-
     public int getCurrentMana() {
         return currentMana;
     }

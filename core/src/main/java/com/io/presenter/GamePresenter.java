@@ -10,8 +10,8 @@ import com.io.core.character.Enemy;
 import com.io.core.character.Player;
 import com.io.core.moves.Move;
 import com.io.presenter.character.CharacterPresenter;
-import com.io.presenter.character.PlayerPresenter;
 import com.io.presenter.character.EnemyPresenter;
+import com.io.presenter.character.PlayerPresenter;
 import com.io.service.GameService;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
@@ -34,6 +34,8 @@ public class GamePresenter {
 
     private BoardPosition lastBoardPosition = new BoardPosition(-1, -1);
     private int lastChosenMove = -1;
+    private Character activeCharacter = null;
+    private boolean gameEnded = false;
 
     public void init(GameService gs) {
         this.gs = gs;
@@ -65,31 +67,36 @@ public class GamePresenter {
     }
 
     public void update() {
-        for (var characterModel : gs.getCharacters()) {
-            var characterPresenter = charactersMap.get(characterModel);
-            if (characterPresenter.isMoving())
-                characterPresenter.updatePosition();
-            if (characterPresenter instanceof EnemyPresenter) {
-                ((EnemyPresenter) characterPresenter).setHealth(characterModel.getCurrentHealth());
+        if (activeCharacter == null && !gameEnded) {
+            activeCharacter = gs.nextTurn();
+        }
+        var activePresenter = charactersMap.get(activeCharacter);
+        if (!activePresenter.isMoving() && !gameEnded) {
+            if (activeCharacter instanceof Enemy enemyModel) {
+                var success = enemyModel.makeNextMove();
+                var enemyPresenter = charactersMap.get(enemyModel);
+                enemyPresenter.update(enemyModel.getPosition());
+                if (!success) endTurn();
+            } else {
+                Vector2 mousePosition = getMousePosition();
+                boardPresenter.handleInput(mousePosition);
+                chessPresenter.handleInput(mousePosition);
+                buttonsPresenter.handleInput(mousePosition);
             }
+        } else {
+            activePresenter.updatePosition();
         }
-
-        if (!charactersMap.get(playerModel).isMoving()) {
-            updateFromModel();
-
-            Vector2 mousePosition = getMousePosition();
-            boardPresenter.handleInput(mousePosition);
-            chessPresenter.handleInput(mousePosition);
-            buttonsPresenter.handleInput(mousePosition);
-        }
+        updateFromModel();
     }
 
     private void updateFromModel() {
         // temporary solution presenter might need more information
 
-        for (var characterModel : gs.getCharacters()) {
-            var characterPresenter = charactersMap.get(characterModel);
-            characterPresenter.update(characterModel.getPosition());
+        for (var character : gs.getCharacters()) {
+            var characterPresenter = charactersMap.get(character);
+            if (characterPresenter instanceof EnemyPresenter enemyPresenter) {
+                enemyPresenter.setHealth(character.getCurrentHealth());
+            }
         }
 
         var selectedMove = chessPresenter.getSelectedMove();
@@ -128,19 +135,25 @@ public class GamePresenter {
 
     public void movePlayer(BoardPosition boardPosition) {
         var chosenMove = chessPresenter.getSelectedMove();
-        if (!gs.getPlayer().PlayMove(boardPosition, chosenMove)) {
+        if (!gs.getPlayer().makeNextMove(boardPosition, chosenMove)) {
             System.err.println("Failed to play Player's move");
         }
+        var playerPresenter = charactersMap.get(playerModel);
+        playerPresenter.update(playerModel.getPosition());
+    }
+
+    public void startGame() {
     }
 
     public void endGame(GameResult gameResult) {
         System.out.println("GAME END\tresult: " + gameResult);
+        gameEnded = true;
     }
 
     public void startTurn() {
     }
 
     public void endTurn() {
-        gs.endTurn();
+        activeCharacter = null;
     }
 }

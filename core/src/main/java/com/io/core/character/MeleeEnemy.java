@@ -6,7 +6,6 @@ import com.io.core.moves.KingMove;
 import com.io.core.moves.MoveDTO;
 import com.io.presenter.GamePresenter;
 import com.io.service.GameService;
-import com.io.service.TurnService;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,20 +18,23 @@ public class MeleeEnemy extends Enemy {
         super(gs, gp, maxMana, maxHealth, position);
     }
 
-    public MoveDTO getNextMove(Board board) {
+    @Override
+    public boolean makeNextMove() {
         if (currentMana <= 0)
-            return null;
+            return false;
+
+        Board board = gs.getBoardSnapshot();
 
         List<BoardPosition> playerTeamPosition = board.getTeamPosition(0);
         if (playerTeamPosition.isEmpty()) {
             System.err.println("No player found on the board");
-            return null;
+            return false;
         }
         BoardPosition playerPosition = playerTeamPosition.get(0);
 
         var move = new KingMove(1, 1);
         if (move.isMoveValid(this, playerPosition, board)) {
-            return new MoveDTO(move, playerPosition, this);
+            return gs.tryMakeMove(new MoveDTO(move, playerPosition, this));
         } else {
             var movePositionArr = Arrays.asList(new BoardPosition[]{
                 new BoardPosition(position.x() - 1, position.y()),
@@ -45,10 +47,10 @@ public class MeleeEnemy extends Enemy {
             var curDistance = distance(playerPosition, position);
             for (var newPosition : movePositionArr) {
                 if (distance(playerPosition, newPosition) < curDistance && move.isMoveValid(this, newPosition, board)) {
-                    return new MoveDTO(move, newPosition, this);
+                    return gs.tryMakeMove(new MoveDTO(move, newPosition, this));
                 }
             }
-            return null;
+            return false;
         }
     }
 

@@ -99,9 +99,10 @@ public class EnemyPresenter implements CharacterPresenter {
     }
 
     public void setHealth(int value) {
+        if (value < health)
+            sm.playRoarSound();
         health = value;
         enemyView.changeHealth((float) health / maxHealth);
-        sm.playRoarSound();
     }
 
 }
