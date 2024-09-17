@@ -10,20 +10,19 @@ import com.io.view.bars_buttons.TourButton;
 
 public class ButtonsPresenter {
     private final SoundManager sm;
-    private final GamePresenter gp;
+    private final GamePresenter gamePresenter;
 
     private final TourButton tourButton;
 
     private boolean isActive;
     private float elapsedTime;
 
-    public ButtonsPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gp) {
+    public ButtonsPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gamePresenter) {
         this.sm = sm;
-        this.gp = gp;
-
-        float cols = cm.getCols();
-        float boardX = cm.getBoardX();
+        this.gamePresenter = gamePresenter;
         float tileSize = cm.getTileSize();
+        float boardX = cm.getBoardX();
+        float cols = cm.getCols();
 
         float tourButtonX = boardX + (cols - 1) * tileSize;
         Vector2 tourButtonPosition = new Vector2(tourButtonX, cm.getManaBarY());
@@ -34,16 +33,15 @@ public class ButtonsPresenter {
 
 
     void handleInput(Vector2 mousePosition) {
-        if (isActive) {
-            updateAnimation();
-        } else {
+        if (!isActive) {
             tourButton.setTexture(0);
             if (tourButton.contains(mousePosition)) {
                 tourButton.setTexture(1);
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    gamePresenter.increaseMana();
                     sm.playSwordSound();
                     startAnimation();
-                    gp.endTurn();
+                    gamePresenter.endTurn();
                 }
             }
         }
@@ -52,6 +50,12 @@ public class ButtonsPresenter {
     private void startAnimation() {
         isActive = true;
         elapsedTime = 0;
+    }
+
+    public void update() {
+        if (isActive) {
+            updateAnimation();
+        }
     }
 
     private void updateAnimation() {

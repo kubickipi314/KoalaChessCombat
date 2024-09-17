@@ -15,12 +15,12 @@ public class CoordinatesManager {
     private final float barHeight;
 
     public CoordinatesManager(int rows, int cols, int chessNumber) {
+        windowWidth = Gdx.graphics.getWidth();
+        float windowHeight = Gdx.graphics.getHeight();
+
         this.rows = rows;
         this.cols = cols;
         this.chessNumber = chessNumber;
-
-        windowWidth = Gdx.graphics.getWidth();
-        float windowHeight = Gdx.graphics.getHeight();
 
         tileSize = Math.min(windowHeight / (rows + 4), windowWidth / Math.max((cols + 2), 7));
         float boardWidth = tileSize * cols;

@@ -30,5 +30,4 @@ public class BarsPresenter {
         healthBar.draw(batch);
         manaBar.draw(batch);
     }
-
 }

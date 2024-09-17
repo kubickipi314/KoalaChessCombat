@@ -18,12 +18,17 @@ public class EnemyPresenter implements CharacterPresenter {
     private BoardPosition boardPosition;
 
     private boolean isMoving;
+    private boolean isAttacking;
     private float movementTime = 0;
+    private float attackTime = 0;
+    private int attackNumber = 0;
     private float stateTime = 0;
     private int stateNumber = 0;
     private Vector2 startPosition;
     private Vector2 targetPosition;
 
+    private Vector2 attackerPosition;
+    private Vector2 attackPosition;
     private final int maxHealth;
     private int health;
 
@@ -33,6 +38,7 @@ public class EnemyPresenter implements CharacterPresenter {
         this.cm = cm;
 
         isMoving = false;
+        isAttacking = false;
         boardPosition = startBoardPosition;
 
         Vector2 position = cm.calculatePosition(boardPosition);
@@ -44,7 +50,6 @@ public class EnemyPresenter implements CharacterPresenter {
     }
 
     public void startMoveAnimation(BoardPosition targetBoardPosition) {
-        if (targetBoardPosition == boardPosition) return;
         isMoving = true;
         movementTime = 0;
 
@@ -61,6 +66,11 @@ public class EnemyPresenter implements CharacterPresenter {
     }
 
     public void updatePosition() {
+        if (isAttacking) {
+            updateAttack();
+            return;
+        }
+
         movementTime += Gdx.graphics.getDeltaTime();
         float animationDuration = 0.5f;
         float progress = Math.min(1.0f, movementTime / animationDuration);
@@ -92,6 +102,7 @@ public class EnemyPresenter implements CharacterPresenter {
 
     public void render(SpriteBatch batch) {
         enemyView.draw(batch);
+        if (isAttacking) enemyView.drawAttack(batch);
     }
 
     public boolean isMoving() {
@@ -105,4 +116,37 @@ public class EnemyPresenter implements CharacterPresenter {
         enemyView.changeHealth((float) health / maxHealth);
     }
 
+    public void attack(BoardPosition position){
+        movementTime = 0;
+        attackTime = 0;
+        sm.playRoarSound();
+        isAttacking = true;
+        isMoving = true;
+        attackPosition = cm.calculatePosition(position);
+        attackerPosition = cm.calculatePosition(boardPosition);
+    }
+
+    public void updateAttack() {
+        float deltaTime = Gdx.graphics.getDeltaTime();
+        movementTime += deltaTime;
+        attackTime += deltaTime;
+        float animationDuration = 0.5f;
+        float progress = Math.min(1.0f, movementTime / animationDuration);
+
+        if (attackTime >= 0.2f) {
+            attackTime = 0;
+            attackNumber = (attackNumber + 1) % 2;
+            enemyView.setAttackTexture(attackNumber);
+        }
+
+        float currentX = attackerPosition.x + (attackPosition.x - attackerPosition.x) * progress;
+        float currentY = attackerPosition.y + (attackPosition.y - attackerPosition.y) * progress;
+        Vector2 currentPosition = new Vector2(currentX, currentY);
+        enemyView.setAttackPosition(currentPosition);
+
+        if (progress >= 1.0f) {
+            isMoving = false;
+            isAttacking = false;
+        }
+    }
 }
