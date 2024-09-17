@@ -1,19 +1,17 @@
 package com.io.core.character;
 
 import com.io.core.board.BoardPosition;
-import com.io.core.moves.Move;
-import com.io.service.TurnService;
-
-import java.util.List;
+import com.io.presenter.GamePresenter;
+import com.io.service.GameService;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public abstract class Character {
-    protected TurnService ts;
+    protected GameService gs;
+    protected GamePresenter gp;
 
     protected final int team;
-    protected final List<Move> moves;
 
     protected int currentMana;
     protected final int maxMana;
@@ -22,27 +20,17 @@ public abstract class Character {
 
     protected BoardPosition position;
 
-    public Character(TurnService ts, int maxMana, int maxHealth, BoardPosition position, int team, List<Move> moves) {
-        this.ts = ts;
+    public Character(GameService gs, GamePresenter gp, int maxMana, int maxHealth, BoardPosition position, int team) {
+        this.gs = gs;
+        this.gp = gp;
+
         this.maxMana = maxMana;
         this.maxHealth = maxHealth;
         this.currentHealth = maxHealth;
         this.currentMana = maxMana;
         this.position = position;
         this.team = team;
-        this.moves = moves;
     }
-
-    public Move getMove(int idx) {
-        return moves.get(idx);
-    }
-
-    public List<Move> getMoves() {
-        return moves;
-    }
-
-    public abstract void startTurn();
-
 
     public int getCurrentMana() {
         return currentMana;
@@ -54,6 +42,10 @@ public abstract class Character {
 
     public int getCurrentHealth() {
         return currentHealth;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
     }
 
     public void changeHealth(int value) {
@@ -70,5 +62,9 @@ public abstract class Character {
 
     public int getTeam() {
         return team;
+    }
+
+    public boolean isDead() {
+        return currentHealth <= 0;
     }
 }

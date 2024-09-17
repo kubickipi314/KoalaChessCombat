@@ -13,30 +13,29 @@ import java.util.List;
 
 
 public class ChessPresenter {
-    private ChessTileView[] chessBoard;
     private final SoundManager sm;
     private final CoordinatesManager cm;
     private final TextureManager tm;
-    private final GamePresenter gamePresenter;
+
+    private ChessTileView[] chessBoard;
 
     private int actualTile;
-    private int numberOfMoves = 0;
+    private int numberOfMoves;
     private float chessBoardX;
     private float chessBoardY;
     private float tileSize;
-
     private List<Move> moves;
-    private int selectedMove = -1;
 
+    private int selectedMove;
 
-    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gamePresenter) {
-        chessBoard = new ChessTileView[numberOfMoves];
+    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, List<Move> moves) {
         this.sm = sm;
         this.cm = cm;
         this.tm = tm;
-        this.gamePresenter = gamePresenter;
-    }
 
+        setMoves(moves);
+        selectMove(0);
+    }
 
     public void handleInput(Vector2 mousePosition) {
         chessBoard[actualTile].unmark();
@@ -45,7 +44,7 @@ public class ChessPresenter {
             getActualTile(mousePosition);
             chessBoard[actualTile].mark();
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                gamePresenter.choseMove(actualTile);
+                selectMove(actualTile);
                 sm.playSelectSound();
             }
         }
@@ -61,7 +60,7 @@ public class ChessPresenter {
         throw new Error("mousePosition outside any tile but inside chessBoard");
     }
 
-    public void setMoves(List<Move> moves) {
+    private void setMoves(List<Move> moves) {
         if (moves.equals(this.moves)) return;
 
         this.moves = moves;
@@ -94,20 +93,21 @@ public class ChessPresenter {
         return mouseX >= chessBoardX && mouseY >= chessBoardY && mouseX <= chessBoardX + tileSize * numberOfMoves && mouseY <= chessBoardY + 2 * tileSize;
     }
 
-    public void selectMove(int i) {
-        if (i == selectedMove) return;
-        selectedMove = i;
-        for (int j = 0; j < numberOfMoves; j++) {
-            chessBoard[j].unselect();
-        }
-        System.out.println("selected " + i);
-        System.out.println(chessBoard[i]);
-        chessBoard[i].select();
-    }
-
     public void render(SpriteBatch batch) {
         for (ChessTileView chessTileView : chessBoard) {
             chessTileView.draw(batch);
         }
+    }
+
+    public int getSelectedMove() {
+        return selectedMove;
+    }
+
+    void selectMove(int i) {
+        selectedMove = i;
+        for (int j = 0; j < numberOfMoves; j++) {
+            chessBoard[j].unselect();
+        }
+        chessBoard[i].select();
     }
 }

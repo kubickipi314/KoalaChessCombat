@@ -11,40 +11,36 @@ import com.io.view.tiles.BoardTileView;
 import java.util.List;
 
 public class BoardPresenter {
-    private final BoardTileView[][] board;
+    private final GamePresenter gp;
 
+    private final BoardTileView[][] board;
+    private List<BoardPosition> availableTiles;
+
+    private final int rows;
+    private final int cols;
+    private final float boardX;
+    private final float boardY;
+    private final float boardWidth;
+    private final float boardHeight;
     private int actualRow;
     private int actualCol;
 
-    private final float boardX;
-    private final float boardY;
-    private final int rows;
-    private final int cols;
-    private final float boardWidth;
-    private final float boardHeight;
-    private List<BoardPosition> availableTiles;
-    private final GamePresenter gamePresenter;
+    public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gp) {
+        this.gp = gp;
 
-    public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gamePresenter) {
         rows = cm.getRows();
         cols = cm.getCols();
-        this.gamePresenter = gamePresenter;
-
         board = new BoardTileView[rows][cols];
 
+        float tileSize = cm.getTileSize();
+        boardWidth = tileSize * cols;
+        boardHeight = tileSize * rows;
         boardX = cm.getBoardX();
         boardY = cm.getBoardY();
 
-        float tileSize = cm.getTileSize();
-
-        boardWidth = tileSize * cols;
-        boardHeight = tileSize * rows;
-
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                float x = boardX + col * tileSize;
-                float y = boardY + row * tileSize;
-                Vector2 position = new Vector2(x, y);
+                Vector2 position = cm.calculatePosition(new BoardPosition(col, row));
                 board[row][col] = new BoardTileView(tm, position, tileSize);
             }
         }
@@ -61,8 +57,7 @@ public class BoardPresenter {
                 board[actualRow][actualCol].switchAvailable();
             }
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                System.out.println("clicked");
-                gamePresenter.movePlayer(new BoardPosition(actualCol, actualRow));
+                gp.movePlayer(new BoardPosition(actualCol, actualRow));
             }
         }
     }

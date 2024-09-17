@@ -5,28 +5,30 @@ import com.io.core.board.BoardPosition;
 import com.io.core.moves.Move;
 import com.io.core.moves.MoveDTO;
 import com.io.presenter.GamePresenter;
-import com.io.service.TurnService;
+import com.io.service.GameService;
 
 import java.util.List;
 
 public class Player extends Character {
     static int maxMana = CONST.MAX_PLAYER_MANA, maxHealth = CONST.MAX_PLAYER_HEALTH;
+    private final List<Move> moves;
 
-    GamePresenter gp;
 
-    public Player(TurnService ts, GamePresenter gp, BoardPosition position, List<Move> moves) {
-        super(ts, maxMana, maxHealth, position, 0, moves);
-        this.gp = gp;
-
+    public Player(GameService gs, GamePresenter gp, BoardPosition position, List<Move> moves) {
+        super(gs, gp, maxMana, maxHealth, position, 0);
+        this.moves = moves;
     }
 
-    @Override
-    public void startTurn() {
-        gp.startTurn();
-    }
-
-    public boolean PlayMove(BoardPosition movePosition, int moveIdx) {
+    public boolean makeNextMove(BoardPosition movePosition, int moveIdx) {
         var moveDTO = new MoveDTO(getMove(moveIdx), movePosition, this);
-        return ts.tryMakeMove(moveDTO);
+        return gs.tryMakeMove(moveDTO);
+    }
+
+    public Move getMove(int idx) {
+        return moves.get(idx);
+    }
+
+    public List<Move> getMoves() {
+        return moves;
     }
 }
