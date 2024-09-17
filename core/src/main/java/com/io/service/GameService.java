@@ -29,11 +29,11 @@ public class GameService {
 
         BoardPosition playerStartingPosition = new BoardPosition(1, 0);
         var moves = List.of(new Move[]{
-            new KingMove(1, 1),
-            new KnightMove(1, 1),
-            new RookMove(1, 1),
-            new BishopMove(1, 1),
-            new QueenMove(1, 1)
+            new KingMove(2, 1),
+            new KnightMove(3, 3),
+            new RookMove(5, 4),
+            new BishopMove(3, 2),
+            new QueenMove(7, 5)
         });
         player = new Player(this, gp, playerStartingPosition, moves);
 

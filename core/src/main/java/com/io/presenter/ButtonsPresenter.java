@@ -33,9 +33,7 @@ public class ButtonsPresenter {
 
 
     void handleInput(Vector2 mousePosition) {
-        if (isActive) {
-            updateAnimation();
-        } else {
+        if (!isActive) {
             tourButton.setTexture(0);
             if (tourButton.contains(mousePosition)) {
                 tourButton.setTexture(1);
@@ -51,6 +49,12 @@ public class ButtonsPresenter {
     private void startAnimation() {
         isActive = true;
         elapsedTime = 0;
+    }
+
+    public void update() {
+        if (isActive) {
+            updateAnimation();
+        }
     }
 
     private void updateAnimation() {

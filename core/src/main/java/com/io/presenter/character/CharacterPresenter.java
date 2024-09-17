@@ -13,4 +13,6 @@ public interface CharacterPresenter {
     void startMoveAnimation(BoardPosition targetBoardPosition);
 
     boolean isMoving();
+
+    void attack(BoardPosition position);
 }

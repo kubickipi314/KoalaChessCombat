@@ -34,6 +34,7 @@ public class GamePresenter {
 
     private BoardPosition lastBoardPosition = new BoardPosition(-1, -1);
     private int lastChosenMove = -1;
+    private int currentHealth;
     private Character activeCharacter = null;
     private boolean gameEnded = false;
 
@@ -64,6 +65,8 @@ public class GamePresenter {
         this.boardPresenter = new BoardPresenter(tm, cm, this);
         this.chessPresenter = new ChessPresenter(tm, sm, cm, moves);
         this.buttonsPresenter = new ButtonsPresenter(tm, sm, cm, this);
+
+        currentHealth = playerModel.getCurrentHealth();
     }
 
     public void update() {
@@ -75,6 +78,9 @@ public class GamePresenter {
             if (activeCharacter instanceof Enemy enemyModel) {
                 var success = enemyModel.makeNextMove();
                 var enemyPresenter = charactersMap.get(enemyModel);
+                if (currentHealth != playerModel.getCurrentHealth()){
+                    enemyPresenter.attack(playerModel.getPosition());
+                }
                 enemyPresenter.update(enemyModel.getPosition());
                 if (!success) endTurn();
             } else {
@@ -86,12 +92,11 @@ public class GamePresenter {
         } else {
             activePresenter.updatePosition();
         }
+        buttonsPresenter.update();
         updateFromModel();
     }
 
     private void updateFromModel() {
-        // temporary solution presenter might need more information
-
         for (var character : gs.getCharacters()) {
             var characterPresenter = charactersMap.get(character);
             if (characterPresenter instanceof EnemyPresenter enemyPresenter) {
@@ -106,7 +111,8 @@ public class GamePresenter {
             lastChosenMove = selectedMove;
         }
         barsPresenter.setMana(playerModel.getCurrentMana());
-        barsPresenter.setHealth(playerModel.getCurrentHealth());
+        currentHealth = playerModel.getCurrentHealth();
+        barsPresenter.setHealth(currentHealth);
         chessPresenter.selectMove(selectedMove);
     }
 

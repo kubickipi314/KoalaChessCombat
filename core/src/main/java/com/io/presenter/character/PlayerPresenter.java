@@ -92,4 +92,7 @@ public class PlayerPresenter implements CharacterPresenter {
     public boolean isMoving() {
         return isMoving;
     }
+
+    public void attack(BoardPosition position) {
+    }
 }

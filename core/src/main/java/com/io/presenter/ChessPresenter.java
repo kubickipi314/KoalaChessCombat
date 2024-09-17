@@ -17,7 +17,6 @@ public class ChessPresenter {
     private final SoundManager sm;
     private final CoordinatesManager cm;
     private final TextureManager tm;
-    private final GamePresenter gamePresenter;
 
     private int actualTile;
 
@@ -110,5 +109,9 @@ public class ChessPresenter {
         for (ChessTileView chessTileView : chessBoard) {
             chessTileView.draw(batch);
         }
+    }
+
+    public int getSelectedMove() {
+        return selectedMove;
     }
 }
