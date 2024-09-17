@@ -17,8 +17,8 @@ public class Board {
 
     public Board(int width, int height, List<Character> characters) {
         this.board = new Cell[height][width];
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 board[i][j] = new Cell(false);
             }
         }

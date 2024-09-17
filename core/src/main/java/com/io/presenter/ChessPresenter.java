@@ -20,7 +20,6 @@ public class ChessPresenter {
     private ChessTileView[] chessBoard;
 
     private int actualTile;
-
     private int numberOfMoves;
     private float chessBoardX;
     private float chessBoardY;
@@ -76,9 +75,15 @@ public class ChessPresenter {
         for (int number = 0; number < numberOfMoves; number++) {
             float x = chessBoardX + number * tileSize;
             Vector2 position = new Vector2(x, chessBoardY);
-            var type = moves.get(number).getType();
-            chessBoard[number] = new ChessTileView(tm.getChessTexture(type),
-                tm.getSelectedTexture(type), position, tileSize);
+            Move move = moves.get(number);
+            var type = move.getType();
+            chessBoard[number] = new ChessTileView(tm.getChess(type),
+                    tm.getSelectedChess(type), position, tileSize);
+
+            int damageNumber = move.getDamage();
+            int costNumber = move.getCost();
+            chessBoard[number].setDamage(tm.getDigit(damageNumber));
+            chessBoard[number].setCost(tm.getDigit(costNumber));
         }
     }
 

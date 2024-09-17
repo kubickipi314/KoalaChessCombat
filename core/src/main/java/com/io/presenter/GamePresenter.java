@@ -40,18 +40,17 @@ public class GamePresenter {
     public void init(GameService gs) {
         this.gs = gs;
 
-        batch = new SpriteBatch();
-        windowHeight = Gdx.graphics.getHeight();
-
         playerModel = gs.getPlayer();
         List<Move> moves = playerModel.getMoves();
 
+        batch = new SpriteBatch();
+        windowHeight = Gdx.graphics.getHeight();
         CoordinatesManager cm = new CoordinatesManager(gs.getRoomHeight(), gs.getRoomWidth(), moves.size());
         TextureManager tm = new TextureManager();
         SoundManager sm = new SoundManager();
 
-        var characterModels = gs.getCharacters();
         charactersMap = new HashMap<>();
+        var characterModels = gs.getCharacters();
         for (var characterModel : characterModels) {
             if (characterModel instanceof Player) {
                 charactersMap.put(characterModel, new PlayerPresenter(tm, sm, cm, characterModel.getPosition()));
