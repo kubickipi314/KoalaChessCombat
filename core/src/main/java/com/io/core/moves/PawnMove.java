@@ -35,8 +35,8 @@ public class PawnMove implements Move {
         int x = position.x();
         int y = position.y();
         var frontPosition = new BoardPosition(x, y + 1);
-        var frontLeftPosition = new BoardPosition(x - 1, y);
-        var frontRightPosition = new BoardPosition(x + 1, y);
+        var frontLeftPosition = new BoardPosition(x - 1, y + 1);
+        var frontRightPosition = new BoardPosition(x + 1, y + 1);
         if (board.isValidCell(frontPosition) && board.getCell(frontPosition).getCharacter() == null)
             accessibleCells.add(frontPosition);
         if (board.isValidCell(frontLeftPosition) && board.getCell(frontLeftPosition).getCharacter() != null)
