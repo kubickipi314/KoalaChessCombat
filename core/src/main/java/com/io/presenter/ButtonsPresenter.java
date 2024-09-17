@@ -10,27 +10,22 @@ import com.io.view.bars_buttons.TourButton;
 
 public class ButtonsPresenter {
     private final SoundManager sm;
-    private final GamePresenter gp;
+    private final GamePresenter gamePresenter;
 
     private final TourButton tourButton;
 
     private boolean isActive;
     private float elapsedTime;
 
-    public ButtonsPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gp) {
+    public ButtonsPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gamePresenter) {
         this.sm = sm;
-        this.gp = gp;
-
-        float rows = cm.getRows();
-        float cols = cm.getCols();
-        float boardX = cm.getBoardX();
-        float boardY = cm.getBoardY();
+        this.gamePresenter = gamePresenter;
         float tileSize = cm.getTileSize();
-
-        float manaBarY = boardY + (rows + 0.2f) * tileSize;
+        float boardX = cm.getBoardX();
+        float cols = cm.getCols();
 
         float tourButtonX = boardX + (cols - 1) * tileSize;
-        Vector2 tourButtonPosition = new Vector2(tourButtonX, manaBarY);
+        Vector2 tourButtonPosition = new Vector2(tourButtonX, cm.getManaBarY());
         tourButton = new TourButton(tm, tourButtonPosition, tileSize);
 
         isActive = false;
@@ -47,7 +42,7 @@ public class ButtonsPresenter {
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                     sm.playSwordSound();
                     startAnimation();
-                    gp.endTurn();
+                    gamePresenter.endTurn();
                 }
             }
         }
@@ -63,9 +58,9 @@ public class ButtonsPresenter {
         float animationDuration = 0.5f;
         float progress = Math.min(1.0f, elapsedTime / animationDuration);
 
-        if (progress > 0.75f) tourButton.setTexture(1);
-        else if (progress > 0.5f) tourButton.setTexture(2);
-        else if (progress > 0.25f) tourButton.setTexture(3);
+        if (progress > 0.8f) tourButton.setTexture(1);
+        else if (progress > 0.6f) tourButton.setTexture(2);
+        else if (progress > 0.2f) tourButton.setTexture(3);
         else tourButton.setTexture(2);
 
         if (progress >= 1.0f) {

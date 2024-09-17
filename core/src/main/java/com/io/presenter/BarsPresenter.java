@@ -11,19 +11,11 @@ public class BarsPresenter {
     private final ManaBarView manaBar;
 
     public BarsPresenter(TextureManager tm, CoordinatesManager cm) {
-        float tileSize = cm.getTileSize();
-        float boardX = cm.getBoardX();
-        float boardY = cm.getBoardY();
-        float rows = cm.getRows();
+        Vector2 healthPosition = new Vector2(cm.getBoardX(), cm.getHealthBarY());
+        healthBar = new HealthBarView(tm, healthPosition, cm.getBarHeight());
 
-        float heartBarY = boardY + (rows + 0.9f) * tileSize;
-        float barHeight = tileSize * 9 / 16;
-        Vector2 heartPosition = new Vector2(boardX, heartBarY);
-        healthBar = new HealthBarView(tm, heartPosition, barHeight);
-
-        float manaBarY = boardY + (rows + 0.2f) * tileSize;
-        Vector2 manaPosition = new Vector2(boardX, manaBarY);
-        manaBar = new ManaBarView(tm, manaPosition, barHeight);
+        Vector2 manaPosition = new Vector2(cm.getBoardX(), cm.getManaBarY());
+        manaBar = new ManaBarView(tm, manaPosition, cm.getBarHeight());
     }
 
     public void setHealth(int i) {

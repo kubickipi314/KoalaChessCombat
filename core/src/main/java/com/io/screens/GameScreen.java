@@ -18,7 +18,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1);
+        Gdx.gl.glClearColor(0.12f, 0.12f, 0.12f, 1);
     }
 
     @Override
