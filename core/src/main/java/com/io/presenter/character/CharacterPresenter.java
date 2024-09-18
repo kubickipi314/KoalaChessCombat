@@ -11,7 +11,7 @@ import com.io.view.characters.CharacterView;
 
 import java.util.Random;
 
-public abstract class CharacterPresenter implements CharacterInterface {
+public abstract class CharacterPresenter implements CharacterPresenterInterface {
     protected final SoundManager sm;
     protected final CoordinatesManager cm;
     protected CharacterView characterView;
@@ -42,10 +42,6 @@ public abstract class CharacterPresenter implements CharacterInterface {
         this.boardPosition = boardPosition;
 
         stateInterval = randomFloat(6);
-    }
-
-    public void setType(CharacterType characterType){
-        this.characterType = characterType;
     }
 
     public void update() {

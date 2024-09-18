@@ -26,13 +26,13 @@ public class KnightMove implements Move {
     @Override
     public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
         var startPosition = character.getPosition();
-        
+
         if (startPosition.x() == endPosition.x() || startPosition.y() == endPosition.y()) return false;
         int dx = Integer.signum(endPosition.x() - startPosition.x());
         int dy = Integer.signum(endPosition.y() - startPosition.y());
 
         return MovesUtils.isValidRayMove(dx, 2 * dy, maxReach, startPosition, endPosition, board) ||
-            MovesUtils.isValidRayMove(2 * dx, dy, maxReach, startPosition, endPosition, board);
+                MovesUtils.isValidRayMove(2 * dx, dy, maxReach, startPosition, endPosition, board);
     }
 
     @Override

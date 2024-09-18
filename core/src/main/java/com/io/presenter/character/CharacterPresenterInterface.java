@@ -3,7 +3,7 @@ package com.io.presenter.character;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.io.core.board.BoardPosition;
 
-public interface CharacterInterface {
+public interface CharacterPresenterInterface {
 
     boolean isActive();
 

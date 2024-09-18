@@ -22,7 +22,7 @@ public class CoordinatesManager {
         this.cols = cols;
         this.chessNumber = chessNumber;
 
-        tileSize = Math.min(windowHeight / (rows + 4), windowWidth / Math.max((cols + 2), 7));
+        tileSize = Math.min(windowHeight / (rows + 5), windowWidth / Math.max((cols + 3), 8));
         float boardWidth = tileSize * cols;
         float boardHeight = tileSize * rows;
         boardX = (windowWidth - boardWidth) / 2;
@@ -55,7 +55,7 @@ public class CoordinatesManager {
     }
 
     public float getChessBoardY() {
-        return boardY - 2 * tileSize;
+        return boardY - 2.2f * tileSize;
     }
 
     public float getManaBarY() {

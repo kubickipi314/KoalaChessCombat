@@ -39,10 +39,10 @@ public class MeleeEnemy extends Enemy {
             return gs.tryMakeMove(new MoveDTO(knightMove, playerPosition, this));
         } else {
             var movePositionArr = Arrays.asList(new BoardPosition[]{
-                new BoardPosition(position.x() - 1, position.y()),
-                new BoardPosition(position.x() + 1, position.y()),
-                new BoardPosition(position.x(), position.y() - 1),
-                new BoardPosition(position.x(), position.y() + 1)
+                    new BoardPosition(position.x() - 1, position.y()),
+                    new BoardPosition(position.x() + 1, position.y()),
+                    new BoardPosition(position.x(), position.y() - 1),
+                    new BoardPosition(position.x(), position.y() + 1)
             });
             Collections.shuffle(movePositionArr);
 

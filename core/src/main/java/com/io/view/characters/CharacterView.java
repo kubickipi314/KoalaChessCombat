@@ -12,16 +12,17 @@ public abstract class CharacterView {
     protected final TextureManager tm;
     protected final float size;
     protected final CharacterType type;
+
     public CharacterView(TextureManager tm, Vector2 position, float size, CharacterType type) {
         this.tm = tm;
         this.size = size;
         this.type = type;
 
-        characterSprite = new Sprite(tm.getCharacter(type,0));
+        characterSprite = new Sprite(tm.getCharacter(type, 0));
         characterSprite.setPosition(position.x, position.y);
         characterSprite.setSize(size, size);
 
-        attackSprite = new Sprite(tm.getAttack(type,0));
+        attackSprite = new Sprite(tm.getAttack(type, 0));
         attackSprite.setPosition(position.x, position.y);
         attackSprite.setSize(size, size);
     }
@@ -30,11 +31,11 @@ public abstract class CharacterView {
 
     public abstract void draw(SpriteBatch batch);
 
-    public void setTexture(int stateNumber){
+    public void setTexture(int stateNumber) {
         characterSprite.setTexture(tm.getCharacter(type, stateNumber));
     }
 
-    public void setAttackTexture(int attackNumber){
+    public void setAttackTexture(int attackNumber) {
         attackSprite.setTexture(tm.getAttack(type, attackNumber));
     }
 

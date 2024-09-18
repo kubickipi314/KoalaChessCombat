@@ -18,6 +18,7 @@ public class PlayerPresenter extends CharacterPresenter {
         characterView = new PlayerView(tm, position, cm.getTileSize());
         characterType = CharacterType.PLAYER;
     }
+
     @Override
     public void startAttack(BoardPosition position) {
         movementTime = 0;

@@ -31,6 +31,7 @@ public class EnemyPresenter extends CharacterPresenter {
         health = value;
         ((EnemyView) characterView).changeHealth((float) health / maxHealth);
     }
+
     @Override
     public void updateState() {
         stateTime += Gdx.graphics.getDeltaTime();

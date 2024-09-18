@@ -9,7 +9,7 @@ import com.io.core.character.Character;
 import com.io.core.character.Enemy;
 import com.io.core.character.Player;
 import com.io.core.moves.Move;
-import com.io.presenter.character.CharacterInterface;
+import com.io.presenter.character.CharacterPresenterInterface;
 import com.io.presenter.character.EnemyPresenter;
 import com.io.presenter.character.PlayerPresenter;
 import com.io.service.GameService;
@@ -29,7 +29,7 @@ public class GamePresenter {
     private ChessPresenter chessPresenter;
     private BarsPresenter barsPresenter;
     private ButtonsPresenter buttonsPresenter;
-    private Map<Character, CharacterInterface> charactersMap;
+    private Map<Character, CharacterPresenterInterface> charactersMap;
     private Player playerModel;
     protected float windowHeight;
 
