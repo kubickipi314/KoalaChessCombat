@@ -11,15 +11,14 @@ import org.mockito.Mockito;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 public class PawnMoveTest {
 
     @Test
-    public void testIsMoveValid() {
+    public void testIsMoveValid_Player() {
         Board mockBoard = Mockito.mock(Board.class);
         BoardPosition startPosition = new BoardPosition(1, 1);
         BoardPosition endPosition = new BoardPosition(2, 2);
@@ -27,6 +26,30 @@ public class PawnMoveTest {
         when(mockPlayer.getPosition()).thenReturn(startPosition);
         Cell mockCell = Mockito.mock(Cell.class);
         Enemy mockEnemy = Mockito.mock(MeleeEnemy.class);
+
+        PawnMove pawnMove = new PawnMove(10, 5);
+
+        when(mockBoard.isValidCell(startPosition)).thenReturn(true);
+        when(mockBoard.isValidCell(endPosition)).thenReturn(true);
+        when(mockBoard.getCell(endPosition)).thenReturn(mockCell);
+        when(mockCell.getCharacter()).thenReturn(mockEnemy);
+
+        boolean result = pawnMove.isMoveValid(mockPlayer, endPosition, mockBoard);
+
+        assertFalse(result, "The move should be valid.");
+    }
+
+    @Test
+    public void testIsMoveValid_Enemy() {
+        Board mockBoard = Mockito.mock(Board.class);
+        BoardPosition startPosition = new BoardPosition(1, 1);
+        BoardPosition endPosition = new BoardPosition(2, 2);
+        Player mockPlayer = Mockito.mock(Player.class);
+        when(mockPlayer.getPosition()).thenReturn(startPosition);
+        when(mockPlayer.getTeam()).thenReturn(0);
+        Cell mockCell = Mockito.mock(Cell.class);
+        Enemy mockEnemy = Mockito.mock(MeleeEnemy.class);
+        when(mockEnemy.getTeam()).thenReturn(1);
 
         PawnMove pawnMove = new PawnMove(10, 5);
 
