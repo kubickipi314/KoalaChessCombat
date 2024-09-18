@@ -3,6 +3,7 @@ package com.io.core.character;
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
 import com.io.core.moves.KingMove;
+import com.io.core.moves.KnightMove;
 import com.io.core.moves.MoveDTO;
 import com.io.presenter.GamePresenter;
 import com.io.service.GameService;
@@ -12,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class MeleeEnemy extends Enemy {
-    static int maxMana = 1, maxHealth = 5;
+    static int maxMana = 2, maxHealth = 5;
 
     public MeleeEnemy(GameService gs, GamePresenter gp, BoardPosition position) {
         super(gs, gp, maxMana, maxHealth, position);
@@ -32,15 +33,16 @@ public class MeleeEnemy extends Enemy {
         }
         BoardPosition playerPosition = playerTeamPosition.get(0);
 
+        var knightMove = new KnightMove(1, 1);
         var move = new KingMove(1, 1);
-        if (move.isMoveValid(this, playerPosition, board)) {
-            return gs.tryMakeMove(new MoveDTO(move, playerPosition, this));
+        if (knightMove.isMoveValid(this, playerPosition, board)) {
+            return gs.tryMakeMove(new MoveDTO(knightMove, playerPosition, this));
         } else {
             var movePositionArr = Arrays.asList(new BoardPosition[]{
-                new BoardPosition(position.x() - 1, position.y()),
-                new BoardPosition(position.x() + 1, position.y()),
-                new BoardPosition(position.x(), position.y() - 1),
-                new BoardPosition(position.x(), position.y() + 1)
+                    new BoardPosition(position.x() - 1, position.y()),
+                    new BoardPosition(position.x() + 1, position.y()),
+                    new BoardPosition(position.x(), position.y() - 1),
+                    new BoardPosition(position.x(), position.y() + 1)
             });
             Collections.shuffle(movePositionArr);
 

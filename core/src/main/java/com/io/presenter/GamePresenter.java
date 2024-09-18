@@ -9,7 +9,7 @@ import com.io.core.character.Character;
 import com.io.core.character.Enemy;
 import com.io.core.character.Player;
 import com.io.core.moves.Move;
-import com.io.presenter.character.CharacterPresenter;
+import com.io.presenter.character.CharacterPresenterInterface;
 import com.io.presenter.character.EnemyPresenter;
 import com.io.presenter.character.PlayerPresenter;
 import com.io.service.GameService;
@@ -20,42 +20,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.io.core.CharacterType.LINUX;
+
 public class GamePresenter {
     private GameService gs;
-
     private SpriteBatch batch;
     private BoardPresenter boardPresenter;
     private ChessPresenter chessPresenter;
     private BarsPresenter barsPresenter;
     private ButtonsPresenter buttonsPresenter;
-    private Map<Character, CharacterPresenter> charactersMap;
+    private Map<Character, CharacterPresenterInterface> charactersMap;
     private Player playerModel;
     protected float windowHeight;
 
     private BoardPosition lastBoardPosition = new BoardPosition(-1, -1);
-    private int lastChosenMove = -1;
+    private int lastChosenMove = 0;
+    private int currentHealth;
     private Character activeCharacter = null;
     private boolean gameEnded = false;
 
     public void init(GameService gs) {
         this.gs = gs;
 
-        playerModel = gs.getPlayer();
-        List<Move> moves = playerModel.getMoves();
-
         batch = new SpriteBatch();
         windowHeight = Gdx.graphics.getHeight();
+
+        playerModel = gs.getPlayer();
+        List<Move> moves = playerModel.getMoves();
+        currentHealth = playerModel.getCurrentHealth();
+
         CoordinatesManager cm = new CoordinatesManager(gs.getRoomHeight(), gs.getRoomWidth(), moves.size());
         TextureManager tm = new TextureManager();
         SoundManager sm = new SoundManager();
 
-        charactersMap = new HashMap<>();
         var characterModels = gs.getCharacters();
+        charactersMap = new HashMap<>();
         for (var characterModel : characterModels) {
             if (characterModel instanceof Player) {
                 charactersMap.put(characterModel, new PlayerPresenter(tm, sm, cm, characterModel.getPosition()));
             } else if (characterModel instanceof Enemy) {
-                charactersMap.put(characterModel, new EnemyPresenter(tm, sm, cm, characterModel.getPosition(), characterModel.getMaxHealth()));
+                charactersMap.put(characterModel, new EnemyPresenter(tm, sm, cm, characterModel.getPosition(), characterModel.getMaxHealth(), LINUX));
             }
         }
 
@@ -70,11 +74,14 @@ public class GamePresenter {
             activeCharacter = gs.nextTurn();
         }
         var activePresenter = charactersMap.get(activeCharacter);
-        if (!activePresenter.isMoving() && !gameEnded) {
+        if (!activePresenter.isActive() && !gameEnded) {
             if (activeCharacter instanceof Enemy enemyModel) {
                 var success = enemyModel.makeNextMove();
                 var enemyPresenter = charactersMap.get(enemyModel);
-                enemyPresenter.update(enemyModel.getPosition());
+                if (currentHealth != playerModel.getCurrentHealth()) {
+                    enemyPresenter.startAttack(playerModel.getPosition());
+                }
+                enemyPresenter.startMove(enemyModel.getPosition());
                 if (!success) endTurn();
             } else {
                 Vector2 mousePosition = getMousePosition();
@@ -82,31 +89,37 @@ public class GamePresenter {
                 chessPresenter.handleInput(mousePosition);
                 buttonsPresenter.handleInput(mousePosition);
             }
-        } else {
-            activePresenter.updatePosition();
         }
-        updateFromModel();
+        buttonsPresenter.update();
+        updateCharacters();
+        updateChess();
+        updateBars();
     }
 
-    private void updateFromModel() {
-        // temporary solution presenter might need more information
-
+    private void updateCharacters() {
         for (var character : gs.getCharacters()) {
             var characterPresenter = charactersMap.get(character);
             if (characterPresenter instanceof EnemyPresenter enemyPresenter) {
                 enemyPresenter.setHealth(character.getCurrentHealth());
             }
+            characterPresenter.update();
         }
+    }
 
+    private void updateChess() {
         var selectedMove = chessPresenter.getSelectedMove();
         if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != selectedMove) {
             boardPresenter.setAvailableTiles(playerModel.getMove(selectedMove).getAccessibleCells(playerModel, gs.getBoardSnapshot()));
             lastBoardPosition = playerModel.getPosition();
             lastChosenMove = selectedMove;
         }
-        barsPresenter.setMana(playerModel.getCurrentMana());
-        barsPresenter.setHealth(playerModel.getCurrentHealth());
         chessPresenter.selectMove(selectedMove);
+    }
+
+    private void updateBars() {
+        barsPresenter.setMana(playerModel.getCurrentMana());
+        currentHealth = playerModel.getCurrentHealth();
+        barsPresenter.setHealth(currentHealth);
     }
 
     private Vector2 getMousePosition() {
@@ -134,11 +147,13 @@ public class GamePresenter {
 
     public void movePlayer(BoardPosition boardPosition) {
         var chosenMove = chessPresenter.getSelectedMove();
-        if (!gs.getPlayer().makeNextMove(boardPosition, chosenMove)) {
+        if (gs.getPlayer().makeNextMove(boardPosition, chosenMove)) {
+            var playerPresenter = charactersMap.get(playerModel);
+            playerPresenter.startMove(playerModel.getPosition());
+            if (playerModel.getPosition() != boardPosition) playerPresenter.startAttack(boardPosition);
+        } else {
             System.err.println("Failed to play Player's move");
         }
-        var playerPresenter = charactersMap.get(playerModel);
-        playerPresenter.update(playerModel.getPosition());
     }
 
     public void startGame() {
@@ -147,9 +162,6 @@ public class GamePresenter {
     public void endGame(GameResult gameResult) {
         System.out.println("GAME END\tresult: " + gameResult);
         gameEnded = true;
-    }
-
-    public void startTurn() {
     }
 
     public void endTurn() {

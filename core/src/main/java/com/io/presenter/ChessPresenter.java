@@ -13,20 +13,21 @@ import java.util.List;
 
 
 public class ChessPresenter {
+    private ChessTileView[] chessBoard;
     private final SoundManager sm;
     private final CoordinatesManager cm;
     private final TextureManager tm;
 
-    private ChessTileView[] chessBoard;
-
     private int actualTile;
-    private int numberOfMoves;
+
+    private int numberOfMoves = 0;
     private float chessBoardX;
     private float chessBoardY;
     private float tileSize;
-    private List<Move> moves;
 
-    private int selectedMove;
+    private List<Move> moves;
+    private int selectedMove = -1;
+
 
     public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, List<Move> moves) {
         this.sm = sm;
@@ -93,6 +94,17 @@ public class ChessPresenter {
         return mouseX >= chessBoardX && mouseY >= chessBoardY && mouseX <= chessBoardX + tileSize * numberOfMoves && mouseY <= chessBoardY + 2 * tileSize;
     }
 
+    public void selectMove(int i) {
+        if (i == selectedMove) return;
+        selectedMove = i;
+        for (int j = 0; j < numberOfMoves; j++) {
+            chessBoard[j].unselect();
+        }
+        System.out.println("selected " + i);
+        System.out.println(chessBoard[i]);
+        chessBoard[i].select();
+    }
+
     public void render(SpriteBatch batch) {
         for (ChessTileView chessTileView : chessBoard) {
             chessTileView.draw(batch);
@@ -101,13 +113,5 @@ public class ChessPresenter {
 
     public int getSelectedMove() {
         return selectedMove;
-    }
-
-    void selectMove(int i) {
-        selectedMove = i;
-        for (int j = 0; j < numberOfMoves; j++) {
-            chessBoard[j].unselect();
-        }
-        chessBoard[i].select();
     }
 }

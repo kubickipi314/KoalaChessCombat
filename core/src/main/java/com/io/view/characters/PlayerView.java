@@ -1,18 +1,19 @@
 package com.io.view.characters;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.view.assets_managers.TextureManager;
 
-public class PlayerView extends CharacterView{
+import static com.io.core.CharacterType.PLAYER;
+
+public class PlayerView extends CharacterView {
     public PlayerView(TextureManager tm, Vector2 position, float size) {
-        super(tm, position, size, tm.getPlayer(0));
+        super(tm, position, size, PLAYER);
     }
 
+    @Override
     public void setTexture(int stateNumber) {
-        characterSprite.setTexture(tm.getPlayer(stateNumber));
+        characterSprite.setTexture(tm.getCharacter(PLAYER, stateNumber));
     }
 
     @Override
@@ -21,7 +22,7 @@ public class PlayerView extends CharacterView{
     }
 
     @Override
-    public  void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch) {
         characterSprite.draw(batch);
     }
 }

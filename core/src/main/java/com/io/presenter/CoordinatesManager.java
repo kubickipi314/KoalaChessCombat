@@ -15,14 +15,14 @@ public class CoordinatesManager {
     private final float barHeight;
 
     public CoordinatesManager(int rows, int cols, int chessNumber) {
+        windowWidth = Gdx.graphics.getWidth();
+        float windowHeight = Gdx.graphics.getHeight();
+
         this.rows = rows;
         this.cols = cols;
         this.chessNumber = chessNumber;
 
-        windowWidth = Gdx.graphics.getWidth();
-        float windowHeight = Gdx.graphics.getHeight();
-
-        tileSize = Math.min(windowHeight / (rows + 4), windowWidth / Math.max((cols + 2), 7));
+        tileSize = Math.min(windowHeight / (rows + 5), windowWidth / Math.max((cols + 3), 8));
         float boardWidth = tileSize * cols;
         float boardHeight = tileSize * rows;
         boardX = (windowWidth - boardWidth) / 2;
@@ -55,7 +55,7 @@ public class CoordinatesManager {
     }
 
     public float getChessBoardY() {
-        return boardY - 2 * tileSize;
+        return boardY - 2.2f * tileSize;
     }
 
     public float getManaBarY() {
@@ -66,17 +66,17 @@ public class CoordinatesManager {
         return boardY + (rows + 0.9f) * tileSize;
     }
 
+    public float getBarHeight() {
+        return barHeight;
+    }
+
     public float getTileSize() {
         return tileSize;
     }
 
-    public Vector2 calculatePosition(BoardPosition bp) {
-        float startX = boardX + bp.x() * tileSize;
-        float startY = boardY + bp.y() * tileSize;
+    public Vector2 calculatePosition(BoardPosition boardPosition) {
+        float startX = boardX + boardPosition.x() * tileSize;
+        float startY = boardY + boardPosition.y() * tileSize;
         return new Vector2(startX, startY);
-    }
-
-    public float getBarHeight() {
-        return barHeight;
     }
 }

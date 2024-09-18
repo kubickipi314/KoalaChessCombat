@@ -15,10 +15,10 @@ public class Main extends Game {
     public void create() {
         TurnService ts = new TurnService();
         GameService gs = new GameService();
-        GamePresenter gp = new GamePresenter();
-        gs.init(ts, gp);
-        gp.init(gs);
-        setScreen(new GameScreen(gp));
+        GamePresenter gamePresenter = new GamePresenter();
+        gs.init(ts, gamePresenter);
+        gamePresenter.init(gs);
+        setScreen(new GameScreen(gamePresenter));
         gs.startGame();
     }
 }
