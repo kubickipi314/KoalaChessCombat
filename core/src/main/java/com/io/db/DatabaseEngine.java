@@ -16,7 +16,7 @@ public class DatabaseEngine {
     public DatabaseEngine(String url) {
         try {
             connectionSource
-                = new JdbcPooledConnectionSource(url);
+                    = new JdbcPooledConnectionSource(url);
             TableUtils.createTableIfNotExists(connectionSource, SnapshotEntity.class);
             TableUtils.createTableIfNotExists(connectionSource, CharactersEntity.class);
         } catch (SQLException e) {

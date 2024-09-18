@@ -19,6 +19,11 @@ public class Player extends Character {
         this.moves = moves;
     }
 
+    public Player(GameService gs, GamePresenter gp, BoardPosition position, List<Move> moves, int currentHealth, int currentMana) {
+        super(gs, gp, maxMana, maxHealth, position, 0, currentHealth, currentMana);
+        this.moves = moves;
+    }
+
     public boolean makeNextMove(BoardPosition movePosition, int moveIdx) {
         var moveDTO = new MoveDTO(getMove(moveIdx), movePosition, this);
         return gs.tryMakeMove(moveDTO);

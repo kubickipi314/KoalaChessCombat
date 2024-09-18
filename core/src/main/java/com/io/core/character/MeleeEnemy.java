@@ -19,6 +19,10 @@ public class MeleeEnemy extends Enemy {
         super(gs, gp, maxMana, maxHealth, position);
     }
 
+    public MeleeEnemy(GameService gs, GamePresenter gp, BoardPosition position, int currentHealth, int currentMana) {
+        super(gs, gp, maxMana, maxHealth, position, currentHealth, currentMana);
+    }
+
     @Override
     public boolean makeNextMove() {
         if (currentMana <= 0)

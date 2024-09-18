@@ -32,7 +32,18 @@ public abstract class Character {
         this.team = team;
     }
 
+    public Character(GameService gs, GamePresenter gp, int maxMana, int maxHealth, BoardPosition position, int team, int currentHealth, int currentMana) {
+        this(gs, gp, maxMana, maxHealth, position, team);
+        this.currentHealth = currentHealth;
+        this.currentMana = currentMana;
+    }
+
+
     public int getCurrentMana() {
+        return currentMana;
+    }
+
+    public int getMaxMana() {
         return currentMana;
     }
 

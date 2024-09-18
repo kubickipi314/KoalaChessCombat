@@ -2,5 +2,5 @@ package com.io.core.snapshot;
 
 import java.util.List;
 
-public record GameSnapshot(List<CharacterSnapshot> characterSnapshotList) {
+public record GameSnapshot(Long id, List<CharacterSnapshot> characterSnapshotList) {
 }

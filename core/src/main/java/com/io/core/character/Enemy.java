@@ -9,5 +9,9 @@ public abstract class Enemy extends Character {
         super(gs, gp, maxMana, maxHealth, position, 1);
     }
 
+    public Enemy(GameService gs, GamePresenter gp, int maxMana, int maxHealth, BoardPosition position, int currentHealth, int currentMana) {
+        super(gs, gp, maxMana, maxHealth, position, 1, currentHealth, currentMana);
+    }
+
     public abstract boolean makeNextMove();
 }

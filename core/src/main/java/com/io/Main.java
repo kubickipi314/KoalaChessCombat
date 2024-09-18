@@ -1,6 +1,7 @@
 package com.io;
 
 import com.badlogic.gdx.Game;
+import com.io.core.snapshot.GameSnapshot;
 import com.io.db.DatabaseEngine;
 import com.io.presenter.GamePresenter;
 import com.io.screens.GameScreen;
@@ -13,17 +14,20 @@ import com.io.service.TurnService;
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
  */
 public class Main extends Game {
-    DatabaseEngine dbEngine;
+    private DatabaseEngine dbEngine;
+
+    private GameService gs;
 
     @Override
     public void create() {
-        DatabaseEngine dbEngine = new DatabaseEngine("jdbc:sqlite:game.db");
+        dbEngine = new DatabaseEngine("jdbc:sqlite:game.db");
         SnapshotService sns = new SnapshotService(dbEngine);
+        GameSnapshot gameSnapshot = sns.getLastSnapshot();
 
         TurnService ts = new TurnService();
-        GameService gs = new GameService();
+        gs = new GameService();
         GamePresenter gamePresenter = new GamePresenter();
-        gs.init(ts, gamePresenter);
+        gs.init(ts, gamePresenter, sns, gameSnapshot);
         gamePresenter.init(gs);
         setScreen(new GameScreen(gamePresenter));
 
@@ -33,6 +37,8 @@ public class Main extends Game {
     @Override
     public void dispose() {
         super.dispose();
+
+        gs.abort();
         dbEngine.closeConnection();
     }
 }
