@@ -74,6 +74,14 @@ public class Board {
         return true;
     }
 
+    public int getBoardWidth() {
+        return boardWidth;
+    }
+
+    public int getBoardHeight() {
+        return boardHeight;
+    }
+
     public boolean isValidCell(BoardPosition position) {
         if (position.x() < 0 || position.x() >= this.boardWidth) return false;
         if (position.y() < 0 || position.y() >= this.boardHeight) return false;
