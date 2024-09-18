@@ -80,7 +80,13 @@ public class Board {
         return !getCell(position).isBlocked;
     }
 
-    public Cell getCell(BoardPosition position) {
+    public Character getCharacter(BoardPosition position) {
+        if (isValidCell(position))
+            return board[position.y()][position.x()].getCharacter();
+        return null;
+    }
+
+    private Cell getCell(BoardPosition position) {
         return board[position.y()][position.x()];
     }
 

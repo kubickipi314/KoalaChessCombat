@@ -27,7 +27,7 @@ public class QueenMove implements Move {
         var startPosition = character.getPosition();
 
         if (startPosition == endPosition) return false;
-        var attackedCharacter = board.getCell(endPosition).getCharacter();
+        var attackedCharacter = board.getCharacter(endPosition);
         if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
 
         int dx = endPosition.x() - startPosition.x();
@@ -47,7 +47,7 @@ public class QueenMove implements Move {
         }
         return accessibleCells.stream()
                 .filter(currentPosition -> {
-                    var attackedCharacter = board.getCell(currentPosition).getCharacter();
+                    var attackedCharacter = board.getCharacter(currentPosition);
                     if (attackedCharacter == null) {
                         return true;
                     }

@@ -21,13 +21,12 @@ public class PawnMove implements Move {
         var startPosition = character.getPosition();
 
         if (!board.isValidCell(startPosition) || !board.isValidCell(endPosition)) return false;
-        var attackedCharacter = board.getCell(endPosition).getCharacter();
+        var attackedCharacter = board.getCharacter(endPosition);
         if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
         if (endPosition.y() != 1 + startPosition.y()) return false;
         if (endPosition.x() > startPosition.x() + 1 || endPosition.x() < startPosition.x() - 1) return false;
-        var endCell = board.getCell(endPosition);
-        if (startPosition.x() == endPosition.x() && endCell.getCharacter() != null) return false;
-        if (endCell.getCharacter() == null) return false;
+        if (startPosition.x() == endPosition.x() && attackedCharacter != null) return false;
+        if (attackedCharacter == null) return false;
         return true;
     }
 
@@ -40,14 +39,14 @@ public class PawnMove implements Move {
         var frontPosition = new BoardPosition(x, y + 1);
         var frontLeftPosition = new BoardPosition(x - 1, y + 1);
         var frontRightPosition = new BoardPosition(x + 1, y + 1);
-        if (board.isValidCell(frontPosition) && board.getCell(frontPosition).getCharacter() == null)
+        if (board.isValidCell(frontPosition) && board.getCharacter(frontPosition) == null)
             accessibleCells.add(frontPosition);
-        var frontLeftCharacter = board.getCell(frontLeftPosition).getCharacter();
+        var frontLeftCharacter = board.getCharacter(frontLeftPosition);
         if (board.isValidCell(frontLeftPosition) && frontLeftCharacter != null
                 && frontLeftCharacter.getTeam() != character.getTeam())
             accessibleCells.add(frontLeftPosition);
 
-        var frontRightCharacter = board.getCell(frontRightPosition).getCharacter();
+        var frontRightCharacter = board.getCharacter(frontRightPosition);
         if (board.isValidCell(frontRightPosition) && frontRightCharacter != null
                 && frontRightCharacter.getTeam() != character.getTeam())
             accessibleCells.add(frontRightPosition);

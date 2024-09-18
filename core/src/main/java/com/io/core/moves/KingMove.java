@@ -26,11 +26,11 @@ public class KingMove implements Move {
     @Override
     public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
         var startPosition = character.getPosition();
-        var cell = board.getCell(endPosition);
+        var attackedCharacter = board.getCharacter(endPosition);
 
-        if (cell.isBlocked)
+        if (!board.isValidCell(endPosition))
             return false;
-        if (cell.getCharacter() != null && cell.getCharacter().getTeam() == character.getTeam())
+        if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam())
             return false;
 
         if (abs(startPosition.x() - endPosition.x()) > 1 ||
@@ -51,7 +51,7 @@ public class KingMove implements Move {
 
         return accessibleCells.stream()
                 .filter(currentPosition -> {
-                    var attackedCharacter = board.getCell(currentPosition).getCharacter();
+                    var attackedCharacter = board.getCharacter(currentPosition);
                     if (attackedCharacter == null) {
                         return true;
                     }

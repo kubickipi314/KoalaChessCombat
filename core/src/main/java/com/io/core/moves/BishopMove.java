@@ -27,7 +27,7 @@ public class BishopMove implements Move {
         var startPosition = character.getPosition();
 
         if (startPosition.x() == endPosition.x() || startPosition.y() == endPosition.y()) return false;
-        var attackedCharacter = board.getCell(endPosition).getCharacter();
+        var attackedCharacter = board.getCharacter(endPosition);
         if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
         int x = endPosition.x() > startPosition.x() ? 1 : -1;
         int y = endPosition.y() > startPosition.y() ? 1 : -1;
@@ -44,7 +44,7 @@ public class BishopMove implements Move {
         }
         return accessibleCells.stream()
                 .filter(currentPosition -> {
-                    var attackedCharacter = board.getCell(currentPosition).getCharacter();
+                    var attackedCharacter = board.getCharacter(currentPosition);
                     if (attackedCharacter == null) {
                         return true;
                     }

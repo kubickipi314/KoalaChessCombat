@@ -33,7 +33,7 @@ public final class MovesUtils {
             var currentPosition = new BoardPosition(currentX, currentY);
             if (currentPosition.equals(endPosition)) return true;
             if (!board.isValidCell(currentPosition)) return false;
-            if (board.getCell(currentPosition).getCharacter() != null) return false;
+            if (board.getCharacter(currentPosition) != null) return false;
         }
         return false;
     }
@@ -51,7 +51,7 @@ public final class MovesUtils {
 
             if (!board.isValidCell(currentPosition)) break;
             accessibleCells.add(currentPosition);
-            if (board.getCell(currentPosition).getCharacter() != null) break;
+            if (board.getCharacter(currentPosition) != null) break;
         }
         return accessibleCells;
     }

@@ -26,7 +26,7 @@ public class KnightMove implements Move {
     @Override
     public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
         var startPosition = character.getPosition();
-        var attackedCharacter = board.getCell(endPosition).getCharacter();
+        var attackedCharacter = board.getCharacter(endPosition);
         if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
 
         if (startPosition.x() == endPosition.x() || startPosition.y() == endPosition.y()) return false;
@@ -48,7 +48,7 @@ public class KnightMove implements Move {
 
         return accessibleCells.stream()
                 .filter(currentPosition -> {
-                    var attackedCharacter = board.getCell(currentPosition).getCharacter();
+                    var attackedCharacter = board.getCharacter(currentPosition);
                     if (attackedCharacter == null) {
                         return true;
                     }
