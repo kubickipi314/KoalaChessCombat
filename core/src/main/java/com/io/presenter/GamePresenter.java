@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.io.core.CharacterType.LINUX;
+import static com.io.core.CharacterType.MINIX;
 
 public class GamePresenter {
     private GameService gs;

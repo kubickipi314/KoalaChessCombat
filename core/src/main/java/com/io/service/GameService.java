@@ -41,7 +41,8 @@ public class GameService {
                 player,
                 new MeleeEnemy(this, gp, new BoardPosition(1, 4)),
                 new MeleeEnemy(this, gp, new BoardPosition(2, 4)),
-                new MeleeEnemy(this, gp, new BoardPosition(3, 4))
+                new MeleeEnemy(this, gp, new BoardPosition(3, 4)),
+                new MeleeEnemy(this, gp, new BoardPosition(4, 4))
         ));
 
         board = new Board(roomWidth, roomHeight, characters);

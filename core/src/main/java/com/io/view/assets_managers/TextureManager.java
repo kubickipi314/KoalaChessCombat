@@ -48,9 +48,9 @@ public class TextureManager {
         linux.add(new Texture("textures/characters/linux_2.png"));
 
         List<Texture> minix = new ArrayList<>();
-        minix.add(new Texture("textures/characters/minix.png"));
-        minix.add(new Texture("textures/characters/minix.png"));
-        minix.add(new Texture("textures/characters/minix.png"));
+        minix.add(new Texture("textures/characters/minix_0.png"));
+        minix.add(new Texture("textures/characters/minix_1.png"));
+        minix.add(new Texture("textures/characters/minix_2.png"));
 
         characters.put(PLAYER, player);
         characters.put(MINIX, minix);
