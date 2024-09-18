@@ -14,11 +14,13 @@ public class SnapshotService {
         this.dbEngine = dbEngine;
     }
 
-    public Long createSnapshot(GameSnapshot gameSnapshot) {
+    public Long createSnapshot(Long id, GameSnapshot gameSnapshot) {
         var snapshotDAO = dbEngine.getDAO(SnapshotEntity.class);
         var charactersDAO = dbEngine.getDAO(CharactersEntity.class);
 
         try {
+            if (id != null) deleteSnapshot(id);
+
             var snapshotEntity = new SnapshotEntity();
             snapshotDAO.create(snapshotEntity);
             var snapshotId = snapshotEntity.getId();
@@ -68,7 +70,7 @@ public class SnapshotService {
             snapshotDAO.deleteById(id);
 
             var deleteBuilder = characterDAO.deleteBuilder();
-            deleteBuilder.where().eq("snapshotId", 1);
+            deleteBuilder.where().eq("snapshotId", id);
             deleteBuilder.delete();
         } catch (SQLException e) {
         }

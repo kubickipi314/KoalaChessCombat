@@ -24,7 +24,7 @@ public class GameService {
     private GamePresenter gp;
     private SnapshotService sns;
 
-    private GameSnapshot gameSnapshot;
+    private Long gameSnapshotId;
 
     private boolean gameInProgress = false;
     private Board board;
@@ -36,10 +36,14 @@ public class GameService {
         this.gp = gp;
         this.sns = sns;
 
-        this.gameSnapshot = gameSnapshot;
-        if (gameSnapshot != null)
-            System.out.println("Snapshot ID: " + gameSnapshot.id());
-        loadGame(gameSnapshot);
+        if (gameSnapshot == null) {
+            gameSnapshotId = null;
+            loadGame();
+        } else {
+            gameSnapshotId = gameSnapshot.id();
+            System.out.println("Game loaded from snapshot with id=" + gameSnapshotId);
+            loadGame(gameSnapshot);
+        }
     }
 
     public void loadGame() {
@@ -65,11 +69,6 @@ public class GameService {
     }
 
     public void loadGame(GameSnapshot gameSnapshot) {
-        if (gameSnapshot == null) {
-            loadGame();
-            return;
-        }
-
         var moves = List.of(new Move[]{
             new KingMove(2, 1),
             new KnightMove(3, 3),
@@ -116,9 +115,9 @@ public class GameService {
 
     public void abort() {
         if (gameInProgress)
-            createGameSnapshot();
-        else if (gameSnapshot != null)
-            sns.deleteSnapshot(gameSnapshot.id());
+            createGameSnapshot(gameSnapshotId);
+        else if (gameSnapshotId != null)
+            sns.deleteSnapshot(gameSnapshotId);
     }
 
     public Player getPlayer() {
@@ -173,7 +172,7 @@ public class GameService {
         return null;
     }
 
-    private void createGameSnapshot() {
+    private void createGameSnapshot(Long id) {
         var characterSnapshots = new ArrayList<CharacterSnapshot>();
         for (var character : getCharacters()) {
             var x = character.getPosition().x();
@@ -186,6 +185,6 @@ public class GameService {
             characterSnapshots.add(new CharacterSnapshot(x, y, characterEnum, currentHealth, currentMana, team));
         }
         var gameSnapshot = new GameSnapshot(null, characterSnapshots);
-        sns.createSnapshot(gameSnapshot);
+        sns.createSnapshot(id, gameSnapshot);
     }
 }
