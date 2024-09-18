@@ -11,7 +11,7 @@ import com.io.view.tiles.BoardTileView;
 import java.util.List;
 
 public class BoardPresenter {
-    private final GamePresenter gp;
+    private final GamePresenter gamePresenter;
 
     private final BoardTileView[][] board;
     private List<BoardPosition> availableTiles;
@@ -26,7 +26,7 @@ public class BoardPresenter {
     private int actualCol;
 
     public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gp) {
-        this.gp = gp;
+        this.gamePresenter = gp;
 
         rows = cm.getRows();
         cols = cm.getCols();
@@ -57,7 +57,7 @@ public class BoardPresenter {
                 board[actualRow][actualCol].switchAvailable();
             }
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                gp.movePlayer(new BoardPosition(actualCol, actualRow));
+                gamePresenter.movePlayer(new BoardPosition(actualCol, actualRow));
             }
         }
     }

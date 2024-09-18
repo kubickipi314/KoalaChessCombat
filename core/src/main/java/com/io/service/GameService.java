@@ -29,19 +29,19 @@ public class GameService {
 
         BoardPosition playerStartingPosition = new BoardPosition(1, 0);
         var moves = List.of(new Move[]{
-            new KingMove(1, 1),
-            new KnightMove(1, 1),
-            new RookMove(1, 1),
-            new BishopMove(1, 1),
-            new QueenMove(1, 1)
+                new KingMove(2, 1),
+                new KnightMove(3, 3),
+                new RookMove(5, 4),
+                new BishopMove(3, 2),
+                new QueenMove(7, 5)
         });
         player = new Player(this, gp, playerStartingPosition, moves);
 
         var characters = new ArrayList<>(List.of(
-            player,
-            new MeleeEnemy(this, gp, new BoardPosition(3, 2)),
-            new MeleeEnemy(this, gp, new BoardPosition(3, 3)),
-            new MeleeEnemy(this, gp, new BoardPosition(3, 4))
+                player,
+                new MeleeEnemy(this, gp, new BoardPosition(1, 4)),
+                new MeleeEnemy(this, gp, new BoardPosition(2, 4)),
+                new MeleeEnemy(this, gp, new BoardPosition(3, 4))
         ));
 
         board = new Board(roomWidth, roomHeight, characters);

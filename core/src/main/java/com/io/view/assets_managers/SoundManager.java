@@ -8,6 +8,7 @@ public class SoundManager {
     private final Sound select;
     private final Sound sword;
     private final Sound roar;
+
     public SoundManager() {
         move = Gdx.audio.newSound(Gdx.files.internal("sounds/move_sound_1.mp3"));
         select = Gdx.audio.newSound(Gdx.files.internal("sounds/select_sound_1.mp3"));
@@ -27,6 +28,7 @@ public class SoundManager {
     public void playSwordSound() {
         sword.play();
     }
+
     public void playRoarSound() {
         roar.play();
     }

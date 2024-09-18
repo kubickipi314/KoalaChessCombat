@@ -39,7 +39,7 @@ public class TurnService {
         }
         turnQueue.addLast(currentCharacter);
 
-        currentCharacter.changeMana(1);
+        currentCharacter.changeMana(5);
         return currentCharacter;
     }
 

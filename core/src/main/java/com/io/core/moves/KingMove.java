@@ -28,14 +28,14 @@ public class KingMove implements Move {
     public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
         var startPosition = character.getPosition();
         var cell = board.getCell(endPosition);
-        
+
         if (cell.isBlocked)
             return false;
         if (cell.getCharacter() != null && cell.getCharacter().getTeam() == character.getTeam())
             return false;
 
         if (abs(startPosition.x() - endPosition.x()) > 1 ||
-            abs(startPosition.y() - endPosition.y()) > 1)
+                abs(startPosition.y() - endPosition.y()) > 1)
             return false;
 
         return true;
