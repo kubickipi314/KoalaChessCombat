@@ -48,7 +48,10 @@ public class PawnMoveTest {
 
         PawnMove pawnMove = new PawnMove(10, 5);
 
-        when(mockCell.getCharacter()).thenReturn(Mockito.mock(Player.class));
+        var mockEnemy = Mockito.mock(MeleeEnemy.class);
+        when(mockCell.getCharacter()).thenReturn(mockEnemy);
+        when(mockEnemy.getTeam()).thenReturn(1);
+
 
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         when(mockBoard.getCell(any(BoardPosition.class))).thenReturn(new Cell(false));
@@ -56,6 +59,7 @@ public class PawnMoveTest {
 
         Player mockPlayer = Mockito.mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(position);
+        when(mockPlayer.getTeam()).thenReturn(0);
 
         List<BoardPosition> accessibleCells = pawnMove.getAccessibleCells(mockPlayer, mockBoard);
 
