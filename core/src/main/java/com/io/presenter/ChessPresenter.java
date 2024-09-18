@@ -14,6 +14,9 @@ import java.util.List;
 
 public class ChessPresenter {
     private ChessTileView[] chessBoard;
+    private final SoundManager sm;
+    private final CoordinatesManager cm;
+    private final TextureManager tm;
 
     private int actualTile;
 
@@ -21,22 +24,19 @@ public class ChessPresenter {
     private float chessBoardX;
     private float chessBoardY;
     private float tileSize;
+
     private List<Move> moves;
-    private final SoundManager sm;
-    private final CoordinatesManager cm;
-    private final TextureManager tm;
-    private final GamePresenter gamePresenter;
     private int selectedMove = -1;
 
 
-    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gamePresenter) {
-        chessBoard = new ChessTileView[numberOfMoves];
+    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, List<Move> moves) {
         this.sm = sm;
         this.cm = cm;
         this.tm = tm;
-        this.gamePresenter = gamePresenter;
-    }
 
+        setMoves(moves);
+        selectMove(0);
+    }
 
     public void handleInput(Vector2 mousePosition) {
         chessBoard[actualTile].unmark();
@@ -45,7 +45,7 @@ public class ChessPresenter {
             getActualTile(mousePosition);
             chessBoard[actualTile].mark();
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                gamePresenter.choseMove(actualTile);
+                selectMove(actualTile);
                 sm.playSelectSound();
             }
         }
@@ -61,7 +61,7 @@ public class ChessPresenter {
         throw new Error("mousePosition outside any tile but inside chessBoard");
     }
 
-    public void setMoves(List<Move> moves) {
+    private void setMoves(List<Move> moves) {
         if (moves.equals(this.moves)) return;
 
         this.moves = moves;
@@ -76,9 +76,15 @@ public class ChessPresenter {
         for (int number = 0; number < numberOfMoves; number++) {
             float x = chessBoardX + number * tileSize;
             Vector2 position = new Vector2(x, chessBoardY);
-            var type = moves.get(number).getType();
-            chessBoard[number] = new ChessTileView(tm.getChessTexture(type),
-                    tm.getSelectedTexture(type), position, tileSize);
+            Move move = moves.get(number);
+            var type = move.getType();
+            chessBoard[number] = new ChessTileView(tm.getChess(type),
+                    tm.getSelectedChess(type), position, tileSize);
+
+            int damageNumber = move.getDamage();
+            int costNumber = move.getCost();
+            chessBoard[number].setDamage(tm.getDigit(damageNumber));
+            chessBoard[number].setCost(tm.getDigit(costNumber));
         }
     }
 
@@ -103,5 +109,9 @@ public class ChessPresenter {
         for (ChessTileView chessTileView : chessBoard) {
             chessTileView.draw(batch);
         }
+    }
+
+    public int getSelectedMove() {
+        return selectedMove;
     }
 }

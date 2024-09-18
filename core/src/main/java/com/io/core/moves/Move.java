@@ -2,11 +2,12 @@ package com.io.core.moves;
 
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
+import com.io.core.character.Character;
 
 import java.util.List;
 
 public interface Move {
-    boolean isMoveValid(BoardPosition startPosition, BoardPosition endPosition, Board board);
+    boolean isMoveValid(Character character, BoardPosition endPosition, Board board);
 
     List<BoardPosition> getAccessibleCells(BoardPosition position, Board board);
 

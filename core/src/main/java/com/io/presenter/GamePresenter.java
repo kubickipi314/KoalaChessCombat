@@ -3,81 +3,123 @@ package com.io.presenter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.CONST;
 import com.io.core.GameResult;
 import com.io.core.board.BoardPosition;
+import com.io.core.character.Character;
+import com.io.core.character.Enemy;
 import com.io.core.character.Player;
+import com.io.core.moves.Move;
+import com.io.presenter.character.CharacterPresenterInterface;
+import com.io.presenter.character.EnemyPresenter;
+import com.io.presenter.character.PlayerPresenter;
 import com.io.service.GameService;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.io.core.CharacterType.LINUX;
+
 public class GamePresenter {
-    private final SpriteBatch batch;
-    private final BoardPresenter boardPresenter;
-    private final ChessPresenter chessPresenter;
-    private final BarsPresenter barsPresenter;
-    private final ButtonsPresenter buttonsPresenter;
-    private final PlayerPresenter player;
-    protected final float windowHeight;
+    private GameService gs;
+    private SpriteBatch batch;
+    private BoardPresenter boardPresenter;
+    private ChessPresenter chessPresenter;
+    private BarsPresenter barsPresenter;
+    private ButtonsPresenter buttonsPresenter;
+    private Map<Character, CharacterPresenterInterface> charactersMap;
+    private Player playerModel;
+    protected float windowHeight;
 
-    private final GameService gs;
+    private BoardPosition lastBoardPosition = new BoardPosition(-1, -1);
+    private int lastChosenMove = 0;
+    private int currentHealth;
+    private Character activeCharacter = null;
+    private boolean gameEnded = false;
 
-    BoardPosition lastBoardPosition = new BoardPosition(-1, -1);
-    int lastChosenMove = -1;
-
-
-    public GamePresenter(GameService gs) {
-        BoardPosition startingPosition = gs.getPlayer().getPosition();
+    public void init(GameService gs) {
+        this.gs = gs;
 
         batch = new SpriteBatch();
-        this.gs = gs;
-        CoordinatesManager cm = new CoordinatesManager(gs.getRoomHeight(), gs.getRoomWidth());
+        windowHeight = Gdx.graphics.getHeight();
+
+        playerModel = gs.getPlayer();
+        List<Move> moves = playerModel.getMoves();
+        currentHealth = playerModel.getCurrentHealth();
+
+        CoordinatesManager cm = new CoordinatesManager(gs.getRoomHeight(), gs.getRoomWidth(), moves.size());
         TextureManager tm = new TextureManager();
         SoundManager sm = new SoundManager();
-        this.player = new PlayerPresenter(tm, sm, cm, startingPosition);
+
+        var characterModels = gs.getCharacters();
+        charactersMap = new HashMap<>();
+        for (var characterModel : characterModels) {
+            if (characterModel instanceof Player) {
+                charactersMap.put(characterModel, new PlayerPresenter(tm, sm, cm, characterModel.getPosition()));
+            } else if (characterModel instanceof Enemy) {
+                charactersMap.put(characterModel, new EnemyPresenter(tm, sm, cm, characterModel.getPosition(), characterModel.getMaxHealth(), LINUX));
+            }
+        }
 
         this.barsPresenter = new BarsPresenter(tm, cm);
-
         this.boardPresenter = new BoardPresenter(tm, cm, this);
-        this.chessPresenter = new ChessPresenter(tm, sm, cm, this);
+        this.chessPresenter = new ChessPresenter(tm, sm, cm, moves);
         this.buttonsPresenter = new ButtonsPresenter(tm, sm, cm, this);
-
-        windowHeight = Gdx.graphics.getHeight();
     }
 
     public void update() {
-        boolean active = false;
-        if (player.isMoving()) {
-            player.updatePosition();
-            active = true;
+        if (activeCharacter == null && !gameEnded) {
+            activeCharacter = gs.nextTurn();
         }
-        if (!active) {
-            updateFromModel();
+        var activePresenter = charactersMap.get(activeCharacter);
+        if (!activePresenter.isActive() && !gameEnded) {
+            if (activeCharacter instanceof Enemy enemyModel) {
+                var success = enemyModel.makeNextMove();
+                var enemyPresenter = charactersMap.get(enemyModel);
+                if (currentHealth != playerModel.getCurrentHealth()) {
+                    enemyPresenter.startAttack(playerModel.getPosition());
+                }
+                enemyPresenter.startMove(enemyModel.getPosition());
+                if (!success) endTurn();
+            } else {
+                Vector2 mousePosition = getMousePosition();
+                boardPresenter.handleInput(mousePosition);
+                chessPresenter.handleInput(mousePosition);
+                buttonsPresenter.handleInput(mousePosition);
+            }
+        }
+        buttonsPresenter.update();
+        updateCharacters();
+        updateChess();
+        updateBars();
+    }
 
-            Vector2 mousePosition = getMousePosition();
-            boardPresenter.handleInput(mousePosition);
-            chessPresenter.handleInput(mousePosition);
-            buttonsPresenter.handleInput(mousePosition);
+    private void updateCharacters() {
+        for (var character : gs.getCharacters()) {
+            var characterPresenter = charactersMap.get(character);
+            if (characterPresenter instanceof EnemyPresenter enemyPresenter) {
+                enemyPresenter.setHealth(character.getCurrentHealth());
+            }
+            characterPresenter.update();
         }
     }
 
-    private void updateFromModel() {
-        // temporary solution presenter might need more information
-
-        Player playerModel = gs.getPlayer();
-        int playerX = playerModel.getPosition().x();
-        int playerY = playerModel.getPosition().y();
-        player.update(playerX, playerY);
-
-        if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != gs.getChosenMove()) {
-            boardPresenter.setAvailableTiles(playerModel.getMove(gs.getChosenMove()).getAccessibleCells(playerModel.getPosition(), gs.getBoard()));
+    private void updateChess() {
+        var selectedMove = chessPresenter.getSelectedMove();
+        if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != selectedMove) {
+            boardPresenter.setAvailableTiles(playerModel.getMove(selectedMove).getAccessibleCells(playerModel.getPosition(), gs.getBoardSnapshot()));
             lastBoardPosition = playerModel.getPosition();
-            lastChosenMove = gs.getChosenMove();
+            lastChosenMove = selectedMove;
         }
+        chessPresenter.selectMove(selectedMove);
+    }
+
+    private void updateBars() {
         barsPresenter.setMana(playerModel.getCurrentMana());
-        barsPresenter.setHealth(playerModel.getCurrentHealth());
-        chessPresenter.setMoves(playerModel.getMoves());
-        chessPresenter.selectMove(gs.getChosenMove());
+        currentHealth = playerModel.getCurrentHealth();
+        barsPresenter.setHealth(currentHealth);
     }
 
     private Vector2 getMousePosition() {
@@ -91,30 +133,38 @@ public class GamePresenter {
         batch.begin();
         boardPresenter.render(batch);
 
-        player.render(batch);
+        for (var characterModel : gs.getCharacters()) {
+            var characterPresenter = charactersMap.get(characterModel);
+            characterPresenter.render(batch);
+        }
 
         chessPresenter.render(batch);
         barsPresenter.render(batch);
         buttonsPresenter.render(batch);
+
         batch.end();
     }
 
-    public void choseMove(int chosenMove) {
-        gs.setMove(chosenMove);
+    public void movePlayer(BoardPosition boardPosition) {
+        var chosenMove = chessPresenter.getSelectedMove();
+        if (gs.getPlayer().makeNextMove(boardPosition, chosenMove)) {
+            var playerPresenter = charactersMap.get(playerModel);
+            playerPresenter.startMove(playerModel.getPosition());
+            if (playerModel.getPosition() != boardPosition) playerPresenter.startAttack(boardPosition);
+        } else {
+            System.err.println("Failed to play Player's move");
+        }
     }
 
-
-    public void movePlayer(BoardPosition boardPosition) {
-        gs.movePlayer(boardPosition);
+    public void startGame() {
     }
 
     public void endGame(GameResult gameResult) {
+        System.out.println("GAME END\tresult: " + gameResult);
+        gameEnded = true;
     }
 
-    public void startTurn() {
-    }
-
-    public void increaseMana() {
-        gs.increaseMana(CONST.DEFAULT_INCREASE_AMOUNT);
+    public void endTurn() {
+        activeCharacter = null;
     }
 }

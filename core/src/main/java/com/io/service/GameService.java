@@ -4,58 +4,66 @@ import com.io.CONST;
 import com.io.core.GameResult;
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
+import com.io.core.character.Character;
+import com.io.core.character.MeleeEnemy;
 import com.io.core.character.Player;
 import com.io.core.moves.*;
 import com.io.presenter.GamePresenter;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
 public class GameService {
+    private final int roomWidth = CONST.DEFAULT_ROOM_WIDTH;
+    private final int roomHeight = CONST.DEFAULT_ROOM_HEIGHT;
 
-    private GamePresenter gamePresenter;
-    private final TurnService ts;
+    private GamePresenter gp;
+    private TurnService ts;
 
-    private int roomWidth = CONST.DEFAULT_ROOM_WIDTH;
-    private int roomHeight = CONST.DEFAULT_ROOM_HEIGHT;
-    private final Player player;
-    private int chosenMove = 0;
+    private Board board;
+    private Player player;
 
-    public GameService(TurnService ts) {
+    public void init(TurnService ts, GamePresenter gp) {
         this.ts = ts;
+        this.gp = gp;
+
         BoardPosition playerStartingPosition = new BoardPosition(1, 0);
-        var moves = new ArrayList<Move>();
-        moves.add(new KingMove(1, 1));
-        moves.add(new KnightMove(1, 1));
-        moves.add(new RookMove(1, 1));
-        moves.add(new BishopMove(1, 1));
-        moves.add(new QueenMove(1, 1));
-        this.player = new Player(ts, gamePresenter, playerStartingPosition, moves);
-        ts.initialize(this, Collections.singletonList(this.player));
+        var moves = List.of(new Move[]{
+                new KingMove(2, 1),
+                new KnightMove(3, 3),
+                new RookMove(5, 4),
+                new BishopMove(3, 2),
+                new QueenMove(7, 5)
+        });
+        player = new Player(this, gp, playerStartingPosition, moves);
+
+        var characters = new ArrayList<>(List.of(
+                player,
+                new MeleeEnemy(this, gp, new BoardPosition(1, 4)),
+                new MeleeEnemy(this, gp, new BoardPosition(2, 4)),
+                new MeleeEnemy(this, gp, new BoardPosition(3, 4))
+        ));
+
+        board = new Board(roomWidth, roomHeight, characters);
+
+        ts.init(this, characters, board);
     }
 
-    public void endGame(GameResult gameResult) {
-        gamePresenter.endGame(gameResult);
+    public void startGame() {
+        gp.startGame();
     }
 
-    public void movePlayer(BoardPosition boardPosition) {
-        player.PlayMove(boardPosition, chosenMove);
-    }
-
-    public void setMove(int chosenMove) {
-        this.chosenMove = chosenMove;
-    }
-
-    public int getChosenMove() {
-        return chosenMove;
-    }
-
-    public void increaseMana(int mana) {
-        player.changeMana(mana);
+    void endGame(GameResult gameResult) {
+        gp.endGame(gameResult);
+        ts.stop();
     }
 
     public Player getPlayer() {
         return player;
+    }
+
+    public List<Character> getCharacters() {
+        return board.getCharacters();
     }
 
     public int getRoomWidth() {
@@ -66,7 +74,31 @@ public class GameService {
         return roomHeight;
     }
 
-    public Board getBoard() {
-        return ts.getBoard();
+    public Board getBoardSnapshot() {
+        // TODO: return readonly object
+        return board;
     }
+
+    GameResult checkEndGameCondition() {
+        var teamCount = board.getTeamCount();
+        if (teamCount.size() == 1) {
+            return teamCount.containsKey(0) ? GameResult.WIN : GameResult.LOSE;
+        }
+        return GameResult.NONE;
+    }
+
+    public Character nextTurn() {
+        return ts.nextTurn();
+    }
+
+    public boolean tryMakeMove(MoveDTO move) {
+        boolean success = ts.tryMakeMove(move);
+
+        if (success) {
+            GameResult gameResult = checkEndGameCondition();
+            if (gameResult != GameResult.NONE) endGame(gameResult);
+        }
+        return success;
+    }
+
 }

@@ -21,10 +21,13 @@ public class Main extends Game {
         SnapshotService sns = new SnapshotService(dbEngine);
 
         TurnService ts = new TurnService();
-        GameService gs = new GameService(ts);
-        GamePresenter gamePresenter = new GamePresenter(gs);
+        GameService gs = new GameService();
+        GamePresenter gamePresenter = new GamePresenter();
+        gs.init(ts, gamePresenter);
+        gamePresenter.init(gs);
         setScreen(new GameScreen(gamePresenter));
 
+        gs.startGame();
     }
 
     @Override

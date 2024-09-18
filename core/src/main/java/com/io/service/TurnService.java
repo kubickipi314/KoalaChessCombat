@@ -1,70 +1,49 @@
 package com.io.service;
 
-import com.io.core.GameResult;
 import com.io.core.board.Board;
 import com.io.core.character.Character;
 import com.io.core.moves.MoveDTO;
 
-import java.util.Collection;
+import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 
 public class TurnService {
     public GameService gs;
 
-    Queue<Character> turnQueue;
+    private Deque<Character> turnQueue;
+    private Board board;
 
-    Board board;
-
-    public TurnService() {
-    }
-
-    public void initialize(GameService gs, Collection<Character> characters) {
+    public void init(GameService gs, List<Character> characters, Board board) {
         this.gs = gs;
 
         turnQueue = new LinkedList<>(characters);
-        board = new Board(gs.getRoomWidth(), gs.getRoomHeight());
+        this.board = board;
     }
 
     public boolean tryMakeMove(MoveDTO moveDTO) {
-        // check if given move is valid
-        if (turnQueue.peek() != moveDTO.character()) {
-            System.out.println("TS: Tried to played move on wrong turn!");
+        if (turnQueue.getLast() != moveDTO.character()) {
+            System.err.println("TS: Tried to played move on wrong turn!");
             return false;
         }
-
-        if (!board.tryMakeMove(moveDTO)) return false;
-
-        GameResult gameResult = checkEndGameCondition();
-        if (gameResult != GameResult.NONE)
-            gs.endGame(gameResult);
-
-        return true;
+        return board.tryMakeMove(moveDTO);
     }
 
-    GameResult checkEndGameCondition() {
-        // check win/lose conditions
+    Character nextTurn() {
+        assert !turnQueue.isEmpty();
 
-        return GameResult.NONE;
+        var currentCharacter = turnQueue.pollFirst();
+        while (currentCharacter.isDead()) {
+            currentCharacter = turnQueue.pollFirst();
+            if (turnQueue.isEmpty()) return null;
+        }
+        turnQueue.addLast(currentCharacter);
+
+        currentCharacter.changeMana(5);
+        return currentCharacter;
     }
 
-    public void endTurn() {
-        // handle on end turn events:
-        // replenish mana etc.
-
-        nextTurn();
-    }
-
-    void nextTurn() {
-        Character currentCharacter = turnQueue.poll();
-        turnQueue.add(currentCharacter);
-
-        assert currentCharacter != null;
-        currentCharacter.startTurn();
-    }
-
-
-    public Board getBoard() {
-        return board;
+    void stop() {
+        turnQueue = new LinkedList<>();
     }
 }

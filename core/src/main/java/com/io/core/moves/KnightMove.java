@@ -2,6 +2,7 @@ package com.io.core.moves;
 
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
+import com.io.core.character.Character;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,9 @@ public class KnightMove implements Move {
     }
 
     @Override
-    public boolean isMoveValid(BoardPosition startPosition, BoardPosition endPosition, Board board) {
+    public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
+        var startPosition = character.getPosition();
+
         if (startPosition.x() == endPosition.x() || startPosition.y() == endPosition.y()) return false;
         int dx = Integer.signum(endPosition.x() - startPosition.x());
         int dy = Integer.signum(endPosition.y() - startPosition.y());
