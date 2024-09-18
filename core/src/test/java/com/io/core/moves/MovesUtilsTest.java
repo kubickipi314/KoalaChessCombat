@@ -25,7 +25,6 @@ class MovesUtilsTest {
         int x = 1, y = 1, maxReach = 3;
 
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
-        when(mockBoard.getCell(any(BoardPosition.class))).thenReturn(new Cell(false));
 
         boolean result = MovesUtils.isValidRayMove(x, y, maxReach, startPosition, endPosition, mockBoard);
 
@@ -41,7 +40,6 @@ class MovesUtilsTest {
         int x = 1, y = -1, maxReach = 3;
 
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
-        when(mockBoard.getCell(any(BoardPosition.class))).thenReturn(new Cell(false));
         boolean result = MovesUtils.isValidRayMove(x, y, maxReach, startPosition, endPosition, mockBoard);
 
         assertFalse(result, "The ray move should be invalid due to out-of-bounds.");
@@ -58,8 +56,7 @@ class MovesUtilsTest {
         when(blockingCell.getCharacter()).thenReturn(Mockito.mock(Player.class));
 
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
-        when(mockBoard.getCell(any(BoardPosition.class))).thenReturn(new Cell(false));
-        when(mockBoard.getCell(new BoardPosition(2, 2))).thenReturn(blockingCell);
+        when(mockBoard.isValidCell(new BoardPosition(2, 2))).thenReturn(false);
 
         boolean result = MovesUtils.isValidRayMove(x, y, maxReach, startPosition, endPosition, mockBoard);
 
@@ -73,7 +70,6 @@ class MovesUtilsTest {
         int x = 1, y = 1, maxReach = 3;
 
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
-        when(mockBoard.getCell(any(BoardPosition.class))).thenReturn(new Cell(false));
 
         List<BoardPosition> result = MovesUtils.getRayAccessibleCells(x, y, maxReach, mockBoard, startPosition);
 
@@ -90,12 +86,9 @@ class MovesUtilsTest {
         BoardPosition startPosition = new BoardPosition(0, 0);
         int x = 1, y = 1, maxReach = 3;
 
-        Cell blockingCell = Mockito.mock(Cell.class);
-        when(blockingCell.getCharacter()).thenReturn(mockCharacter);
-
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
-        when(mockBoard.getCell(new BoardPosition(1, 1))).thenReturn(new Cell(false));
-        when(mockBoard.getCell(new BoardPosition(2, 2))).thenReturn(blockingCell);
+        when(mockBoard.isValidCell(new BoardPosition(1, 1))).thenReturn(true);
+        when(mockBoard.getCharacter(new BoardPosition(2, 2))).thenReturn(mockCharacter);
 
         List<BoardPosition> result = MovesUtils.getRayAccessibleCells(x, y, maxReach, mockBoard, startPosition);
 

@@ -2,7 +2,6 @@ package com.io.core.moves;
 
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
-import com.io.core.board.Cell;
 import com.io.core.character.Enemy;
 import com.io.core.character.MeleeEnemy;
 import com.io.core.character.Player;
@@ -24,19 +23,18 @@ public class PawnMoveTest {
         BoardPosition endPosition = new BoardPosition(2, 2);
         Player mockPlayer = Mockito.mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(startPosition);
-        Cell mockCell = Mockito.mock(Cell.class);
         Enemy mockEnemy = Mockito.mock(MeleeEnemy.class);
+        when(mockEnemy.getTeam()).thenReturn(0);//player group
 
         PawnMove pawnMove = new PawnMove(10, 5);
 
         when(mockBoard.isValidCell(startPosition)).thenReturn(true);
         when(mockBoard.isValidCell(endPosition)).thenReturn(true);
-        when(mockBoard.getCell(endPosition)).thenReturn(mockCell);
-        when(mockCell.getCharacter()).thenReturn(mockEnemy);
+        when(mockBoard.getCharacter(endPosition)).thenReturn(mockEnemy);
 
         boolean result = pawnMove.isMoveValid(mockPlayer, endPosition, mockBoard);
 
-        assertFalse(result, "The move should be valid.");
+        assertFalse(result, "The move should be not valid.");
     }
 
     @Test
@@ -47,7 +45,6 @@ public class PawnMoveTest {
         Player mockPlayer = Mockito.mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(startPosition);
         when(mockPlayer.getTeam()).thenReturn(0);
-        Cell mockCell = Mockito.mock(Cell.class);
         Enemy mockEnemy = Mockito.mock(MeleeEnemy.class);
         when(mockEnemy.getTeam()).thenReturn(1);
 
@@ -55,8 +52,7 @@ public class PawnMoveTest {
 
         when(mockBoard.isValidCell(startPosition)).thenReturn(true);
         when(mockBoard.isValidCell(endPosition)).thenReturn(true);
-        when(mockBoard.getCell(endPosition)).thenReturn(mockCell);
-        when(mockCell.getCharacter()).thenReturn(mockEnemy);
+        when(mockBoard.getCharacter(endPosition)).thenReturn(mockEnemy);
 
         boolean result = pawnMove.isMoveValid(mockPlayer, endPosition, mockBoard);
 
@@ -67,18 +63,15 @@ public class PawnMoveTest {
     public void testGetAccessibleCells() {
         Board mockBoard = Mockito.mock(Board.class);
         BoardPosition position = new BoardPosition(1, 1);
-        Cell mockCell = Mockito.mock(Cell.class);
 
         PawnMove pawnMove = new PawnMove(10, 5);
 
         var mockEnemy = Mockito.mock(MeleeEnemy.class);
-        when(mockCell.getCharacter()).thenReturn(mockEnemy);
         when(mockEnemy.getTeam()).thenReturn(1);
 
 
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
-        when(mockBoard.getCell(any(BoardPosition.class))).thenReturn(new Cell(false));
-        when(mockBoard.getCell(new BoardPosition(2, 2))).thenReturn(mockCell);
+        when(mockBoard.getCharacter(new BoardPosition(2, 2))).thenReturn(mockEnemy);
 
         Player mockPlayer = Mockito.mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(position);
