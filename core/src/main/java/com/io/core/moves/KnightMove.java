@@ -26,23 +26,35 @@ public class KnightMove implements Move {
     @Override
     public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
         var startPosition = character.getPosition();
-        
+        var attackedCharacter = board.getCell(endPosition).getCharacter();
+        if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
+
         if (startPosition.x() == endPosition.x() || startPosition.y() == endPosition.y()) return false;
         int dx = Integer.signum(endPosition.x() - startPosition.x());
         int dy = Integer.signum(endPosition.y() - startPosition.y());
 
         return MovesUtils.isValidRayMove(dx, 2 * dy, maxReach, startPosition, endPosition, board) ||
-            MovesUtils.isValidRayMove(2 * dx, dy, maxReach, startPosition, endPosition, board);
+                MovesUtils.isValidRayMove(2 * dx, dy, maxReach, startPosition, endPosition, board);
     }
 
     @Override
-    public List<BoardPosition> getAccessibleCells(BoardPosition position, Board board) {
+    public List<BoardPosition> getAccessibleCells(Character character, Board board) {
+        var position = character.getPosition();
         var accessibleCells = new ArrayList<BoardPosition>();
 
         for (int i = 0; i < DX.length; i++) {
             accessibleCells.addAll(MovesUtils.getRayAccessibleCells(DX[i], DY[i], maxReach, board, position));
         }
-        return accessibleCells;
+
+        return accessibleCells.stream()
+                .filter(currentPosition -> {
+                    var attackedCharacter = board.getCell(currentPosition).getCharacter();
+                    if (attackedCharacter == null) {
+                        return true;
+                    }
+                    return attackedCharacter.getTeam() != character.getTeam();
+                })
+                .toList();
     }
 
     @Override

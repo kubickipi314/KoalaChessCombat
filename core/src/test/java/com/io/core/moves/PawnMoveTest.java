@@ -54,7 +54,10 @@ public class PawnMoveTest {
         when(mockBoard.getCell(any(BoardPosition.class))).thenReturn(new Cell(false));
         when(mockBoard.getCell(new BoardPosition(2, 2))).thenReturn(mockCell);
 
-        List<BoardPosition> accessibleCells = pawnMove.getAccessibleCells(position, mockBoard);
+        Player mockPlayer = Mockito.mock(Player.class);
+        when(mockPlayer.getPosition()).thenReturn(position);
+
+        List<BoardPosition> accessibleCells = pawnMove.getAccessibleCells(mockPlayer, mockBoard);
 
         assertEquals(2, accessibleCells.size(), "There should be two accessible cells.");
         assertTrue(accessibleCells.contains(new BoardPosition(1, 2)), "Front-left position should be accessible.");

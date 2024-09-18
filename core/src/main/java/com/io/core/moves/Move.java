@@ -9,7 +9,7 @@ import java.util.List;
 public interface Move {
     boolean isMoveValid(Character character, BoardPosition endPosition, Board board);
 
-    List<BoardPosition> getAccessibleCells(BoardPosition position, Board board);
+    List<BoardPosition> getAccessibleCells(Character character, Board board);
 
     MoveType getType();
 

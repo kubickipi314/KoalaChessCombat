@@ -27,19 +27,30 @@ public class BishopMove implements Move {
         var startPosition = character.getPosition();
 
         if (startPosition.x() == endPosition.x() || startPosition.y() == endPosition.y()) return false;
+        var attackedCharacter = board.getCell(endPosition).getCharacter();
+        if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
         int x = endPosition.x() > startPosition.x() ? 1 : -1;
         int y = endPosition.y() > startPosition.y() ? 1 : -1;
         return MovesUtils.isValidRayMove(x, y, maxReach, startPosition, endPosition, board);
     }
 
     @Override
-    public List<BoardPosition> getAccessibleCells(BoardPosition position, Board board) {
+    public List<BoardPosition> getAccessibleCells(Character character, Board board) {
+        var position = character.getPosition();
         var accessibleCells = new ArrayList<BoardPosition>();
 
         for (int i = 0; i < DX.length; i++) {
             accessibleCells.addAll(MovesUtils.getRayAccessibleCells(DX[i], DY[i], maxReach, board, position));
         }
-        return accessibleCells;
+        return accessibleCells.stream()
+                .filter(currentPosition -> {
+                    var attackedCharacter = board.getCell(currentPosition).getCharacter();
+                    if (attackedCharacter == null) {
+                        return true;
+                    }
+                    return attackedCharacter.getTeam() != character.getTeam();
+                })
+                .toList();
     }
 
     @Override

@@ -25,21 +25,33 @@ public class LongRangeMove implements Move {
 
     public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
         var startPosition = character.getPosition();
+        var attackedCharacter = board.getCell(endPosition).getCharacter();
+        if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
         return isInRange(startPosition, endPosition);
     }
 
     @Override
-    public List<BoardPosition> getAccessibleCells(BoardPosition position, Board board) {
-        ArrayList<BoardPosition> result = new ArrayList<>();
+    public List<BoardPosition> getAccessibleCells(Character character, Board board) {
+        var position = character.getPosition();
+        ArrayList<BoardPosition> accessibleCells = new ArrayList<>();
         for (int i = 0; i <= board.boardWidth; i++) {
             for (int j = 0; j < board.boardHeight; j++) {
                 BoardPosition currentPosition = new BoardPosition(i, j);
                 if (isInRange(position, currentPosition) && board.isValidCell(currentPosition) && !board.getCell(currentPosition).isBlocked) {
-                    result.add(currentPosition);
+                    accessibleCells.add(currentPosition);
                 }
             }
         }
-        return result;
+
+        return accessibleCells.stream()
+                .filter(currentPosition -> {
+                    var attackedCharacter = board.getCell(currentPosition).getCharacter();
+                    if (attackedCharacter == null) {
+                        return true;
+                    }
+                    return attackedCharacter.getTeam() != character.getTeam();
+                })
+                .toList();
     }
 
 

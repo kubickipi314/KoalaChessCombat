@@ -21,6 +21,8 @@ public class PawnMove implements Move {
         var startPosition = character.getPosition();
 
         if (!board.isValidCell(startPosition) || !board.isValidCell(endPosition)) return false;
+        var attackedCharacter = board.getCell(endPosition).getCharacter();
+        if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
         if (endPosition.y() != 1 + startPosition.y()) return false;
         if (endPosition.x() > startPosition.x() + 1 || endPosition.x() < startPosition.x() - 1) return false;
         var endCell = board.getCell(endPosition);
@@ -30,7 +32,8 @@ public class PawnMove implements Move {
     }
 
     @Override
-    public List<BoardPosition> getAccessibleCells(BoardPosition position, Board board) {
+    public List<BoardPosition> getAccessibleCells(Character character, Board board) {
+        var position = character.getPosition();
         var accessibleCells = new ArrayList<BoardPosition>();
         int x = position.x();
         int y = position.y();
@@ -39,9 +42,14 @@ public class PawnMove implements Move {
         var frontRightPosition = new BoardPosition(x + 1, y + 1);
         if (board.isValidCell(frontPosition) && board.getCell(frontPosition).getCharacter() == null)
             accessibleCells.add(frontPosition);
-        if (board.isValidCell(frontLeftPosition) && board.getCell(frontLeftPosition).getCharacter() != null)
+        var frontLeftCharacter = board.getCell(frontLeftPosition).getCharacter();
+        if (board.isValidCell(frontLeftPosition) && frontLeftCharacter != null
+                && frontLeftCharacter.getTeam() != character.getTeam())
             accessibleCells.add(frontLeftPosition);
-        if (board.isValidCell(frontRightPosition) && board.getCell(frontRightPosition).getCharacter() != null)
+
+        var frontRightCharacter = board.getCell(frontRightPosition).getCharacter();
+        if (board.isValidCell(frontRightPosition) && frontRightCharacter != null
+                && frontRightCharacter.getTeam() != character.getTeam())
             accessibleCells.add(frontRightPosition);
         return accessibleCells;
     }

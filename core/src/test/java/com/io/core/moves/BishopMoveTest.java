@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class BishopMoveTest {
 
     @Test
-    void isMoveValid() {
-
+    void testIsValidMove_NoObstacle() {
+        BishopMove bishopMove = new BishopMove(5, 10);
     }
 
     @Test

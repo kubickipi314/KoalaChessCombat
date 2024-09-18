@@ -27,6 +27,9 @@ public class QueenMove implements Move {
         var startPosition = character.getPosition();
 
         if (startPosition == endPosition) return false;
+        var attackedCharacter = board.getCell(endPosition).getCharacter();
+        if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
+
         int dx = endPosition.x() - startPosition.x();
         int dy = endPosition.y() - startPosition.y();
 
@@ -35,13 +38,22 @@ public class QueenMove implements Move {
     }
 
     @Override
-    public List<BoardPosition> getAccessibleCells(BoardPosition position, Board board) {
+    public List<BoardPosition> getAccessibleCells(Character character, Board board) {
+        var position = character.getPosition();
         var accessibleCells = new ArrayList<BoardPosition>();
 
         for (int i = 0; i < DX.length; i++) {
             accessibleCells.addAll(MovesUtils.getRayAccessibleCells(DX[i], DY[i], maxReach, board, position));
         }
-        return accessibleCells;
+        return accessibleCells.stream()
+                .filter(currentPosition -> {
+                    var attackedCharacter = board.getCell(currentPosition).getCharacter();
+                    if (attackedCharacter == null) {
+                        return true;
+                    }
+                    return attackedCharacter.getTeam() != character.getTeam();
+                })
+                .toList();
     }
 
     @Override
