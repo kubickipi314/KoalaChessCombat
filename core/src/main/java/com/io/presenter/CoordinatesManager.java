@@ -66,17 +66,17 @@ public class CoordinatesManager {
         return boardY + (rows + 0.9f) * tileSize;
     }
 
+    public float getBarHeight() {
+        return barHeight;
+    }
+
     public float getTileSize() {
         return tileSize;
     }
 
-    public Vector2 calculatePosition(BoardPosition bp) {
-        float startX = boardX + bp.x() * tileSize;
-        float startY = boardY + bp.y() * tileSize;
+    public Vector2 calculatePosition(BoardPosition boardPosition) {
+        float startX = boardX + boardPosition.x() * tileSize;
+        float startY = boardY + boardPosition.y() * tileSize;
         return new Vector2(startX, startY);
-    }
-
-    public float getBarHeight() {
-        return barHeight;
     }
 }

@@ -9,7 +9,7 @@ import com.io.core.character.Character;
 import com.io.core.character.Enemy;
 import com.io.core.character.Player;
 import com.io.core.moves.Move;
-import com.io.presenter.character.CharacterPresenter;
+import com.io.presenter.character.CharacterInterface;
 import com.io.presenter.character.EnemyPresenter;
 import com.io.presenter.character.PlayerPresenter;
 import com.io.service.GameService;
@@ -22,13 +22,12 @@ import java.util.Map;
 
 public class GamePresenter {
     private GameService gs;
-
     private SpriteBatch batch;
     private BoardPresenter boardPresenter;
     private ChessPresenter chessPresenter;
     private BarsPresenter barsPresenter;
     private ButtonsPresenter buttonsPresenter;
-    private Map<Character, CharacterPresenter> charactersMap;
+    private Map<Character, CharacterInterface> charactersMap;
     private Player playerModel;
     protected float windowHeight;
 
@@ -46,6 +45,7 @@ public class GamePresenter {
 
         playerModel = gs.getPlayer();
         List<Move> moves = playerModel.getMoves();
+        currentHealth = playerModel.getCurrentHealth();
 
         CoordinatesManager cm = new CoordinatesManager(gs.getRoomHeight(), gs.getRoomWidth(), moves.size());
         TextureManager tm = new TextureManager();
@@ -55,7 +55,7 @@ public class GamePresenter {
         charactersMap = new HashMap<>();
         for (var characterModel : characterModels) {
             if (characterModel instanceof Player) {
-                charactersMap.put(characterModel, new PlayerPresenter(tm, sm, cm, characterModel.getPosition()));
+                charactersMap.put(characterModel, new PlayerPresenter(tm, sm, cm, characterModel.getPosition(), playerModel.getMaxHealth()));
             } else if (characterModel instanceof Enemy) {
                 charactersMap.put(characterModel, new EnemyPresenter(tm, sm, cm, characterModel.getPosition(), characterModel.getMaxHealth()));
             }
@@ -65,8 +65,6 @@ public class GamePresenter {
         this.boardPresenter = new BoardPresenter(tm, cm, this);
         this.chessPresenter = new ChessPresenter(tm, sm, cm, moves);
         this.buttonsPresenter = new ButtonsPresenter(tm, sm, cm, this);
-
-        currentHealth = playerModel.getCurrentHealth();
     }
 
     public void update() {
@@ -74,14 +72,14 @@ public class GamePresenter {
             activeCharacter = gs.nextTurn();
         }
         var activePresenter = charactersMap.get(activeCharacter);
-        if (!activePresenter.isMoving() && !gameEnded) {
+        if (!activePresenter.isActive() && !gameEnded) {
             if (activeCharacter instanceof Enemy enemyModel) {
                 var success = enemyModel.makeNextMove();
                 var enemyPresenter = charactersMap.get(enemyModel);
                 if (currentHealth != playerModel.getCurrentHealth()){
-                    enemyPresenter.attack(playerModel.getPosition());
+                    enemyPresenter.startAttack(playerModel.getPosition());
                 }
-                enemyPresenter.update(enemyModel.getPosition());
+                enemyPresenter.startMove(enemyModel.getPosition());
                 if (!success) endTurn();
             } else {
                 Vector2 mousePosition = getMousePosition();
@@ -89,31 +87,37 @@ public class GamePresenter {
                 chessPresenter.handleInput(mousePosition);
                 buttonsPresenter.handleInput(mousePosition);
             }
-        } else {
-            activePresenter.updatePosition();
         }
         buttonsPresenter.update();
-        updateFromModel();
+        updateCharacters();
+        updateChess();
+        updateBars();
     }
 
-    private void updateFromModel() {
+    private void updateCharacters(){
         for (var character : gs.getCharacters()) {
             var characterPresenter = charactersMap.get(character);
             if (characterPresenter instanceof EnemyPresenter enemyPresenter) {
                 enemyPresenter.setHealth(character.getCurrentHealth());
             }
+            characterPresenter.update();
         }
+    }
 
+    private void updateChess() {
         var selectedMove = chessPresenter.getSelectedMove();
         if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != selectedMove) {
             boardPresenter.setAvailableTiles(playerModel.getMove(selectedMove).getAccessibleCells(playerModel.getPosition(), gs.getBoardSnapshot()));
             lastBoardPosition = playerModel.getPosition();
             lastChosenMove = selectedMove;
         }
+        chessPresenter.selectMove(selectedMove);
+    }
+
+    private void updateBars() {
         barsPresenter.setMana(playerModel.getCurrentMana());
         currentHealth = playerModel.getCurrentHealth();
         barsPresenter.setHealth(currentHealth);
-        chessPresenter.selectMove(selectedMove);
     }
 
     private Vector2 getMousePosition() {
@@ -145,7 +149,7 @@ public class GamePresenter {
             System.err.println("Failed to play Player's move");
         }
         var playerPresenter = charactersMap.get(playerModel);
-        playerPresenter.update(playerModel.getPosition());
+        playerPresenter.startMove(playerModel.getPosition());
     }
 
     public void startGame() {

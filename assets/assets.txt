@@ -1,7 +1,11 @@
 textures/attacks/shuriken_0.png
 textures/attacks/shuriken_1.png
 textures/characters/koala_0.png
+textures/characters/postgres_1.png
 textures/characters/monkey.png
+textures/characters/linux.png
+textures/characters/postgres_0.png
+textures/characters/postgres_2.png
 textures/characters/koala_1.png
 textures/characters/minix.png
 textures/characters/koala_2.png

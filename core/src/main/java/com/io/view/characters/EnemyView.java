@@ -52,4 +52,8 @@ public class EnemyView extends CharacterView {
     public void setAttackTexture(int attackNumber){
         attackSprite.setTexture(tm.getShuriken(attackNumber));
     }
+
+    public void setTexture(int stateNumber) {
+        characterSprite.setTexture(tm.getElephant(stateNumber));
+    }
 }

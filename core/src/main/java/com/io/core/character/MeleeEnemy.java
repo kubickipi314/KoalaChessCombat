@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class MeleeEnemy extends Enemy {
-    static int maxMana = 3, maxHealth = 5;
+    static int maxMana = 2, maxHealth = 5;
 
     public MeleeEnemy(GameService gs, GamePresenter gp, BoardPosition position) {
         super(gs, gp, maxMana, maxHealth, position);

@@ -23,4 +23,14 @@ public abstract class CharacterView {
     public abstract void setPosition(Vector2 newPosition);
 
     public abstract void draw(SpriteBatch batch);
+
+    public void setAttackTexture(int attackNumber) {
+    }
+
+    public void setAttackPosition(Vector2 currentPosition) {
+    }
+
+    public void drawAttack(SpriteBatch batch) {
+    }
+
 }

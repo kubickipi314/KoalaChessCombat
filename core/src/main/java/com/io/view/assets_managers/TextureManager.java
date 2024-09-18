@@ -22,25 +22,29 @@ public class TextureManager {
     private final Texture mana;
     private final List<Texture> tourButtons;
     private final List<Texture> player;
+    private final List<Texture> elephant;
     private final List<Texture> digits;
     private final Texture enemyHealth;
-    private final List<Texture> shurikens;
+    private final List<Texture> shuriken;
 
     public TextureManager() {
         chess = new EnumMap<>(MoveType.class);
         selectedChess = new EnumMap<>(MoveType.class);
 
         normalTile = new Texture("textures/tiles/tile.png");
-        //normalTile = new Texture("textures/buttons/pouse_0.png");
         markedCover = new Texture("textures/tiles/marked_cover.png");
-        //markedCover = new Texture("textures/buttons/pouse_1.png");
         availableCover = new Texture("textures/tiles/available_cover.png");
 
         player = new ArrayList<>();
         player.add(new Texture("textures/characters/koala_0.png"));
         player.add(new Texture("textures/characters/koala_1.png"));
         player.add(new Texture("textures/characters/koala_2.png"));
-        monkey = new Texture("textures/characters/minix.png");
+
+        elephant = new ArrayList<>();
+        elephant.add(new Texture("textures/characters/postgres_0.png"));
+        elephant.add(new Texture("textures/characters/postgres_1.png"));
+        elephant.add(new Texture("textures/characters/postgres_2.png"));
+        monkey = new Texture("textures/characters/linux.png");
 
         chess.put(KING, new Texture("textures/figures/king.png"));
         chess.put(BISHOP, new Texture("textures/figures/bishop.png"));
@@ -76,9 +80,9 @@ public class TextureManager {
         digits.add(new Texture("textures/digits/eight.png"));
         digits.add(new Texture("textures/digits/nine.png"));
 
-        shurikens = new ArrayList<>();
-        shurikens.add(new Texture("textures/attacks/shuriken_0.png"));
-        shurikens.add(new Texture("textures/attacks/shuriken_1.png"));
+        shuriken = new ArrayList<>();
+        shuriken.add(new Texture("textures/attacks/shuriken_0.png"));
+        shuriken.add(new Texture("textures/attacks/shuriken_1.png"));
 
         enemyHealth = new Texture("textures/bars/enemy_health.png");
 
@@ -138,6 +142,9 @@ public class TextureManager {
     }
 
     public Texture getShuriken(int number) {
-        return shurikens.get(number);
+        return shuriken.get(number);
+    }
+
+    public Texture getElephant(int number) { return elephant.get(number);
     }
 }
