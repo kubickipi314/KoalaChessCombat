@@ -93,7 +93,7 @@ class MovesUtilsTest {
         List<BoardPosition> result = MovesUtils.getRayAccessibleCells(x, y, maxReach, mockBoard, startPosition);
 
         assertEquals(2, result.size(), "There should be two accessible cells.");
-        assertTrue(result.contains(new BoardPosition(1, 1)), "The first position should be accessible.");
-        assertTrue(result.contains(new BoardPosition(2, 2)), "The second position should be accessible but blocked.");
+        assertTrue(result.contains(new BoardPosition(1, 1)), "position should be accessible.");
+        assertTrue(result.contains(new BoardPosition(2, 2)), "position should be accessible but blocked.");
     }
 }

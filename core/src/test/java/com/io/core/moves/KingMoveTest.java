@@ -72,7 +72,7 @@ class KingMoveTest {
 
         var result = kingMove.getAccessibleCells(mockPlayer, smallBoard);
 
-        assertEquals(3, result.size(), "There should be two accessible cells.");
+        assertEquals(3, result.size(), "There should be three accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
         assertTrue(result.contains(new BoardPosition(1, 0)), "position should be accessible.");
         assertTrue(result.contains(new BoardPosition(1, 1)), "position should be accessible.");
@@ -91,7 +91,7 @@ class KingMoveTest {
 
         var result = kingMove.getAccessibleCells(mockPlayer, smallBoard);
 
-        assertEquals(3, result.size(), "There should be two accessible cells.");
+        assertEquals(3, result.size(), "There should be three accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
         assertTrue(result.contains(new BoardPosition(1, 0)), "position should be accessible.");
         assertTrue(result.contains(new BoardPosition(1, 1)), "position should be accessible.");

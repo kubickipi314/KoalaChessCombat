@@ -65,7 +65,7 @@ class QueenMoveTest {
 
         var result = queenMove.getAccessibleCells(mockPlayer, smallBoard);
 
-        assertEquals(3, result.size(), "There should be two accessible cells.");
+        assertEquals(3, result.size(), "There should be three accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
         assertTrue(result.contains(new BoardPosition(1, 0)), "position should be accessible.");
         assertTrue(result.contains(new BoardPosition(1, 1)), "position should be accessible.");
@@ -84,7 +84,7 @@ class QueenMoveTest {
 
         var result = queenMove.getAccessibleCells(mockPlayer, smallBoard);
 
-        assertEquals(3, result.size(), "There should be two accessible cells.");
+        assertEquals(3, result.size(), "There should be three accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
         assertTrue(result.contains(new BoardPosition(1, 0)), "position should be accessible.");
         assertTrue(result.contains(new BoardPosition(1, 1)), "position should be accessible.");
@@ -97,7 +97,7 @@ class QueenMoveTest {
 
         var type = queenMove.getType();
 
-        assertEquals(MoveType.QUEEN, type, "The type should match the value of BISHOP enum");
+        assertEquals(MoveType.QUEEN, type, "The type should match the value of QUEEN enum");
     }
 
     @Test

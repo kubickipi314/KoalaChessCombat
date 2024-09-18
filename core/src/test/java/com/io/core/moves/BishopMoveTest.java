@@ -65,8 +65,8 @@ class BishopMoveTest {
 
         var result = bishopMove.getAccessibleCells(mockPlayer, smallBoard);
 
-        assertEquals(1, result.size(), "There should be two accessible cells.");
-        assertTrue(result.contains(new BoardPosition(1, 1)), "Front-left position should be accessible.");
+        assertEquals(1, result.size(), "There should be one accessible cells.");
+        assertTrue(result.contains(new BoardPosition(1, 1)), "position should be accessible.");
     }
 
     @Test
@@ -82,8 +82,8 @@ class BishopMoveTest {
 
         var result = bishopMove.getAccessibleCells(mockPlayer, smallBoard);
 
-        assertEquals(1, result.size(), "There should be two accessible cells.");
-        assertTrue(result.contains(new BoardPosition(1, 1)), "Front-left position should be accessible.");
+        assertEquals(1, result.size(), "There should be 1 accessible cells.");
+        assertTrue(result.contains(new BoardPosition(1, 1)), "position should be accessible.");
     }
 
 

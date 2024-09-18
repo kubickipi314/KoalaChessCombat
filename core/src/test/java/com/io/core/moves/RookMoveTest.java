@@ -95,7 +95,7 @@ class RookMoveTest {
 
         var type = rookMove.getType();
 
-        assertEquals(MoveType.ROOK, type, "The type should match the value of BISHOP enum");
+        assertEquals(MoveType.ROOK, type, "The type should match the value of ROOK enum");
     }
 
     @Test

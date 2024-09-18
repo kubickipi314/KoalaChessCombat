@@ -100,7 +100,7 @@ class KnightMoveTest {
 
         var type = knightMove.getType();
 
-        assertEquals(MoveType.KNIGHT, type, "The type should match the value of BISHOP enum");
+        assertEquals(MoveType.KNIGHT, type, "The type should match the value of KNIGHT enum");
     }
 
     @Test

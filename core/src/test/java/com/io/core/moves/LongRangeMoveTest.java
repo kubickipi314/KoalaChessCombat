@@ -104,7 +104,7 @@ class LongRangeMoveTest {
 
         var type = longRangeMove.getType();
 
-        assertNull(type, "The type should match the value of BISHOP enum");
+        assertNull(type, "The type should be null");
     }
 
     @Test
