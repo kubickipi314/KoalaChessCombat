@@ -34,7 +34,7 @@ public class LongRangeMove implements Move {
         for (int i = 0; i <= board.boardWidth; i++) {
             for (int j = 0; j < board.boardHeight; j++) {
                 BoardPosition currentPosition = new BoardPosition(i, j);
-                if (isInRange(position, currentPosition)) {
+                if (isInRange(position, currentPosition) && board.isValidCell(currentPosition) && !board.getCell(currentPosition).isBlocked) {
                     result.add(currentPosition);
                 }
             }

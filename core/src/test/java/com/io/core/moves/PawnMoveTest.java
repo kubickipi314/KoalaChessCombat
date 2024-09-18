@@ -56,7 +56,6 @@ public class PawnMoveTest {
 
         List<BoardPosition> accessibleCells = pawnMove.getAccessibleCells(position, mockBoard);
 
-        System.out.println(accessibleCells);
         assertEquals(2, accessibleCells.size(), "There should be two accessible cells.");
         assertTrue(accessibleCells.contains(new BoardPosition(1, 2)), "Front-left position should be accessible.");
         assertTrue(accessibleCells.contains(new BoardPosition(2, 2)), "Front-right position should be accessible.");
