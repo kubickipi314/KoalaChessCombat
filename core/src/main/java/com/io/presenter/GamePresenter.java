@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.io.core.CharacterType.LINUX;
+
 public class GamePresenter {
     private GameService gs;
     private SpriteBatch batch;
@@ -32,7 +34,7 @@ public class GamePresenter {
     protected float windowHeight;
 
     private BoardPosition lastBoardPosition = new BoardPosition(-1, -1);
-    private int lastChosenMove = -1;
+    private int lastChosenMove = 0;
     private int currentHealth;
     private Character activeCharacter = null;
     private boolean gameEnded = false;
@@ -55,9 +57,9 @@ public class GamePresenter {
         charactersMap = new HashMap<>();
         for (var characterModel : characterModels) {
             if (characterModel instanceof Player) {
-                charactersMap.put(characterModel, new PlayerPresenter(tm, sm, cm, characterModel.getPosition(), playerModel.getMaxHealth()));
+                charactersMap.put(characterModel, new PlayerPresenter(tm, sm, cm, characterModel.getPosition()));
             } else if (characterModel instanceof Enemy) {
-                charactersMap.put(characterModel, new EnemyPresenter(tm, sm, cm, characterModel.getPosition(), characterModel.getMaxHealth()));
+                charactersMap.put(characterModel, new EnemyPresenter(tm, sm, cm, characterModel.getPosition(), characterModel.getMaxHealth(), LINUX));
             }
         }
 
@@ -76,7 +78,7 @@ public class GamePresenter {
             if (activeCharacter instanceof Enemy enemyModel) {
                 var success = enemyModel.makeNextMove();
                 var enemyPresenter = charactersMap.get(enemyModel);
-                if (currentHealth != playerModel.getCurrentHealth()){
+                if (currentHealth != playerModel.getCurrentHealth()) {
                     enemyPresenter.startAttack(playerModel.getPosition());
                 }
                 enemyPresenter.startMove(enemyModel.getPosition());
@@ -94,7 +96,7 @@ public class GamePresenter {
         updateBars();
     }
 
-    private void updateCharacters(){
+    private void updateCharacters() {
         for (var character : gs.getCharacters()) {
             var characterPresenter = charactersMap.get(character);
             if (characterPresenter instanceof EnemyPresenter enemyPresenter) {
@@ -145,11 +147,13 @@ public class GamePresenter {
 
     public void movePlayer(BoardPosition boardPosition) {
         var chosenMove = chessPresenter.getSelectedMove();
-        if (!gs.getPlayer().makeNextMove(boardPosition, chosenMove)) {
+        if (gs.getPlayer().makeNextMove(boardPosition, chosenMove)) {
+            var playerPresenter = charactersMap.get(playerModel);
+            playerPresenter.startMove(playerModel.getPosition());
+            if (playerModel.getPosition() != boardPosition) playerPresenter.startAttack(boardPosition);
+        } else {
             System.err.println("Failed to play Player's move");
         }
-        var playerPresenter = charactersMap.get(playerModel);
-        playerPresenter.startMove(playerModel.getPosition());
     }
 
     public void startGame() {
@@ -158,9 +162,6 @@ public class GamePresenter {
     public void endGame(GameResult gameResult) {
         System.out.println("GAME END\tresult: " + gameResult);
         gameEnded = true;
-    }
-
-    public void startTurn() {
     }
 
     public void endTurn() {

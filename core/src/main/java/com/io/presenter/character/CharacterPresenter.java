@@ -3,38 +3,53 @@ package com.io.presenter.character;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.io.core.CharacterType;
 import com.io.core.board.BoardPosition;
 import com.io.presenter.CoordinatesManager;
 import com.io.view.assets_managers.SoundManager;
-import com.io.view.assets_managers.TextureManager;
 import com.io.view.characters.CharacterView;
 
-public abstract class CharacterPresenter implements CharacterInterface{
+import java.util.Random;
+
+public abstract class CharacterPresenter implements CharacterInterface {
     protected final SoundManager sm;
-    private final CoordinatesManager cm;
+    protected final CoordinatesManager cm;
     protected CharacterView characterView;
     protected BoardPosition boardPosition;
     protected boolean isMoving;
-    private boolean isAttacking;
-    private float movementTime = 0;
-    private float attackTime = 0;
-    private int attackNumber = 0;
+    protected boolean isAttacking;
+    protected float movementTime = 0;
+    protected float attackTime = 0;
+    protected int attackNumber = 0;
     private Vector2 startPosition;
     private Vector2 targetPosition;
 
-    private Vector2 attackerPosition;
-    private Vector2 attackPosition;
+    protected Vector2 attackerPosition;
+    protected Vector2 attackPosition;
 
-    public CharacterPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, BoardPosition startBoardPosition) {
+    protected int state = 0;
+    protected float stateTime = 0;
+    protected float stateInterval;
+
+    protected CharacterType characterType;
+
+    public CharacterPresenter(SoundManager sm, CoordinatesManager cm, BoardPosition boardPosition) {
         this.sm = sm;
         this.cm = cm;
 
         isMoving = false;
         isAttacking = false;
-        boardPosition = startBoardPosition;
+        this.boardPosition = boardPosition;
+
+        stateInterval = randomFloat(6);
+    }
+
+    public void setType(CharacterType characterType){
+        this.characterType = characterType;
     }
 
     public void update() {
+        updateState();
         if (isMoving) updateMove();
         if (isAttacking) updateAttack();
     }
@@ -44,6 +59,7 @@ public abstract class CharacterPresenter implements CharacterInterface{
         isMoving = true;
         movementTime = 0;
 
+        characterView.setTexture(2);
         sm.playMoveSound();
 
         startPosition = cm.calculatePosition(boardPosition);
@@ -63,10 +79,11 @@ public abstract class CharacterPresenter implements CharacterInterface{
 
         if (progress >= 1.0f) {
             isMoving = false;
+            characterView.setTexture(state);
         }
     }
 
-    public void startAttack(BoardPosition position){
+    public void startAttack(BoardPosition position) {
         movementTime = 0;
         attackTime = 0;
         sm.playRoarSound();
@@ -98,6 +115,29 @@ public abstract class CharacterPresenter implements CharacterInterface{
         }
     }
 
+    public void updateState() {
+        stateTime += Gdx.graphics.getDeltaTime();
+        if (state == 0) {
+            if (stateTime >= stateInterval) {
+                state = 1;
+                characterView.setTexture(state);
+                stateTime = 0f;
+                stateInterval = randomFloat(6);
+            }
+        } else {
+            if (stateTime >= 0.3f) {
+                state = 0;
+                characterView.setTexture(state);
+                stateTime = 0f;
+            }
+        }
+    }
+
+    protected float randomFloat(int max) {
+        Random rand = new Random();
+        return rand.nextFloat() * (float) max;
+    }
+
     public void render(SpriteBatch batch) {
         characterView.draw(batch);
         if (isAttacking) characterView.drawAttack(batch);
@@ -107,10 +147,4 @@ public abstract class CharacterPresenter implements CharacterInterface{
         return isMoving || isAttacking;
     }
 
-//    public void setHealth(int value) {
-//        if (value < health)
-//            sm.playRoarSound();
-//        health = value;
-//        characterView.changeHealth((float) health / maxHealth);
-//    }
 }

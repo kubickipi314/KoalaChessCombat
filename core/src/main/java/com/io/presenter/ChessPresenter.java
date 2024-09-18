@@ -26,7 +26,7 @@ public class ChessPresenter {
     private float tileSize;
 
     private List<Move> moves;
-    private int selectedMove;
+    private int selectedMove = -1;
 
 
     public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, List<Move> moves) {
