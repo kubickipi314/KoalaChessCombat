@@ -56,6 +56,8 @@ textures/buttons/tour_button_0.png
 textures/buttons/pouse_0.png
 textures/buttons/tour_button_3.png
 textures/buttons/tour_button_2.png
+textures/buttons/win_result.png
+textures/buttons/lose_result.png
 .gitkeep
 ui/font-window.fnt
 ui/font-list.fnt

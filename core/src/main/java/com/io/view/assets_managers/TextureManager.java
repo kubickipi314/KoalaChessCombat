@@ -1,7 +1,9 @@
 package com.io.view.assets_managers;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.io.core.CharacterType;
+import com.io.core.GameResult;
 import com.io.core.moves.MoveType;
 
 import java.util.ArrayList;
@@ -10,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.io.core.CharacterType.*;
+import static com.io.core.GameResult.LOSE;
+import static com.io.core.GameResult.WIN;
 import static com.io.core.moves.MoveType.*;
 
 public class TextureManager {
@@ -20,6 +24,7 @@ public class TextureManager {
     private final Map<MoveType, Texture> selectedChess;
     private final Map<CharacterType, List<Texture>> characters;
     private final Map<CharacterType, List<Texture>> attacks;
+    private final Map<GameResult, Texture> result;
     private final Texture barBackground;
     private final Texture heart;
     private final Texture mana;
@@ -32,6 +37,7 @@ public class TextureManager {
         selectedChess = new EnumMap<>(MoveType.class);
         characters = new EnumMap<>(CharacterType.class);
         attacks = new EnumMap<>(CharacterType.class);
+        result = new EnumMap<>(GameResult.class);
 
         normalTile = new Texture("textures/tiles/tile.png");
         markedCover = new Texture("textures/tiles/marked_cover.png");
@@ -104,6 +110,9 @@ public class TextureManager {
 
         enemyHealth = new Texture("textures/bars/enemy_health.png");
 
+        result.put(WIN, new Texture("textures/buttons/win_result.png"));
+        result.put(LOSE, new Texture("textures/buttons/lose_result.png"));
+
     }
 
     public Texture getCharacter(CharacterType type, int stateNumber) {
@@ -158,4 +167,7 @@ public class TextureManager {
         return digits.get(number);
     }
 
+    public Texture getResult(GameResult gameResult) {
+        return result.get(gameResult);
+    }
 }

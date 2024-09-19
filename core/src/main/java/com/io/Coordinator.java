@@ -11,8 +11,6 @@ import com.io.screens.StartScreen;
 import com.io.service.GameService;
 import com.io.service.TurnService;
 
-import java.awt.*;
-
 public class Coordinator {
     private final Game game;
     public Coordinator(Game game) {

@@ -172,6 +172,7 @@ public class GamePresenter {
     }
 
     public void endGame(GameResult gameResult) {
+        buttonsPresenter.showResult(gameResult);
         System.out.println("GAME END\tresult: " + gameResult);
         gameEnded = true;
     }
