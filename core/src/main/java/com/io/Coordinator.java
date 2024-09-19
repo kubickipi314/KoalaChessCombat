@@ -12,6 +12,9 @@ import com.io.service.GameService;
 import com.io.service.TurnService;
 
 public class Coordinator {
+    //TODO: disposing resources after screen is not used
+
+    //TODO: loading snapshots from db
     private final Game game;
     public Coordinator(Game game) {
         this.game = game;

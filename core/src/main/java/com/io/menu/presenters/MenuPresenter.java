@@ -9,7 +9,11 @@ import com.io.menu.view.MenuButton;
 import com.io.menu.view.MenuSoundManager;
 import com.io.menu.view.MenuTextureManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MenuPresenter {
+    //TODO: keeping and managing list of snapshot (exture,id)
     private final Coordinator coordinator;
     private final MenuSoundManager sm;
     private final SpriteBatch batch;
@@ -17,6 +21,7 @@ public class MenuPresenter {
     private final MenuButton levelPicture;
     private final MenuButton leftArrow;
     private final MenuButton rightArrow;
+    private final List<MenuButton> buttons;
     private final float windowHeight;
 
     public MenuPresenter(Coordinator coordinator) {
@@ -42,52 +47,44 @@ public class MenuPresenter {
         Vector2 leftPosition = new Vector2(windowWidth / 2 - tileSize * 2.5f, tileSize * 2.5f);
         rightArrow = new MenuButton(tm.getLeftArrow(), leftPosition, tileSize, tileSize);
 
+        buttons = new ArrayList<>();
+        buttons.add(levelPicture);
+        buttons.add(backButton);
+        buttons.add(leftArrow);
+        buttons.add(rightArrow);
     }
 
     public void update() {
-        backButton.unmark();
-        levelPicture.unmark();
-        rightArrow.unmark();
-        leftArrow.unmark();
+        for (MenuButton button : buttons) button.unmark();
 
         Vector2 mousePosition = getMousePosition();
-        if (backButton.contains(mousePosition)) {
-            backButton.mark();
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+
+        for (MenuButton button: buttons) {
+            if (button.contains(mousePosition)) button.mark();
+        }
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            if (backButton.contains(mousePosition)){
                 System.out.println("Go back");
                 sm.playSelectSound();
                 coordinator.setStartScreen();
-            }
-        } else if (levelPicture.contains(mousePosition)) {
-            levelPicture.mark();
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            } else if (levelPicture.contains(mousePosition)) {
                 System.out.println("Start game level");
                 sm.playSelectSound();
                 coordinator.setGameScreen();
-            }
-        } else if (leftArrow.contains(mousePosition)) {
-            leftArrow.mark();
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            } else if (leftArrow.contains(mousePosition)) {
                 System.out.println("Go left");
                 sm.playSelectSound();
-
-            }
-        } else if (rightArrow.contains(mousePosition)) {
-            rightArrow.mark();
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            } else if (rightArrow.contains(mousePosition)) {
                 System.out.println("Go right");
                 sm.playSelectSound();
-
             }
         }
     }
 
     public void render() {
         batch.begin();
-        backButton.draw(batch);
-        leftArrow.draw(batch);
-        rightArrow.draw(batch);
-        levelPicture.draw(batch);
+        for (MenuButton button : buttons) button.draw(batch);
         batch.end();
     }
 

@@ -9,6 +9,9 @@ import com.io.menu.view.MenuButton;
 import com.io.menu.view.MenuSoundManager;
 import com.io.menu.view.MenuTextureManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StartPresenter {
     private final Coordinator coordinator;
     private final MenuSoundManager sm;
@@ -16,6 +19,7 @@ public class StartPresenter {
     private final MenuButton playButton;
     private final MenuButton quitButton;
     private final MenuButton playerButton;
+    private final List<MenuButton> buttons;
     private final float windowHeight;
 
     public StartPresenter(Coordinator coordinator) {
@@ -38,32 +42,32 @@ public class StartPresenter {
 
         Vector2 characterPosition = new Vector2(windowWidth / 2 - tileSize, mainY + tileSize * 2.2f);
         playerButton = new MenuButton(tm.getPlayer(), characterPosition, 2 * tileSize, 2 * tileSize);
+
+        buttons = new ArrayList<>();
+        buttons.add(quitButton);
+        buttons.add(playButton);
+        buttons.add(playerButton);
     }
 
     public void update() {
-        quitButton.unmark();
-        playButton.unmark();
-        playerButton.unmark();
+        for (MenuButton button : buttons) button.unmark();
 
         Vector2 mousePosition = getMousePosition();
 
-        if (quitButton.contains(mousePosition)) {
-            quitButton.mark();
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+        for (MenuButton button: buttons) {
+            if (button.contains(mousePosition)) button.mark();
+        }
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            if (quitButton.contains(mousePosition)){
                 System.out.println("QUIT!!!");
                 sm.playSelectSound();
                 coordinator.quit();
-            }
-        } else if (playButton.contains(mousePosition)) {
-            playButton.mark();
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            } else if (playButton.contains(mousePosition)) {
                 System.out.println("PLAY!!!");
                 sm.playSelectSound();
                 coordinator.setMenuScreen();
-            }
-        } else if (playerButton.contains(mousePosition)) {
-            playerButton.mark();
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            } else if (playerButton.contains(mousePosition)) {
                 System.out.println("Choose player");
                 sm.playSelectSound();
             }
@@ -72,9 +76,7 @@ public class StartPresenter {
 
     public void render() {
         batch.begin();
-        quitButton.draw(batch);
-        playButton.draw(batch);
-        playerButton.draw(batch);
+        for (MenuButton button : buttons) button.draw(batch);
         batch.end();
     }
 
