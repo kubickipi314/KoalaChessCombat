@@ -21,36 +21,41 @@ public class PawnMove implements Move {
         var startPosition = character.getPosition();
 
         if (!board.isValidCell(startPosition) || !board.isValidCell(endPosition)) return false;
+        var attackedCharacter = board.getCharacter(endPosition);
+        if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
         if (endPosition.y() != 1 + startPosition.y()) return false;
         if (endPosition.x() > startPosition.x() + 1 || endPosition.x() < startPosition.x() - 1) return false;
-        var endCell = board.getCell(endPosition);
-        if (startPosition.x() == endPosition.x() && endCell.getCharacter() != null) return false;
-        if (endCell.getCharacter() == null) return false;
+        if (startPosition.x() == endPosition.x() && attackedCharacter != null) return false;
+        if (attackedCharacter == null) return false;
         return true;
     }
 
     @Override
-    public List<BoardPosition> getAccessibleCells(BoardPosition position, Board board) {
+    public List<BoardPosition> getAccessibleCells(Character character, Board board) {
+        var position = character.getPosition();
         var accessibleCells = new ArrayList<BoardPosition>();
         int x = position.x();
         int y = position.y();
         var frontPosition = new BoardPosition(x, y + 1);
-        var frontLeftPosition = new BoardPosition(x - 1, y);
-        var frontRightPosition = new BoardPosition(x + 1, y);
-        if (board.isValidCell(frontPosition) && board.getCell(frontPosition).getCharacter() == null)
+        var frontLeftPosition = new BoardPosition(x - 1, y + 1);
+        var frontRightPosition = new BoardPosition(x + 1, y + 1);
+        if (board.isValidCell(frontPosition) && board.getCharacter(frontPosition) == null)
             accessibleCells.add(frontPosition);
-        if (board.isValidCell(frontLeftPosition) && board.getCell(frontLeftPosition).getCharacter() != null)
+        var frontLeftCharacter = board.getCharacter(frontLeftPosition);
+        if (board.isValidCell(frontLeftPosition) && frontLeftCharacter != null
+                && frontLeftCharacter.getTeam() != character.getTeam())
             accessibleCells.add(frontLeftPosition);
-        if (board.isValidCell(frontRightPosition) && board.getCell(frontRightPosition).getCharacter() != null)
+
+        var frontRightCharacter = board.getCharacter(frontRightPosition);
+        if (board.isValidCell(frontRightPosition) && frontRightCharacter != null
+                && frontRightCharacter.getTeam() != character.getTeam())
             accessibleCells.add(frontRightPosition);
         return accessibleCells;
     }
 
-
-    //currently unsupported
     @Override
     public MoveType getType() {
-        return null;
+        return MoveType.PAWN;
     }
 
     @Override
