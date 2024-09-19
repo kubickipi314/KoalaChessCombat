@@ -2,8 +2,10 @@ package com.io.core.moves;
 
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
+import com.io.core.character.Character;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class MovesUtils {
     private MovesUtils() {
@@ -54,5 +56,17 @@ public final class MovesUtils {
             if (board.getCharacter(currentPosition) != null) break;
         }
         return accessibleCells;
+    }
+
+    public static List<BoardPosition> sanitizeAccessibleCells(List<BoardPosition> accessibleCells, Character character, Board board) {
+        return accessibleCells.stream()
+                .filter(currentPosition -> {
+                    var attackedCharacter = board.getCharacter(currentPosition);
+                    if (attackedCharacter == null) {
+                        return true;
+                    }
+                    return attackedCharacter.getTeam() != character.getTeam();
+                })
+                .toList();
     }
 }

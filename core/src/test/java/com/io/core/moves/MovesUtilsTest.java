@@ -4,6 +4,7 @@ import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
 import com.io.core.board.Cell;
 import com.io.core.character.Character;
+import com.io.core.character.MeleeEnemy;
 import com.io.core.character.Player;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -95,5 +96,23 @@ class MovesUtilsTest {
         assertEquals(2, result.size(), "There should be two accessible cells.");
         assertTrue(result.contains(new BoardPosition(1, 1)), "position should be accessible.");
         assertTrue(result.contains(new BoardPosition(2, 2)), "position should be accessible but blocked.");
+    }
+
+    @Test
+    public void testSanitizeAccessibleCells() {
+        Board mockBoard = Mockito.mock(Board.class);
+        Character mockCharacter = Mockito.mock(Player.class);
+
+        var enemyMock = Mockito.mock(MeleeEnemy.class);
+        when(enemyMock.getTeam()).thenReturn(0);
+
+        when(mockBoard.getCharacter(new BoardPosition(1, 0))).thenReturn(enemyMock);
+        when(mockBoard.getCharacter(new BoardPosition(1, 1))).thenReturn(null);
+
+        List<BoardPosition> accessibleCells = List.of(new BoardPosition(1, 0), new BoardPosition(1, 1));
+        List<BoardPosition> result = MovesUtils.sanitizeAccessibleCells(accessibleCells, mockCharacter, mockBoard);
+
+        assertEquals(1, result.size(), "There should be one accessible cells.");
+        assertTrue(result.contains(new BoardPosition(1, 1)), "position should be accessible.");
     }
 }

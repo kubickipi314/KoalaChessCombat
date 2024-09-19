@@ -45,15 +45,7 @@ public class LongRangeMove implements Move {
         }
         System.out.println(accessibleCells);
 
-        return accessibleCells.stream()
-                .filter(currentPosition -> {
-                    var attackedCharacter = board.getCharacter(currentPosition);
-                    if (attackedCharacter == null) {
-                        return true;
-                    }
-                    return attackedCharacter.getTeam() != character.getTeam();
-                })
-                .toList();
+        return MovesUtils.sanitizeAccessibleCells(accessibleCells, character, board);
     }
 
 

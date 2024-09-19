@@ -46,15 +46,7 @@ public class RookMove implements Move {
         for (int i = 0; i < DX.length; i++) {
             accessibleCells.addAll(MovesUtils.getRayAccessibleCells(DX[i], DY[i], maxReach, board, position));
         }
-        return accessibleCells.stream()
-                .filter(currentPosition -> {
-                    var attackedCharacter = board.getCharacter(currentPosition);
-                    if (attackedCharacter == null) {
-                        return true;
-                    }
-                    return attackedCharacter.getTeam() != character.getTeam();
-                })
-                .toList();
+        return MovesUtils.sanitizeAccessibleCells(accessibleCells, character, board);
     }
 
     @Override
