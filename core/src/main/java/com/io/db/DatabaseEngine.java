@@ -1,6 +1,6 @@
 package com.io.db;
 
-import com.io.db.entity.CharactersEntity;
+import com.io.db.entity.CharacterEntity;
 import com.io.db.entity.SnapshotEntity;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -12,13 +12,12 @@ import java.sql.SQLException;
 public class DatabaseEngine {
     private JdbcPooledConnectionSource connectionSource;
 
-
     public DatabaseEngine(String url) {
         try {
             connectionSource
                     = new JdbcPooledConnectionSource(url);
             TableUtils.createTableIfNotExists(connectionSource, SnapshotEntity.class);
-            TableUtils.createTableIfNotExists(connectionSource, CharactersEntity.class);
+            TableUtils.createTableIfNotExists(connectionSource, CharacterEntity.class);
         } catch (SQLException e) {
             System.err.println("Failed to create db connection.\t" + e);
         }

@@ -4,6 +4,7 @@ import com.io.CONST;
 import com.io.core.board.BoardPosition;
 import com.io.core.moves.Move;
 import com.io.core.moves.MoveDTO;
+import com.io.db.entity.CharacterEntity;
 import com.io.presenter.GamePresenter;
 import com.io.service.GameService;
 
@@ -19,8 +20,8 @@ public class Player extends Character {
         this.moves = moves;
     }
 
-    public Player(GameService gs, GamePresenter gp, BoardPosition position, List<Move> moves, int currentHealth, int currentMana) {
-        super(gs, gp, maxMana, maxHealth, position, 0, currentHealth, currentMana);
+    public Player(GameService gs, GamePresenter gp, CharacterEntity che, List<Move> moves) {
+        super(gs, gp, maxMana, maxHealth, che);
         this.moves = moves;
     }
 

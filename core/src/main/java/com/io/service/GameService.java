@@ -9,8 +9,9 @@ import com.io.core.character.CharacterEnum;
 import com.io.core.character.MeleeEnemy;
 import com.io.core.character.Player;
 import com.io.core.moves.*;
-import com.io.core.snapshot.CharacterSnapshot;
 import com.io.core.snapshot.GameSnapshot;
+import com.io.db.entity.CharacterEntity;
+import com.io.db.entity.SnapshotEntity;
 import com.io.presenter.GamePresenter;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class GameService {
             gameSnapshotId = null;
             loadGame();
         } else {
-            gameSnapshotId = gameSnapshot.id();
+            gameSnapshotId = gameSnapshot.getId();
             System.out.println("Game loaded from snapshot with id=" + gameSnapshotId);
             loadGame(gameSnapshot);
         }
@@ -69,26 +70,23 @@ public class GameService {
     }
 
     public void loadGame(GameSnapshot gameSnapshot) {
-        var moves = List.of(new Move[]{
+        var moves = List.of(
             new KingMove(2, 1),
             new KnightMove(3, 3),
             new RookMove(5, 4),
             new BishopMove(3, 2),
             new QueenMove(7, 5)
-        });
+        );
 
         var characters = new ArrayList<Character>();
-
-        for (var chs : gameSnapshot.characterSnapshotList()) {
-            System.out.println(chs.characterEnum());
-            var characterEnum = chs.characterEnum();
-            var startPosition = new BoardPosition(chs.x(), chs.y());
+        for (var che : gameSnapshot.charactersEntityList()) {
+            var characterEnum = che.getCharacterEnum();
             Character character;
             if (characterEnum == CharacterEnum.Player) {
-                player = new Player(this, gp, startPosition, moves, chs.currentHealth(), chs.currentMana());
+                player = new Player(this, gp, che, moves);
                 character = player;
             } else if (characterEnum == CharacterEnum.MeleeEnemy) {
-                character = new MeleeEnemy(this, gp, startPosition, chs.currentHealth(), chs.currentMana());
+                character = new MeleeEnemy(this, gp, che);
             } else {
                 System.err.println("Found unrecognised character(" + characterEnum + "when importing snapshot.");
                 continue;
@@ -173,7 +171,7 @@ public class GameService {
     }
 
     private void createGameSnapshot(Long id) {
-        var characterSnapshots = new ArrayList<CharacterSnapshot>();
+        var characterSnapshotList = new ArrayList<CharacterEntity>();
         for (var character : getCharacters()) {
             var x = character.getPosition().x();
             var y = character.getPosition().y();
@@ -182,9 +180,9 @@ public class GameService {
             var currentMana = character.getCurrentMana();
             var team = character.getTeam();
 
-            characterSnapshots.add(new CharacterSnapshot(x, y, characterEnum, currentHealth, currentMana, team));
+            characterSnapshotList.add(new CharacterEntity(characterEnum, x, y, currentHealth, currentMana, team));
         }
-        var gameSnapshot = new GameSnapshot(null, characterSnapshots);
-        sns.createSnapshot(id, gameSnapshot);
+        var snapshotEntity = new SnapshotEntity();
+        sns.createSnapshot(id, snapshotEntity, characterSnapshotList);
     }
 }

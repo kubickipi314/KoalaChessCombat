@@ -15,5 +15,4 @@ public class SnapshotEntity {
     public long getId() {
         return id;
     }
-    // standard getters, setters
 }

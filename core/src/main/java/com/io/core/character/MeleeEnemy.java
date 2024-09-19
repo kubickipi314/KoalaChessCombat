@@ -5,6 +5,7 @@ import com.io.core.board.BoardPosition;
 import com.io.core.moves.KingMove;
 import com.io.core.moves.KnightMove;
 import com.io.core.moves.MoveDTO;
+import com.io.db.entity.CharacterEntity;
 import com.io.presenter.GamePresenter;
 import com.io.service.GameService;
 
@@ -19,8 +20,8 @@ public class MeleeEnemy extends Enemy {
         super(gs, gp, maxMana, maxHealth, position);
     }
 
-    public MeleeEnemy(GameService gs, GamePresenter gp, BoardPosition position, int currentHealth, int currentMana) {
-        super(gs, gp, maxMana, maxHealth, position, currentHealth, currentMana);
+    public MeleeEnemy(GameService gs, GamePresenter gp, CharacterEntity che) {
+        super(gs, gp, maxMana, maxHealth, che);
     }
 
     @Override
