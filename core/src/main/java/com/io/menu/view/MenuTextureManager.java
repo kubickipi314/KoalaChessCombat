@@ -11,6 +11,9 @@ public class MenuTextureManager {
     private final List<Texture> backButton;
     private final List<Texture> player;
     private final List<Texture> levels;
+    private final List<Texture> rightArrow;
+    private final List<Texture> leftArrow;
+
     public MenuTextureManager() {
         quitButton = new ArrayList<>();
         quitButton.add(new Texture("textures/menu/quit_button_0.png"));
@@ -31,6 +34,14 @@ public class MenuTextureManager {
         levels = new ArrayList<>();
         levels.add(new Texture("textures/menu/level_0.png"));
         levels.add(new Texture("textures/menu/level_1.png"));
+
+        rightArrow = new ArrayList<>();
+        rightArrow.add(new Texture("textures/menu/right_arrow_0.png"));
+        rightArrow.add(new Texture("textures/menu/right_arrow_1.png"));
+
+        leftArrow = new ArrayList<>();
+        leftArrow.add(new Texture("textures/menu/left_arrow_0.png"));
+        leftArrow.add(new Texture("textures/menu/left_arrow_1.png"));
     }
 
     public List<Texture> getQuitButton() {
@@ -50,5 +61,13 @@ public class MenuTextureManager {
 
     public List<Texture> getLevel() {
         return levels;
+    }
+
+    public List<Texture> getRightArrow() {
+        return rightArrow;
+    }
+
+    public List<Texture> getLeftArrow() {
+        return leftArrow;
     }
 }
