@@ -9,6 +9,7 @@ import com.io.core.character.Character;
 import com.io.core.character.Enemy;
 import com.io.core.character.Player;
 import com.io.core.moves.Move;
+import com.io.Coordinator;
 import com.io.presenter.character.CharacterPresenterInterface;
 import com.io.presenter.character.EnemyPresenter;
 import com.io.presenter.character.PlayerPresenter;
@@ -21,10 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.io.core.CharacterType.LINUX;
-import static com.io.core.CharacterType.MINIX;
 
 public class GamePresenter {
     private GameService gs;
+    private Coordinator coordinator;
     private SpriteBatch batch;
     private BoardPresenter boardPresenter;
     private ChessPresenter chessPresenter;
@@ -39,9 +40,11 @@ public class GamePresenter {
     private int currentHealth;
     private Character activeCharacter = null;
     private boolean gameEnded = false;
+    private float gameEndTime = 0;
 
-    public void init(GameService gs) {
+    public void init(GameService gs, Coordinator coordinator) {
         this.gs = gs;
+        this.coordinator = coordinator;
 
         batch = new SpriteBatch();
         windowHeight = Gdx.graphics.getHeight();
@@ -95,6 +98,7 @@ public class GamePresenter {
         updateCharacters();
         updateChess();
         updateBars();
+        updateGameEnd();
     }
 
     private void updateCharacters() {
@@ -121,6 +125,13 @@ public class GamePresenter {
         barsPresenter.setMana(playerModel.getCurrentMana());
         currentHealth = playerModel.getCurrentHealth();
         barsPresenter.setHealth(currentHealth);
+    }
+
+    private void updateGameEnd() {
+        if (gameEnded) {
+            gameEndTime += Gdx.graphics.getDeltaTime();
+            if (gameEndTime >= 5) coordinator.setMenuScreen();
+        }
     }
 
     private Vector2 getMousePosition() {

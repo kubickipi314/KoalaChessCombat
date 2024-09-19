@@ -1,10 +1,6 @@
 package com.io;
 
 import com.badlogic.gdx.Game;
-import com.io.presenter.GamePresenter;
-import com.io.screens.GameScreen;
-import com.io.service.GameService;
-import com.io.service.TurnService;
 
 
 /**
@@ -13,12 +9,15 @@ import com.io.service.TurnService;
 public class Main extends Game {
     @Override
     public void create() {
-        TurnService ts = new TurnService();
-        GameService gs = new GameService();
-        GamePresenter gamePresenter = new GamePresenter();
-        gs.init(ts, gamePresenter);
-        gamePresenter.init(gs);
-        setScreen(new GameScreen(gamePresenter));
-        gs.startGame();
+//        TurnService ts = new TurnService();
+//        GameService gs = new GameService();
+//        GamePresenter gamePresenter = new GamePresenter();
+//        gs.init(ts, gamePresenter);
+//        gamePresenter.init(gs);
+//        setScreen(new GameScreen(gamePresenter));
+//        gs.startGame();
+
+        Coordinator coordinator = new Coordinator(this);
+        coordinator.setStartScreen();
     }
 }

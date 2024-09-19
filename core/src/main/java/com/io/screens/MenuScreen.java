@@ -3,14 +3,13 @@ package com.io.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.io.menu.presenters.StartPresenter;
+import com.io.menu.presenters.MenuPresenter;
 
-public class StartScreen implements Screen {
+public class MenuScreen implements Screen {
+    private final MenuPresenter menuPresenter;
 
-    private final StartPresenter startPresenter;
-
-    public StartScreen(StartPresenter startPresenter) {
-        this.startPresenter = startPresenter;
+    public MenuScreen(MenuPresenter menuPresenter) {
+        this.menuPresenter = menuPresenter;
     }
 
     @Override
@@ -20,11 +19,11 @@ public class StartScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        startPresenter.update();
+        menuPresenter.update();
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        startPresenter.render();
+        menuPresenter.render();
     }
 
     @Override
