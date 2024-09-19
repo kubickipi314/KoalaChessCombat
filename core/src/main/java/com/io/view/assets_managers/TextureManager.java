@@ -1,7 +1,6 @@
 package com.io.view.assets_managers;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.io.core.CharacterType;
 import com.io.core.GameResult;
 import com.io.core.moves.MoveType;
