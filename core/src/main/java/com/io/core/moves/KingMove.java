@@ -2,7 +2,6 @@ package com.io.core.moves;
 
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
-import com.io.core.board.Cell;
 import com.io.core.character.Character;
 
 import java.util.ArrayList;
@@ -27,11 +26,11 @@ public class KingMove implements Move {
     @Override
     public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
         var startPosition = character.getPosition();
-        var cell = board.getCell(endPosition);
+        var attackedCharacter = board.getCharacter(endPosition);
 
-        if (cell.isBlocked)
+        if (!board.isValidCell(endPosition))
             return false;
-        if (cell.getCharacter() != null && cell.getCharacter().getTeam() == character.getTeam())
+        if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam())
             return false;
 
         if (abs(startPosition.x() - endPosition.x()) > 1 ||
@@ -42,13 +41,15 @@ public class KingMove implements Move {
     }
 
     @Override
-    public List<BoardPosition> getAccessibleCells(BoardPosition position, Board board) {
+    public List<BoardPosition> getAccessibleCells(Character character, Board board) {
+        var position = character.getPosition();
         var accessibleCells = new ArrayList<BoardPosition>();
 
         for (int i = 0; i < DX.length; i++) {
             accessibleCells.addAll(MovesUtils.getRayAccessibleCells(DX[i], DY[i], maxReach, board, position));
         }
-        return accessibleCells;
+
+        return MovesUtils.sanitizeAccessibleCells(accessibleCells, character, board);
     }
 
     @Override

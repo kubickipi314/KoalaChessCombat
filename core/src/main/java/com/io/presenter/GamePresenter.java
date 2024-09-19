@@ -114,7 +114,7 @@ public class GamePresenter {
     private void updateChess() {
         var selectedMove = chessPresenter.getSelectedMove();
         if (!lastBoardPosition.equals(playerModel.getPosition()) || lastChosenMove != selectedMove) {
-            boardPresenter.setAvailableTiles(playerModel.getMove(selectedMove).getAccessibleCells(playerModel.getPosition(), gs.getBoardSnapshot()));
+            boardPresenter.setAvailableTiles(playerModel.getMove(selectedMove).getAccessibleCells(playerModel, gs.getBoardSnapshot()));
             lastBoardPosition = playerModel.getPosition();
             lastChosenMove = selectedMove;
         }

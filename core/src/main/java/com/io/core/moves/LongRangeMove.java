@@ -6,52 +6,53 @@ import com.io.core.character.Character;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static com.io.core.moves.MoveType.ROOK;
-
-public class RookMove implements Move {
-
+public class LongRangeMove implements Move {
     private final int cost, damage;
-    private static final int[] DX = {0, 1, -1, 0};
-    private static final int[] DY = {1, 0, 0, -1};
-    private static final int maxReach = Integer.MAX_VALUE;
-    private static final MoveType type = ROOK;
+    private final int minRange;
 
-    public RookMove(int cost, int damage) {
+    public LongRangeMove(int cost, int damage, int minRange) {
         this.cost = cost;
         this.damage = damage;
+        this.minRange = minRange;
+    }
+
+    private boolean isInRange(BoardPosition start, BoardPosition end) {
+        if (Math.abs(end.x() - start.x()) >= minRange) return true;
+        return Math.abs(end.y() - start.y()) >= minRange;
     }
 
     @Override
     public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
         var startPosition = character.getPosition();
-
         if (!board.isValidCell(endPosition)) return false;
-        if (startPosition == endPosition) return false;
         var attackedCharacter = board.getCharacter(endPosition);
         if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
-
-        int dx = endPosition.x() - startPosition.x();
-        int dy = endPosition.y() - startPosition.y();
-        if (dx != 0 && dy != 0) return false;
-
-        return MovesUtils.isValidRayMove(Integer.signum(dx), Integer.signum(dy), maxReach, startPosition, endPosition, board);
+        return isInRange(startPosition, endPosition);
     }
 
     @Override
     public List<BoardPosition> getAccessibleCells(Character character, Board board) {
         var position = character.getPosition();
-        var accessibleCells = new ArrayList<BoardPosition>();
-
-        for (int i = 0; i < DX.length; i++) {
-            accessibleCells.addAll(MovesUtils.getRayAccessibleCells(DX[i], DY[i], maxReach, board, position));
+        ArrayList<BoardPosition> accessibleCells = new ArrayList<>();
+        for (int i = 0; i <= board.getBoardWidth(); i++) {
+            for (int j = 0; j < board.getBoardHeight(); j++) {
+                BoardPosition currentPosition = new BoardPosition(i, j);
+                if (Objects.equals(character.getPosition(), currentPosition)) continue;
+                if (isInRange(position, currentPosition) && board.isValidCell(currentPosition)) {
+                    accessibleCells.add(currentPosition);
+                }
+            }
         }
+
         return MovesUtils.sanitizeAccessibleCells(accessibleCells, character, board);
     }
 
+
     @Override
     public MoveType getType() {
-        return type;
+        return MoveType.LONG_RANGE;
     }
 
     @Override

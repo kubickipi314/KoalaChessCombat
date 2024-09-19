@@ -5,5 +5,8 @@ public enum MoveType {
     QUEEN,
     KNIGHT,
     BISHOP,
-    ROOK
+    ROOK,
+    PAWN,
+    LONG_RANGE,
+    SHORT_RANGE
 }
