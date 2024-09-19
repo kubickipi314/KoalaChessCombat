@@ -4,20 +4,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.io.core.GameResult;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
+import com.io.view.bars_buttons.ResultView;
 import com.io.view.bars_buttons.TourButton;
+
+import static com.io.core.GameResult.WIN;
 
 public class ButtonsPresenter {
     private final SoundManager sm;
+    private final TextureManager tm;
     private final GamePresenter gamePresenter;
-
     private final TourButton tourButton;
-
+    private final ResultView resultView;
     private boolean isActive;
     private float elapsedTime;
+    private boolean isResultShown;
 
     public ButtonsPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gamePresenter) {
+        this.tm = tm;
         this.sm = sm;
         this.gamePresenter = gamePresenter;
         float tileSize = cm.getTileSize();
@@ -28,7 +34,11 @@ public class ButtonsPresenter {
         Vector2 tourButtonPosition = new Vector2(tourButtonX, cm.getManaBarY());
         tourButton = new TourButton(tm, tourButtonPosition, tileSize);
 
+        Vector2 resultPosition = new Vector2(cm.getBoardX(), cm.getBoardY());
+        resultView = new ResultView(tm.getResult(WIN), resultPosition, tileSize);
+
         isActive = false;
+        isResultShown = false;
     }
 
 
@@ -74,5 +84,11 @@ public class ButtonsPresenter {
 
     public void render(SpriteBatch batch) {
         tourButton.draw(batch);
+        if (isResultShown) resultView.draw(batch);
+    }
+
+    public void showResult(GameResult gameResult) {
+        isResultShown = true;
+        resultView.setTexture(tm.getResult(gameResult));
     }
 }
