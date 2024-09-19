@@ -93,7 +93,7 @@ class BishopMoveTest {
 
         var type = bishopMove.getType();
 
-        assertEquals(type, MoveType.BISHOP, "The type should match the value of BISHOP enum");
+        assertEquals(MoveType.BISHOP, type, "The type should match the value of BISHOP enum");
     }
 
     @Test

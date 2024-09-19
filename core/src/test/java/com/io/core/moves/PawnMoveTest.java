@@ -101,4 +101,13 @@ public class PawnMoveTest {
 
         assertEquals(5, damage, "The damage should match the value set in the constructor.");
     }
+
+    @Test
+    void getType() {
+        PawnMove pawnMove = new PawnMove(10, 5);
+
+        var type = pawnMove.getType();
+
+        assertEquals(MoveType.PAWN, type, "The type should match the value of BISHOP enum");
+    }
 }

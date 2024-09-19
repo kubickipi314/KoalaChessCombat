@@ -8,19 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class LongRangeMove implements Move {
+public class ShortRangeMove implements Move {
     private final int cost, damage;
-    private final int minRange;
+    private final int maxRange;
 
-    public LongRangeMove(int cost, int damage, int minRange) {
+    public ShortRangeMove(int cost, int damage, int maxRange) {
         this.cost = cost;
         this.damage = damage;
-        this.minRange = minRange;
+        this.maxRange = maxRange;
     }
 
     private boolean isInRange(BoardPosition start, BoardPosition end) {
-        if (Math.abs(end.x() - start.x()) >= minRange) return true;
-        return Math.abs(end.y() - start.y()) >= minRange;
+        return Math.abs(end.x() - start.x()) <= maxRange && Math.abs(end.y() - start.y()) <= maxRange;
     }
 
     @Override
@@ -52,7 +51,7 @@ public class LongRangeMove implements Move {
 
     @Override
     public MoveType getType() {
-        return MoveType.LONG_RANGE;
+        return MoveType.SHORT_RANGE;
     }
 
     @Override

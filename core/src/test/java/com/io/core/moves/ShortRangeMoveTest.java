@@ -11,13 +11,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class LongRangeMoveTest {
+class ShortRangeMoveTest {
 
     Board smallBoard;
 
     @Test
     void testIsValidMove_NoObstacle() {
-        LongRangeMove longRangeMove = new LongRangeMove(10, 5, 2);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2);
 
         var mockBoard = mock(Board.class);
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
@@ -26,15 +26,15 @@ class LongRangeMoveTest {
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertTrue(longRangeMove.isMoveValid(mockPlayer, new BoardPosition(0, 2), mockBoard));
-        assertTrue(longRangeMove.isMoveValid(mockPlayer, new BoardPosition(2, 0), mockBoard));
-        assertTrue(longRangeMove.isMoveValid(mockPlayer, new BoardPosition(2, 2), mockBoard));
-        assertFalse(longRangeMove.isMoveValid(mockPlayer, new BoardPosition(1, 1), mockBoard));
+        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(0, 3), mockBoard));
+        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(3, 0), mockBoard));
+        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(3, 3), mockBoard));
+        assertTrue(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(1, 1), mockBoard));
     }
 
     @Test
     void testIsValid_Obstacle() {
-        LongRangeMove longRangeMove = new LongRangeMove(10, 5, 2);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 3);
 
         var mockBoard = mock(Board.class);
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
@@ -46,8 +46,8 @@ class LongRangeMoveTest {
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertFalse(longRangeMove.isMoveValid(mockPlayer, new BoardPosition(2, 2), mockBoard));
-        assertFalse(longRangeMove.isMoveValid(mockPlayer, new BoardPosition(1, 0), mockBoard));
+        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(2, 2), mockBoard));
+        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(1, 0), mockBoard));
     }
 
     void init() {
@@ -64,15 +64,15 @@ class LongRangeMoveTest {
 
     @Test
     void testGetAccessibleCells_NoObstacle() {
-        LongRangeMove longRangeMove = new LongRangeMove(10, 5, 2);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2);
         init();
 
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
 
-        var result = longRangeMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = shortRangeMove.getAccessibleCells(mockPlayer, smallBoard);
 
-        assertEquals(5, result.size(), "There should be five accessible cells.");
+        assertEquals(8, result.size(), "There should be nine accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 2)), "position should be accessible.");
         assertTrue(result.contains(new BoardPosition(1, 2)), "position should be accessible.");
         assertTrue(result.contains(new BoardPosition(2, 1)), "position should be accessible.");
@@ -80,7 +80,7 @@ class LongRangeMoveTest {
 
     @Test
     void testGetAccessibleCells_Obstacle() {
-        LongRangeMove longRangeMove = new LongRangeMove(10, 5, 2);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 1);
         init();
         var mockEnemy = mock(MeleeEnemy.class);
         when(mockEnemy.getTeam()).thenReturn(1);
@@ -89,38 +89,38 @@ class LongRangeMoveTest {
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
 
-        var result = longRangeMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = shortRangeMove.getAccessibleCells(mockPlayer, smallBoard);
 
-        assertEquals(5, result.size(), "There should be five accessible cells.");
-        assertTrue(result.contains(new BoardPosition(2, 2)), "position should be accessible.");
-        assertTrue(result.contains(new BoardPosition(1, 2)), "position should be accessible.");
-        assertTrue(result.contains(new BoardPosition(2, 1)), "position should be accessible.");
+        assertEquals(3, result.size(), "There should be five accessible cells.");
+        assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
+        assertTrue(result.contains(new BoardPosition(1, 1)), "position should be accessible.");
+        assertFalse(result.contains(new BoardPosition(0, 0)), "position should be accessible.");
     }
 
 
     @Test
     void getType() {
-        LongRangeMove longRangeMove = new LongRangeMove(10, 5, 2);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2);
 
-        var type = longRangeMove.getType();
+        var type = shortRangeMove.getType();
 
-        assertEquals(MoveType.LONG_RANGE, type, "The type should match the value of BISHOP enum");
+        assertEquals(MoveType.SHORT_RANGE, type, "The type should match the value of BISHOP enum");
     }
 
     @Test
     public void testGetCost() {
-        LongRangeMove longRangeMove = new LongRangeMove(10, 5, 2);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2);
 
-        int cost = longRangeMove.getCost();
+        int cost = shortRangeMove.getCost();
 
         assertEquals(10, cost, "The cost should match the value set in the constructor.");
     }
 
     @Test
     public void testGetDamage() {
-        LongRangeMove longRangeMove = new LongRangeMove(10, 5, 2);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2);
 
-        int damage = longRangeMove.getDamage();
+        int damage = shortRangeMove.getDamage();
 
         assertEquals(5, damage, "The damage should match the value set in the constructor.");
     }

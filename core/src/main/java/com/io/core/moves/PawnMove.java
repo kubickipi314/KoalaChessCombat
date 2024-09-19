@@ -53,11 +53,9 @@ public class PawnMove implements Move {
         return accessibleCells;
     }
 
-
-    //currently unsupported
     @Override
     public MoveType getType() {
-        return null;
+        return MoveType.PAWN;
     }
 
     @Override
