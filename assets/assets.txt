@@ -58,7 +58,6 @@ textures/buttons/tour_button_3.png
 textures/buttons/tour_button_2.png
 textures/buttons/win_result.png
 textures/buttons/lose_result.png
-.gitkeep
 ui/font-window.fnt
 ui/font-list.fnt
 ui/font.fnt
@@ -67,7 +66,10 @@ ui/uiskin.json
 ui/uiskin.png
 ui/font-subtitle.fnt
 sounds/roar_1.mp3
+sounds/select_3.mp3
 sounds/sword_sound_1.mp3
 sounds/move_sound_1.mp3
 sounds/roar_2.mp3
+sounds/select_2.mp3
+sounds/select_1.mp3
 sounds/select_sound_1.mp3
