@@ -2,51 +2,31 @@ package com.io.menu.view;
 
 import com.badlogic.gdx.graphics.Texture;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MenuTextureManager {
-    private final List<Texture> quitButton;
-    private final List<Texture> playButton;
-    private final List<Texture> backButton;
-    private final List<Texture> player;
-    private final List<Texture> levels;
-    private final List<Texture> rightArrow;
-    private final List<Texture> leftArrow;
+    private List<Texture> getTextureList(String name, int count) {
+        return IntStream.range(0, count).mapToObj(idx -> new Texture(name + "_" + idx + ".png")).collect(Collectors.toList());
+    }
+
+    private final List<Texture> quitButton = getTextureList("textures/menu/quit_button", 2);
+    private final List<Texture> playButton = getTextureList("textures/menu/play_button", 2);
+    private final List<Texture> backButton = getTextureList("textures/menu/back_button", 2);
+    private final List<Texture> levels = getTextureList("textures/menu/level", 2);
+    private final List<Texture> rightArrow = getTextureList("textures/menu/right_arrow", 2);
+    private final List<Texture> leftArrow = getTextureList("textures/menu/left_arrow", 2);
+    private final List<Texture> player = List.of(new Texture("textures/characters/koala_0.png"),
+            new Texture("textures/characters/koala_2.png"));
 
     public MenuTextureManager() {
-        quitButton = new ArrayList<>();
-        quitButton.add(new Texture("textures/menu/quit_button_0.png"));
-        quitButton.add(new Texture("textures/menu/quit_button_1.png"));
-
-        playButton = new ArrayList<>();
-        playButton.add(new Texture("textures/menu/play_button_0.png"));
-        playButton.add(new Texture("textures/menu/play_button_1.png"));
-
-        backButton = new ArrayList<>();
-        backButton.add(new Texture("textures/menu/back_button_0.png"));
-        backButton.add(new Texture("textures/menu/back_button_1.png"));
-
-        player = new ArrayList<>();
-        player.add(new Texture("textures/characters/koala_0.png"));
-        player.add(new Texture("textures/characters/koala_2.png"));
-
-        levels = new ArrayList<>();
-        levels.add(new Texture("textures/menu/level_0.png"));
-        levels.add(new Texture("textures/menu/level_1.png"));
-
-        rightArrow = new ArrayList<>();
-        rightArrow.add(new Texture("textures/menu/right_arrow_0.png"));
-        rightArrow.add(new Texture("textures/menu/right_arrow_1.png"));
-
-        leftArrow = new ArrayList<>();
-        leftArrow.add(new Texture("textures/menu/left_arrow_0.png"));
-        leftArrow.add(new Texture("textures/menu/left_arrow_1.png"));
     }
 
     public List<Texture> getQuitButton() {
         return quitButton;
     }
+
     public List<Texture> getPlayButton() {
         return playButton;
     }
