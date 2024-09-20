@@ -3,13 +3,13 @@ package com.io.presenter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.io.Coordinator;
 import com.io.core.GameResult;
 import com.io.core.board.BoardPosition;
 import com.io.core.character.Character;
 import com.io.core.character.Enemy;
 import com.io.core.character.Player;
 import com.io.core.moves.Move;
-import com.io.Coordinator;
 import com.io.presenter.character.CharacterPresenterInterface;
 import com.io.presenter.character.EnemyPresenter;
 import com.io.presenter.character.PlayerPresenter;
@@ -80,7 +80,7 @@ public class GamePresenter {
         var activePresenter = charactersMap.get(activeCharacter);
         if (!activePresenter.isActive() && !gameEnded) {
             if (activeCharacter instanceof Enemy enemyModel) {
-                var success = enemyModel.makeNextMove();
+                var success = gs.moveEnemy(enemyModel);
                 var enemyPresenter = charactersMap.get(enemyModel);
                 if (currentHealth != playerModel.getCurrentHealth()) {
                     enemyPresenter.startAttack(playerModel.getPosition());
@@ -159,7 +159,7 @@ public class GamePresenter {
 
     public void movePlayer(BoardPosition boardPosition) {
         var chosenMove = chessPresenter.getSelectedMove();
-        if (gs.getPlayer().makeNextMove(boardPosition, chosenMove)) {
+        if (gs.movePlayer(boardPosition, chosenMove)) {
             var playerPresenter = charactersMap.get(playerModel);
             playerPresenter.startMove(playerModel.getPosition());
             if (playerModel.getPosition() != boardPosition) playerPresenter.startAttack(boardPosition);
