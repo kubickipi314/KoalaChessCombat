@@ -3,11 +3,19 @@ package com.io.core.board;
 import com.io.core.character.Character;
 
 public class Cell {
-    public final boolean isBlocked;
+    private boolean isBlocked;
     private Character character;
 
     public Cell(boolean isBlocked) {
         this.isBlocked = isBlocked;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
     }
 
     public Character getCharacter() {
@@ -17,4 +25,5 @@ public class Cell {
     public void setCharacter(Character character) {
         this.character = character;
     }
+
 }

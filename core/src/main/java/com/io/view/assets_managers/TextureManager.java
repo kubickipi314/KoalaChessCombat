@@ -17,6 +17,7 @@ import static com.io.core.moves.MoveType.*;
 
 public class TextureManager {
     private final Texture normalTile;
+    private final Texture blockedTile;
     private final Texture markedCover;
     private final Texture availableCover;
     private final Map<MoveType, Texture> chess;
@@ -39,6 +40,7 @@ public class TextureManager {
         result = new EnumMap<>(GameResult.class);
 
         normalTile = new Texture("textures/tiles/tile.png");
+        blockedTile = new Texture("textures/tiles/blocked_tile.png");
         markedCover = new Texture("textures/tiles/marked_cover.png");
         availableCover = new Texture("textures/tiles/available_cover.png");
 
@@ -132,6 +134,10 @@ public class TextureManager {
 
     public Texture getNormalTile() {
         return normalTile;
+    }
+
+    public Texture getBlockedTile() {
+        return blockedTile;
     }
 
     public Texture getMarkedCover() {

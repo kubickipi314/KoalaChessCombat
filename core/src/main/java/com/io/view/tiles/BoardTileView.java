@@ -10,26 +10,29 @@ public class BoardTileView {
     private final Vector2 position;
     private boolean isMarked;
     private boolean isAvailable;
+    private boolean isBlocked;
 
     private final Sprite tileSprite;
+    private final Sprite blockedTileSprite;
     private final Sprite availableSprite;
     private final Sprite markedSprite;
 
     public BoardTileView(TextureManager tm, Vector2 position, float size) {
         this.position = position;
-        Texture markedCover = tm.getMarkedCover();
-        Texture availableCover = tm.getAvailableCover();
 
         tileSprite = new Sprite(tm.getNormalTile());
         tileSprite.setPosition(position.x, position.y);
         tileSprite.setSize(size, size);
 
+        blockedTileSprite = new Sprite(tm.getBlockedTile());
+        blockedTileSprite.setPosition(position.x, position.y);
+        blockedTileSprite.setSize(size, size);
+
         availableSprite = new Sprite(tileSprite);
-        availableSprite.setTexture(availableCover);
+        availableSprite.setTexture(tm.getAvailableCover());
 
         markedSprite = new Sprite(tileSprite);
-        markedSprite.setTexture(markedCover);
-
+        markedSprite.setTexture(tm.getMarkedCover());
     }
 
     public void setAvailable(boolean isAvailable) {
@@ -44,10 +47,18 @@ public class BoardTileView {
         this.isMarked = isMarked;
     }
 
+    public void setBlocked(boolean isBlocked) {
+        this.isBlocked = isBlocked;
+    }
+
     public void draw(SpriteBatch batch) {
-        tileSprite.draw(batch);
-        if (isMarked) markedSprite.draw(batch);
-        if (isAvailable) availableSprite.draw(batch);
+        if (isBlocked) {
+            blockedTileSprite.draw(batch);
+        } else {
+            tileSprite.draw(batch);
+            if (isMarked) markedSprite.draw(batch);
+            if (isAvailable) availableSprite.draw(batch);
+        }
     }
 
     public Vector2 getPosition() {

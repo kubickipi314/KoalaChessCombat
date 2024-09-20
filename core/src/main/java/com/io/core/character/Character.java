@@ -1,6 +1,7 @@
 package com.io.core.character;
 
 import com.io.core.board.BoardPosition;
+import com.io.db.entity.CharacterEntity;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -23,7 +24,18 @@ public abstract class Character {
         this.team = team;
     }
 
+    public Character(int maxMana, int maxHealth, CharacterEntity che) {
+        this(maxMana, maxHealth, che.getPosition(), che.getTeam());
+        this.currentHealth = che.getCurrentHealth();
+        this.currentMana = che.getCurrentMana();
+    }
+
+
     public int getCurrentMana() {
+        return currentMana;
+    }
+
+    public int getMaxMana() {
         return currentMana;
     }
 

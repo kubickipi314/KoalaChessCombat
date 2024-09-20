@@ -22,6 +22,6 @@ class CellTest {
         boolean value = false;
         Cell cell = new Cell(value);
 
-        assertEquals(value, cell.isBlocked);
+        assertEquals(value, cell.isBlocked());
     }
 }

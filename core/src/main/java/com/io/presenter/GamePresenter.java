@@ -67,8 +67,10 @@ public class GamePresenter {
             }
         }
 
+        var specialCells = gs.getBoardSnapshot().getSpecialCells();
+
         this.barsPresenter = new BarsPresenter(tm, cm);
-        this.boardPresenter = new BoardPresenter(tm, cm, this);
+        this.boardPresenter = new BoardPresenter(tm, cm, this, specialCells);
         this.chessPresenter = new ChessPresenter(tm, sm, cm, moves);
         this.buttonsPresenter = new ButtonsPresenter(tm, sm, cm, this);
     }

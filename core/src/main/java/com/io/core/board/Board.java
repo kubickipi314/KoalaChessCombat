@@ -15,12 +15,15 @@ public class Board {
     private final List<Character> characters;
     private final Map<Integer, Integer> teamCount;
 
-    public Board(int width, int height, List<Character> characters) {
+    public Board(int width, int height, List<Character> characters, List<SpecialCell> specialCells) {
         this.board = new Cell[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 board[i][j] = new Cell(false);
             }
+        }
+        for (var cell : specialCells) {
+            board[cell.y()][cell.x()].setBlocked(cell.isBlocked());
         }
 
         this.characters = characters;
@@ -85,7 +88,7 @@ public class Board {
     public boolean isValidCell(BoardPosition position) {
         if (position.x() < 0 || position.x() >= this.boardWidth) return false;
         if (position.y() < 0 || position.y() >= this.boardHeight) return false;
-        return !getCell(position).isBlocked;
+        return !getCell(position).isBlocked();
     }
 
     public Character getCharacter(BoardPosition position) {
@@ -100,6 +103,19 @@ public class Board {
 
     public List<Character> getCharacters() {
         return characters;
+    }
+
+    public List<SpecialCell> getSpecialCells() {
+        var specialCellList = new ArrayList<SpecialCell>();
+        for (int y = 0; y < boardHeight; ++y) {
+            for (int x = 0; x < boardWidth; ++x) {
+                var cell = board[y][x];
+                if (cell.isBlocked()) {
+                    specialCellList.add(new SpecialCell(x, y, true));
+                }
+            }
+        }
+        return specialCellList;
     }
 
     public List<BoardPosition> getTeamPosition(int team) {

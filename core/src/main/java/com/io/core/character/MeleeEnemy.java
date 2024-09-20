@@ -5,6 +5,7 @@ import com.io.core.board.BoardPosition;
 import com.io.core.moves.KingMove;
 import com.io.core.moves.KnightMove;
 import com.io.core.moves.MoveDTO;
+import com.io.db.entity.CharacterEntity;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,6 +16,10 @@ public class MeleeEnemy extends Enemy {
 
     public MeleeEnemy(BoardPosition position) {
         super(maxMana, maxHealth, position);
+    }
+
+    public MeleeEnemy(CharacterEntity che) {
+        super(maxMana, maxHealth, che);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.io.core.character;
 import com.io.CONST;
 import com.io.core.board.BoardPosition;
 import com.io.core.moves.Move;
+import com.io.db.entity.CharacterEntity;
 
 import java.util.List;
 
@@ -12,6 +13,11 @@ public class Player extends Character {
 
     public Player(BoardPosition position, List<Move> moves) {
         super(maxMana, maxHealth, position, 0);
+        this.moves = moves;
+    }
+
+    public Player(CharacterEntity che, List<Move> moves) {
+        super(maxMana, maxHealth, che);
         this.moves = moves;
     }
 
