@@ -5,6 +5,7 @@ import com.io.core.GameResult;
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
 import com.io.core.character.Character;
+import com.io.core.character.Enemy;
 import com.io.core.character.MeleeEnemy;
 import com.io.core.character.Player;
 import com.io.core.moves.*;
@@ -35,13 +36,13 @@ public class GameService {
                 new BishopMove(3, 2),
                 new QueenMove(7, 5)
         });
-        player = new Player(this, gp, playerStartingPosition, moves);
+        player = new Player(playerStartingPosition, moves);
 
         var characters = new ArrayList<>(List.of(
                 player,
-                new MeleeEnemy(this, gp, new BoardPosition(1, 4)),
-                new MeleeEnemy(this, gp, new BoardPosition(2, 4)),
-                new MeleeEnemy(this, gp, new BoardPosition(3, 3))
+                new MeleeEnemy(new BoardPosition(1, 4)),
+                new MeleeEnemy(new BoardPosition(2, 4)),
+                new MeleeEnemy(new BoardPosition(3, 3))
         ));
 
         board = new Board(roomWidth, roomHeight, characters);
@@ -99,6 +100,19 @@ public class GameService {
             if (gameResult != GameResult.NONE) endGame(gameResult);
         }
         return success;
+    }
+
+    public boolean moveEnemy(Enemy enemy) {
+        var move = enemy.makeNextMove(board);
+        if (move == null) {
+            return false;
+        }
+        return tryMakeMove(move);
+    }
+
+    public boolean movePlayer(BoardPosition boardPosition, int chosenMove) {
+        var move = player.getMove(chosenMove);
+        return tryMakeMove(new MoveDTO(move, boardPosition, player));
     }
 
 }
