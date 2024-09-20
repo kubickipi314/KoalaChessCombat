@@ -6,8 +6,6 @@ import com.io.core.moves.KingMove;
 import com.io.core.moves.KnightMove;
 import com.io.core.moves.MoveDTO;
 import com.io.db.entity.CharacterEntity;
-import com.io.presenter.GamePresenter;
-import com.io.service.GameService;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,32 +14,30 @@ import java.util.List;
 public class MeleeEnemy extends Enemy {
     static int maxMana = 2, maxHealth = 5;
 
-    public MeleeEnemy(GameService gs, GamePresenter gp, BoardPosition position) {
-        super(gs, gp, maxMana, maxHealth, position);
+    public MeleeEnemy(BoardPosition position) {
+        super(maxMana, maxHealth, position);
     }
 
-    public MeleeEnemy(GameService gs, GamePresenter gp, CharacterEntity che) {
-        super(gs, gp, maxMana, maxHealth, che);
+    public MeleeEnemy(CharacterEntity che) {
+        super(maxMana, maxHealth, che);
     }
 
     @Override
-    public boolean makeNextMove() {
+    public MoveDTO makeNextMove(Board board) {
         if (currentMana <= 0)
-            return false;
-
-        Board board = gs.getBoardSnapshot();
+            return null;
 
         List<BoardPosition> playerTeamPosition = board.getTeamPosition(0);
         if (playerTeamPosition.isEmpty()) {
             System.err.println("No player found on the board");
-            return false;
+            return null;
         }
         BoardPosition playerPosition = playerTeamPosition.get(0);
 
         var knightMove = new KnightMove(1, 1);
         var move = new KingMove(1, 1);
         if (knightMove.isMoveValid(this, playerPosition, board)) {
-            return gs.tryMakeMove(new MoveDTO(knightMove, playerPosition, this));
+            return new MoveDTO(knightMove, playerPosition, this);
         } else {
             var movePositionArr = Arrays.asList(new BoardPosition[]{
                     new BoardPosition(position.x() - 1, position.y()),
@@ -54,10 +50,10 @@ public class MeleeEnemy extends Enemy {
             var curDistance = distance(playerPosition, position);
             for (var newPosition : movePositionArr) {
                 if (distance(playerPosition, newPosition) < curDistance && move.isMoveValid(this, newPosition, board)) {
-                    return gs.tryMakeMove(new MoveDTO(move, newPosition, this));
+                    return new MoveDTO(move, newPosition, this);
                 }
             }
-            return false;
+            return null;
         }
     }
 

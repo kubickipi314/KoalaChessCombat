@@ -2,18 +2,12 @@ package com.io.core.character;
 
 import com.io.core.board.BoardPosition;
 import com.io.db.entity.CharacterEntity;
-import com.io.presenter.GamePresenter;
-import com.io.service.GameService;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public abstract class Character {
-    protected GameService gs;
-    protected GamePresenter gp;
-
     protected final int team;
-
     protected int currentMana;
     protected final int maxMana;
     protected int currentHealth;
@@ -21,10 +15,7 @@ public abstract class Character {
 
     protected BoardPosition position;
 
-    public Character(GameService gs, GamePresenter gp, int maxMana, int maxHealth, BoardPosition position, int team) {
-        this.gs = gs;
-        this.gp = gp;
-
+    public Character(int maxMana, int maxHealth, BoardPosition position, int team) {
         this.maxMana = maxMana;
         this.maxHealth = maxHealth;
         this.currentHealth = maxHealth;
@@ -33,8 +24,8 @@ public abstract class Character {
         this.team = team;
     }
 
-    public Character(GameService gs, GamePresenter gp, int maxMana, int maxHealth, CharacterEntity che) {
-        this(gs, gp, maxMana, maxHealth, che.getPosition(), che.getTeam());
+    public Character(int maxMana, int maxHealth, CharacterEntity che) {
+        this(maxMana, maxHealth, che.getPosition(), che.getTeam());
         this.currentHealth = che.getCurrentHealth();
         this.currentMana = che.getCurrentMana();
     }

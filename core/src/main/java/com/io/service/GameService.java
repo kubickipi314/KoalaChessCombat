@@ -5,9 +5,7 @@ import com.io.core.GameResult;
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
 import com.io.core.character.Character;
-import com.io.core.character.CharacterEnum;
-import com.io.core.character.MeleeEnemy;
-import com.io.core.character.Player;
+import com.io.core.character.*;
 import com.io.core.moves.*;
 import com.io.core.snapshot.GameSnapshot;
 import com.io.db.entity.CharacterEntity;
@@ -55,12 +53,12 @@ public class GameService {
             new QueenMove(7, 5)
         );
 
-        player = new Player(this, gp, new BoardPosition(1, 0), moves);
+        player = new Player(new BoardPosition(1, 0), moves);
         var characters = new ArrayList<>(List.of(
             player,
-            new MeleeEnemy(this, gp, new BoardPosition(1, 4)),
-            new MeleeEnemy(this, gp, new BoardPosition(2, 4)),
-            new MeleeEnemy(this, gp, new BoardPosition(3, 3))
+            new MeleeEnemy(new BoardPosition(1, 4)),
+            new MeleeEnemy(new BoardPosition(2, 4)),
+            new MeleeEnemy(new BoardPosition(3, 3))
         ));
 
         board = new Board(roomWidth, roomHeight, characters);
@@ -85,10 +83,10 @@ public class GameService {
             var characterEnum = che.getCharacterEnum();
             Character character;
             if (characterEnum == CharacterEnum.Player) {
-                player = new Player(this, gp, che, moves);
+                player = new Player(che, moves);
                 character = player;
             } else if (characterEnum == CharacterEnum.MeleeEnemy) {
-                character = new MeleeEnemy(this, gp, che);
+                character = new MeleeEnemy(che);
             } else {
                 System.err.println("Found unrecognised character(" + characterEnum + "when importing snapshot.");
                 continue;
@@ -188,5 +186,18 @@ public class GameService {
         }
         var snapshotEntity = new SnapshotEntity(board.boardWidth, board.boardHeight);
         sns.createSnapshot(id, snapshotEntity, characterSnapshotList);
+    }
+
+    public boolean moveEnemy(Enemy enemy) {
+        var move = enemy.makeNextMove(board);
+        if (move == null) {
+            return false;
+        }
+        return tryMakeMove(move);
+    }
+
+    public boolean movePlayer(BoardPosition boardPosition, int chosenMove) {
+        var move = player.getMove(chosenMove);
+        return tryMakeMove(new MoveDTO(move, boardPosition, player));
     }
 }
