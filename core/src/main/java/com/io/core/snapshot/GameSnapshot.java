@@ -5,7 +5,7 @@ import com.io.db.entity.SnapshotEntity;
 
 import java.util.List;
 
-public record GameSnapshot(SnapshotEntity snapshotEntity, List<CharacterEntity> charactersEntityList) {
+public record GameSnapshot(SnapshotEntity snapshotEntity, List<CharacterEntity> characterEntityList) {
     public Long getId() {
         return snapshotEntity.getId();
     }

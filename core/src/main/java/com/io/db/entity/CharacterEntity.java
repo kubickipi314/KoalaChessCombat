@@ -11,28 +11,28 @@ public class CharacterEntity {
     @DatabaseField(generatedId = true)
     private long id;
 
-    @DatabaseField()
+    @DatabaseField
     private long snapshotId;
 
-    @DatabaseField()
+    @DatabaseField
     private CharacterEnum characterEnum;
 
-    @DatabaseField()
+    @DatabaseField
     private int positionX;
 
-    @DatabaseField()
+    @DatabaseField
     private int positionY;
 
-    @DatabaseField()
+    @DatabaseField
     private int currentHealth;
 
-    @DatabaseField()
+    @DatabaseField
     private int currentMana;
 
-    @DatabaseField()
+    @DatabaseField
     private int team;
 
-    public CharacterEntity() {
+    private CharacterEntity() {
     }
 
     public CharacterEntity(CharacterEnum characterEnum, int positionX, int positionY, int currentHealth, int currentMana, int team) {

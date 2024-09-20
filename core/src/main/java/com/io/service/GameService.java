@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameService {
-    private final int roomWidth = CONST.DEFAULT_ROOM_WIDTH;
-    private final int roomHeight = CONST.DEFAULT_ROOM_HEIGHT;
+    private int roomWidth = CONST.DEFAULT_ROOM_WIDTH;
+    private int roomHeight = CONST.DEFAULT_ROOM_HEIGHT;
 
     private TurnService ts;
     private GamePresenter gp;
@@ -30,7 +30,6 @@ public class GameService {
     private boolean gameInProgress = false;
     private Board board;
     private Player player;
-
 
     public void init(TurnService ts, GamePresenter gp, SnapshotService sns, GameSnapshot gameSnapshot) {
         this.ts = ts;
@@ -70,6 +69,9 @@ public class GameService {
     }
 
     public void loadGame(GameSnapshot gameSnapshot) {
+        var snapshotEntity = gameSnapshot.snapshotEntity();
+        var characterEntityList = gameSnapshot.characterEntityList();
+
         var moves = List.of(
             new KingMove(2, 1),
             new KnightMove(3, 3),
@@ -79,7 +81,7 @@ public class GameService {
         );
 
         var characters = new ArrayList<Character>();
-        for (var che : gameSnapshot.charactersEntityList()) {
+        for (var che : characterEntityList) {
             var characterEnum = che.getCharacterEnum();
             Character character;
             if (characterEnum == CharacterEnum.Player) {
@@ -94,6 +96,8 @@ public class GameService {
             characters.add(character);
         }
 
+        roomWidth = snapshotEntity.getBoardWidth();
+        roomHeight = snapshotEntity.getBoardHeight();
         board = new Board(roomWidth, roomHeight, characters);
 
         ts.init(this, characters, board);
@@ -182,7 +186,7 @@ public class GameService {
 
             characterSnapshotList.add(new CharacterEntity(characterEnum, x, y, currentHealth, currentMana, team));
         }
-        var snapshotEntity = new SnapshotEntity();
+        var snapshotEntity = new SnapshotEntity(board.boardWidth, board.boardHeight);
         sns.createSnapshot(id, snapshotEntity, characterSnapshotList);
     }
 }
