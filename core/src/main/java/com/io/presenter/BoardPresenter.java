@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.core.board.BoardPosition;
+import com.io.core.board.SpecialCell;
 import com.io.view.assets_managers.TextureManager;
 import com.io.view.tiles.BoardTileView;
 
@@ -25,7 +26,7 @@ public class BoardPresenter {
     private int actualRow;
     private int actualCol;
 
-    public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gp) {
+    public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gp, List<SpecialCell> specialCells) {
         this.gamePresenter = gp;
 
         rows = cm.getRows();
@@ -43,6 +44,10 @@ public class BoardPresenter {
                 Vector2 position = cm.calculatePosition(new BoardPosition(col, row));
                 board[row][col] = new BoardTileView(tm, position, tileSize);
             }
+        }
+
+        for (var cell: specialCells) {
+            board[cell.y()][cell.x()].setBlocked(cell.isBlocked());
         }
     }
 

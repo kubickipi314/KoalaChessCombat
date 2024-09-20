@@ -4,10 +4,12 @@ import com.io.CONST;
 import com.io.core.GameResult;
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
+import com.io.core.board.SpecialCell;
 import com.io.core.character.Character;
 import com.io.core.character.*;
 import com.io.core.moves.*;
 import com.io.core.snapshot.GameSnapshot;
+import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
 import com.io.db.entity.SnapshotEntity;
 import com.io.presenter.GamePresenter;
@@ -16,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameService {
-    private int roomWidth = CONST.DEFAULT_ROOM_WIDTH;
-    private int roomHeight = CONST.DEFAULT_ROOM_HEIGHT;
+    private int roomWidth;
+    private int roomHeight;
 
     private TurnService ts;
     private GamePresenter gp;
@@ -61,7 +63,12 @@ public class GameService {
             new MeleeEnemy(new BoardPosition(3, 3))
         ));
 
-        board = new Board(roomWidth, roomHeight, characters);
+        roomWidth = CONST.DEFAULT_ROOM_WIDTH;
+        roomHeight = CONST.DEFAULT_ROOM_HEIGHT;
+        var specialCells = List.of(
+            new SpecialCell(2, 2, true)
+        );
+        board = new Board(roomWidth, roomHeight, characters, specialCells);
 
         ts.init(this, characters, board);
     }
@@ -69,6 +76,7 @@ public class GameService {
     public void loadGame(GameSnapshot gameSnapshot) {
         var snapshotEntity = gameSnapshot.snapshotEntity();
         var characterEntityList = gameSnapshot.characterEntityList();
+        var cellEntityList = gameSnapshot.cellEntityList();
 
         var moves = List.of(
             new KingMove(2, 1),
@@ -96,7 +104,13 @@ public class GameService {
 
         roomWidth = snapshotEntity.getBoardWidth();
         roomHeight = snapshotEntity.getBoardHeight();
-        board = new Board(roomWidth, roomHeight, characters);
+        var specialCells = cellEntityList.stream()
+            .map(ce -> new SpecialCell(
+                ce.getPositionX(),
+                ce.getPositionY(),
+                ce.isBlocked()
+            )).toList();
+        board = new Board(roomWidth, roomHeight, characters, specialCells);
 
         ts.init(this, characters, board);
     }
@@ -173,19 +187,24 @@ public class GameService {
     }
 
     private void createGameSnapshot(Long id) {
-        var characterSnapshotList = new ArrayList<CharacterEntity>();
-        for (var character : getCharacters()) {
-            var x = character.getPosition().x();
-            var y = character.getPosition().y();
-            var characterEnum = getCharacterEnum(character);
-            var currentHealth = character.getCurrentHealth();
-            var currentMana = character.getCurrentMana();
-            var team = character.getTeam();
-
-            characterSnapshotList.add(new CharacterEntity(characterEnum, x, y, currentHealth, currentMana, team));
-        }
         var snapshotEntity = new SnapshotEntity(board.boardWidth, board.boardHeight);
-        sns.createSnapshot(id, snapshotEntity, characterSnapshotList);
+        var characterEntityList = getCharacters().stream()
+            .map(ch -> new CharacterEntity(
+                ch.getPosition().x(),
+                ch.getPosition().y(),
+                getCharacterEnum(ch),
+                ch.getCurrentHealth(),
+                ch.getCurrentMana(),
+                ch.getTeam()
+            )).toList();
+        var cellEntityList = board.getSpecialCells().stream()
+            .map(cell -> new CellEntity(
+                cell.x(),
+                cell.y(),
+                cell.isBlocked()
+            )).toList();
+
+        sns.createSnapshot(id, snapshotEntity, characterEntityList, cellEntityList);
     }
 
     public boolean moveEnemy(Enemy enemy) {

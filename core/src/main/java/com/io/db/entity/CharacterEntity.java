@@ -5,7 +5,7 @@ import com.io.core.character.CharacterEnum;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "Characters")
+@DatabaseTable(tableName = "Character")
 public class CharacterEntity {
 
     @DatabaseField(generatedId = true)
@@ -15,13 +15,13 @@ public class CharacterEntity {
     private long snapshotId;
 
     @DatabaseField
-    private CharacterEnum characterEnum;
-
-    @DatabaseField
     private int positionX;
 
     @DatabaseField
     private int positionY;
+
+    @DatabaseField
+    private CharacterEnum characterEnum;
 
     @DatabaseField
     private int currentHealth;
@@ -35,10 +35,10 @@ public class CharacterEntity {
     private CharacterEntity() {
     }
 
-    public CharacterEntity(CharacterEnum characterEnum, int positionX, int positionY, int currentHealth, int currentMana, int team) {
-        this.characterEnum = characterEnum;
+    public CharacterEntity(int positionX, int positionY, CharacterEnum characterEnum, int currentHealth, int currentMana, int team) {
         this.positionX = positionX;
         this.positionY = positionY;
+        this.characterEnum = characterEnum;
         this.currentHealth = currentHealth;
         this.currentMana = currentMana;
         this.team = team;

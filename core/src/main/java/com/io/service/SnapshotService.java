@@ -4,6 +4,7 @@ package com.io.service;
 
 import com.io.core.snapshot.GameSnapshot;
 import com.io.db.DatabaseEngine;
+import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
 import com.io.db.entity.SnapshotEntity;
 
@@ -17,9 +18,11 @@ public class SnapshotService {
         this.dbEngine = dbEngine;
     }
 
-    public void createSnapshot(Long id, SnapshotEntity snapshotEntity, List<CharacterEntity> charactersEntityList) {
+    public void createSnapshot(Long id, SnapshotEntity snapshotEntity, List<CharacterEntity> charactersEntityList, List<CellEntity> cellEntityList) {
         var snapshotDAO = dbEngine.getDAO(SnapshotEntity.class);
-        var charactersDAO = dbEngine.getDAO(CharacterEntity.class);
+        var characterDAO = dbEngine.getDAO(CharacterEntity.class);
+        var cellDAO = dbEngine.getDAO(CellEntity.class);
+
         try {
             if (id != null) deleteSnapshot(id);
 
@@ -28,7 +31,11 @@ public class SnapshotService {
             System.out.println("Created new snapshot with id=" + snapshotId);
             for (var charactersEntity : charactersEntityList) {
                 charactersEntity.setSnapshotId(snapshotId);
-                charactersDAO.create(charactersEntity);
+                characterDAO.create(charactersEntity);
+            }
+            for (var cellEntity : cellEntityList) {
+                cellEntity.setSnapshotId(snapshotId);
+                cellDAO.create(cellEntity);
             }
         } catch (SQLException ignored) {
         }
@@ -37,11 +44,13 @@ public class SnapshotService {
     public GameSnapshot getSnapshot(long id) {
         var snapshotDAO = dbEngine.getDAO(SnapshotEntity.class);
         var characterDAO = dbEngine.getDAO(CharacterEntity.class);
+        var cellDAO = dbEngine.getDAO(CellEntity.class);
+
         try {
             var snapshotEntity = snapshotDAO.queryForId(id);
             var characterEntityList = characterDAO.queryBuilder().where().eq("snapshotId", id).query();
-            System.out.println(id + "_" + characterEntityList);
-            return new GameSnapshot(snapshotEntity, characterEntityList);
+            var cellEntityList = cellDAO.queryBuilder().where().eq("snapshotId", id).query();
+            return new GameSnapshot(snapshotEntity, characterEntityList, cellEntityList);
         } catch (SQLException ignored) {
             return null;
         }
