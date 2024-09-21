@@ -1,6 +1,5 @@
 package com.io.service;
 
-import com.io.CONST;
 import com.io.core.GameResult;
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
@@ -11,8 +10,6 @@ import com.io.core.moves.*;
 import com.io.core.snapshot.GameSnapshot;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
-import com.io.presenter.GamePresenter;
-import com.io.db.entity.SnapshotEntity;
 
 import java.util.*;
 
@@ -41,34 +38,6 @@ public class GameService implements GameServiceInterface {
         movesHistory = new ArrayList<>();
 
         turnQueue = new LinkedList<>(characters);
-    }
-
-    private void loadGame() {
-        var moves = List.of(
-                new KingMove(2, 1),
-                new KnightMove(3, 3),
-                new RookMove(5, 4),
-                new BishopMove(3, 2),
-                new QueenMove(7, 5)
-        );
-        player = new Player(new BoardPosition(1, 0), moves);
-
-        characters = new ArrayList<>(List.of(
-                player,
-                new MeleeEnemy(new BoardPosition(1, 4)),
-                new MeleeEnemy(new BoardPosition(2, 4)),
-                new MeleeEnemy(new BoardPosition(3, 3))
-        ));
-
-        roomWidth = CONST.DEFAULT_ROOM_WIDTH;
-        roomHeight = CONST.DEFAULT_ROOM_HEIGHT;
-
-        var specialCells = List.of(
-                new SpecialCell(2, 2, true)
-        );
-
-        board = new Board(roomWidth, roomHeight, characters, specialCells);
-
     }
 
     private void loadGame(GameSnapshot gameSnapshot) {
@@ -244,17 +213,12 @@ public class GameService implements GameServiceInterface {
 
     private void endGame() {
         gameEnded = true;
-        gameInProgress = false;
         sns.removeLevelSnapshot(levelId);
     }
 
     public void abort() {
-        if (gameInProgress)
-            createSnapshot();
         if (!gameEnded)
-            createGameSnapshot(gameSnapshotId);
-        else if (gameSnapshotId != null)
-            sns.deleteSnapshot(gameSnapshotId);
+            createSnapshot();
     }
 
     private Board getBoardSnapshot() {
