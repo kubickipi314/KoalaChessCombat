@@ -12,7 +12,6 @@ import com.io.screens.MenuScreen;
 import com.io.screens.StartScreen;
 import com.io.service.GameService;
 import com.io.service.SnapshotService;
-import com.io.service.TurnService;
 
 public class Coordinator {
     //TODO: disposing resources after screen is not used
@@ -50,7 +49,6 @@ public class Coordinator {
         gs.init(sns, gameSnapshot);
         gamePresenter.init(gs, this);
         game.setScreen(new GameScreen(gamePresenter));
-        gs.startGame();
     }
 
     public void quit() {

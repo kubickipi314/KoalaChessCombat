@@ -19,7 +19,6 @@ public class Board {
     private boolean hasMoved;
     private boolean hasAttacked;
     private Character attacked;
-    private boolean isAttackedDead;
 
     public Board(int width, int height, List<Character> characters, List<SpecialCell> specialCells) {
         this.board = new Cell[height][width];
@@ -58,7 +57,6 @@ public class Board {
         hasMoved = false;
         hasAttacked = false;
         attacked = null;
-        isAttackedDead = false;
 
         var move = moveDTO.move();
         var movePosition = moveDTO.boardPosition();
@@ -77,7 +75,7 @@ public class Board {
             attackedCharacter.changeHealth(-move.getDamage());
             hasAttacked = true;
             attacked = attackedCharacter;
-            if (attackedCharacter.getCurrentHealth() <= 0) {
+            if (attackedCharacter.isDead()) {
                 characters.remove(attackedCharacter);
                 destinationCell.setCharacter(null);
                 decreaseTeamCount(attackedCharacter.getTeam());
@@ -165,8 +163,5 @@ public class Board {
     }
     public Character getAttacked() {
         return attacked;
-    }
-    public boolean isAttackedDead() {
-        return isAttackedDead;
     }
 }

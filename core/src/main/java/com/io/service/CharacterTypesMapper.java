@@ -1,4 +1,4 @@
-package com.io.presenter.character;
+package com.io.service;
 
 import com.io.core.CharacterType;
 import com.io.core.character.CharacterEnum;
@@ -11,7 +11,7 @@ public class CharacterTypesMapper {
 
     static {
         map.put(CharacterEnum.Player, CharacterType.PLAYER);
-        map.put(CharacterEnum.MeleeEnemy, CharacterType.MINIX);
+        map.put(CharacterEnum.MeleeEnemy, CharacterType.LINUX);
     }
     public static CharacterType getPresenterType(CharacterEnum type) {
         return map.get(type);

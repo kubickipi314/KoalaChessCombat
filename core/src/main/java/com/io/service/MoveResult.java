@@ -5,7 +5,7 @@ import com.io.core.board.BoardPosition;
 public record MoveResult(
         int characterId,
         boolean hasMoved,
-        BoardPosition resultPosition,
+        BoardPosition targetPosition,
         boolean hasAttacked,
         boolean isAttackedDead,
         int attackedId,

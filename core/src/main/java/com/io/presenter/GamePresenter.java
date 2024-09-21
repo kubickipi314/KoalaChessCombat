@@ -84,21 +84,17 @@ public class GamePresenter {
             gameEnded = true;
             buttonsPresenter.showResult(gs.checkEndGameCondition());
         }
-        if (gs.isPlayersTurn() && !gameEnded) {
-            Vector2 mousePosition = getMousePosition();
-            boardPresenter.handleInput(mousePosition);
-            chessPresenter.handleInput(mousePosition);
-            buttonsPresenter.handleInput(mousePosition);
-        } else {
-            gs.makeNextMove();
-            MoveResult result = gs.getLastMoveResult();
-            var enemy = charactersMap.get(result.characterId());
-            if (result.hasMoved()) enemy.startMove(result.resultPosition());
-            else enemy.startAttack(result.resultPosition());
-            if (result.hasAttacked()) {
-                if (result.isAttackedDead()) {
-                    removeDeadCharacter(result.attackedId());
-                }
+        if (!isActiveCharacter() && !gameEnded) {
+            if (gs.isPlayersTurn()) {
+                Vector2 mousePosition = getMousePosition();
+                boardPresenter.handleInput(mousePosition);
+                chessPresenter.handleInput(mousePosition);
+                buttonsPresenter.handleInput(mousePosition);
+            } else {
+                boolean success = gs.makeNextMove();
+                if (!success) return;
+                MoveResult result = gs.getLastMoveResult();
+                handleEnemyMove(result);
             }
         }
         buttonsPresenter.update();
@@ -106,6 +102,14 @@ public class GamePresenter {
         updateAvailableTiles();
         updateBars();
         updateGameEnd();
+    }
+
+    private boolean isActiveCharacter() {
+        for (var characterId : charactersIdList) {
+            var characterPresenter = charactersMap.get(characterId);
+            if (characterPresenter.isActive()) return true;
+        }
+        return false;
     }
 
     private void updateCharacters() {
@@ -159,23 +163,37 @@ public class GamePresenter {
         var chosenMove = chessPresenter.getSelectedMove();
         if (gs.movePlayer(boardPosition, chosenMove)) {
             MoveResult result = gs.getLastMoveResult();
-            var player = charactersMap.get(result.characterId());
-            if (result.hasMoved()) player.startMove(boardPosition);
-            else player.startAttack(boardPosition);
-            if (result.hasAttacked()) {
-                if (result.isAttackedDead()) {
-                    removeDeadCharacter(result.attackedId());
-                } else {
-                    EnemyPresenter enemy = (EnemyPresenter) charactersMap.get(result.attackedId());
-                    enemy.setHealth(result.attackedHealth());
-                }
-            }
+            handlePlayerMove(result);
         } else {
             System.err.println("Failed to play Player's move");
         }
     }
+    public void handlePlayerMove(MoveResult result) {
+        var player = charactersMap.get(result.characterId());
+        if (result.hasMoved()) player.startMove(result.targetPosition());
+        else player.startAttack(result.targetPosition());
+        if (result.hasAttacked()) {
+            if (result.isAttackedDead()) {
+                removeDeadCharacter(result.attackedId());
+            } else {
+                EnemyPresenter enemy = (EnemyPresenter) charactersMap.get(result.attackedId());
+                enemy.setHealth(result.attackedHealth());
+            }
+        }
+    }
 
-    private void removeDeadCharacter(int characterId) {
+    public void handleEnemyMove(MoveResult result) {
+        var enemy = charactersMap.get(result.characterId());
+        if (result.hasMoved()) enemy.startMove(result.targetPosition());
+        else enemy.startAttack(result.targetPosition());
+        if (result.hasAttacked()) {
+            if (result.isAttackedDead()) {
+                removeDeadCharacter(result.attackedId());
+            }
+        }
+    }
+
+    private void removeDeadCharacter(Integer characterId) {
         charactersIdList.remove(characterId);
     }
 

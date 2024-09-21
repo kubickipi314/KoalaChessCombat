@@ -12,7 +12,6 @@ import com.io.core.snapshot.GameSnapshot;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
 import com.io.db.entity.SnapshotEntity;
-import com.io.presenter.character.CharacterTypesMapper;
 
 import java.util.*;
 
@@ -21,7 +20,6 @@ public class GameService implements GameServiceInterface {
     private int roomHeight;
     private SnapshotService sns;
     private Long gameSnapshotId;
-    private boolean gameInProgress = false;
     private boolean gameEnded = false;
     private Board board;
     private Player player;
@@ -116,7 +114,6 @@ public class GameService implements GameServiceInterface {
         board = new Board(roomWidth, roomHeight, characters, specialCells);
     }
 
-    @Override
     public List<CharacterRegister> getCharacterRegisters() {
         characterIdMap = new HashMap<>();
         List<CharacterRegister> characterRegisters = new ArrayList<>();
@@ -134,17 +131,14 @@ public class GameService implements GameServiceInterface {
         return characterRegisters;
     }
 
-    @Override
     public List<Move> getPlayerMoves() {
         return player.getMoves();
     }
 
-    @Override
     public boolean hasGameEnded() {
         return gameEnded;
     }
 
-    @Override
     public GameResult checkEndGameCondition() {
         var teamCount = board.getTeamCount();
         if (teamCount.size() == 1) {
@@ -153,12 +147,10 @@ public class GameService implements GameServiceInterface {
         return GameResult.NONE;
     }
 
-    @Override
     public boolean isPlayersTurn() {
         return turnQueue.peek() instanceof Player;
     }
 
-    @Override
     public boolean movePlayer(BoardPosition boardPosition, Move move) {
         if (!isPlayersTurn()) return false;
         var moveDTO = new MoveDTO(move, boardPosition, player);
@@ -170,107 +162,95 @@ public class GameService implements GameServiceInterface {
         return false;
     }
 
-    @Override
     public void endPlayerTour() {
-        if (isPlayersTurn())
+        if (isPlayersTurn()) {
             turnQueue.add(turnQueue.poll());
+            player.changeMana(5);
+        }
     }
 
-    @Override
     public boolean makeNextMove() {
         if (isPlayersTurn()) return false;
 
         assert !turnQueue.isEmpty();
         Enemy enemy = (Enemy) turnQueue.peek();
-        enemy.changeMana(5);
+
+        if (enemy.isDead()){
+            turnQueue.poll();
+            return false;
+        }
         var moveDTO = enemy.makeNextMove(board);
         if (moveDTO == null) {
-            nextTurn();
-            return makeNextMove();
+            enemy.changeMana(5);
+            turnQueue.add(turnQueue.poll());
+            return false;
         }
         if (board.tryMakeMove(moveDTO)){
             collectMoveInformation(moveDTO);
             if (checkEndGameCondition() != GameResult.NONE) endGame();
             return true;
         }
-        nextTurn();
-        return makeNextMove();
+        turnQueue.add(turnQueue.poll());
+        return false;
     }
 
     private void collectMoveInformation(MoveDTO move) {
+        MoveResult result;
         Character character = move.character();
         int characterId = characterIdMap.get(character);
         boolean hasMoved = board.hasMoved();
-        BoardPosition resultPosition = character.getPosition();
+        BoardPosition targetPosition = move.boardPosition();
         boolean hasAttacked = board.hasAttacked();
-        Character attacked = board.getAttacked();
-        boolean isAttackedDead = board.isAttackedDead();
-        int attackedId = characterIdMap.get(attacked);
-        int attackedHealth = attacked.getCurrentHealth();
-
-        MoveResult result = new MoveResult(characterId, hasMoved, resultPosition,
-                hasAttacked, isAttackedDead, attackedId, attackedHealth);
+        if (hasAttacked) {
+            Character attacked = board.getAttacked();
+            boolean isAttackedDead = attacked.isDead();
+            int attackedId = characterIdMap.get(attacked);
+            int attackedHealth = attacked.getCurrentHealth();
+            result = new MoveResult(characterId, hasMoved, targetPosition,
+                    true, isAttackedDead, attackedId, attackedHealth);
+        }
+        else {
+            result = new MoveResult(characterId, hasMoved, targetPosition,
+                    false, false, -1, 0);
+        }
         movesHistory.add(result);
     }
 
-    private void nextTurn() {
-        turnQueue.add(turnQueue.poll());
-        Character enemy = turnQueue.peek();
-        while (true) {
-            assert enemy != null;
-            if (!enemy.isDead()) break;
-            turnQueue.poll();
-            enemy = turnQueue.peek();
-        }
-    }
-
-    @Override
     public MoveResult getLastMoveResult() {
         int historySize = movesHistory.size();
         return movesHistory.get(historySize - 1);
     }
 
-    @Override
     public List<BoardPosition> getAvailableTiles(Move move) {
         return move.getAccessibleCells(player, getBoardSnapshot());
     }
 
-    @Override
     public int getPlayerHealth() {
         return player.getCurrentHealth();
     }
 
-    @Override
     public int getPlayerMana() {
         return player.getCurrentMana();
     }
 
-    @Override
     public List<SpecialCell> getSpecialCells() {
         return board.getSpecialCells();
     }
 
-    @Override
     public int getRoomWidth() {
         return roomWidth;
     }
 
-    @Override
     public int getRoomHeight() {
         return roomHeight;
     }
 
-    public void startGame() {
-        gameInProgress = true;
-    }
-
     private void endGame() {
         gameEnded = true;
-        gameInProgress = false;
     }
 
     public void abort() {
-        if (gameInProgress)
+        if (!gameEnded)
             createGameSnapshot(gameSnapshotId);
         else if (gameSnapshotId != null)
             sns.deleteSnapshot(gameSnapshotId);
