@@ -13,17 +13,30 @@ import java.util.List;
 public class LevelService {
     private final DatabaseEngine dbEngine;
 
+    private final List<Long> levels;
+    private int levelIdx = 0;
+
     public LevelService(DatabaseEngine dbEngine) {
         this.dbEngine = dbEngine;
+
+        var lvl = getLevels();
+        if (lvl.isEmpty()) {
+            loadLevels();
+            lvl = getLevels();
+        }
+        levels = lvl;
     }
 
-    public List<Long> getLevels() {
-        var levelDAO = dbEngine.getDAO(LevelEntity.class);
-        try {
-            return levelDAO.queryForAll().stream().map(LevelEntity::getId).toList();
-        } catch (SQLException ignored) {
-        }
-        return List.of();
+    public long getCurrentLevel() {
+        return levels.get(levelIdx);
+    }
+
+    public void previousLevel() {
+        levelIdx = (levelIdx + levels.size() - 1) % levels.size();
+    }
+
+    public void nextLevel() {
+        levelIdx = (levelIdx + 1) % levels.size();
     }
 
     private void createLevel(
@@ -53,9 +66,7 @@ public class LevelService {
         }
     }
 
-    public void loadLevels() {
-        dbEngine.clear();
-
+    private void loadLevels() {
         {
             // LEVEL 1
             SnapshotEntity snapshotEntity = new SnapshotEntity(5, 5);
@@ -89,5 +100,14 @@ public class LevelService {
             );
             createLevel(levelEntity, snapshotEntity, characterEntityList, cellEntityList);
         }
+    }
+
+    private List<Long> getLevels() {
+        var levelDAO = dbEngine.getDAO(LevelEntity.class);
+        try {
+            return levelDAO.queryForAll().stream().map(LevelEntity::getId).toList();
+        } catch (SQLException ignored) {
+        }
+        return List.of();
     }
 }

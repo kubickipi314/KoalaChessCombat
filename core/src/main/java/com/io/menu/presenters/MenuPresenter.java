@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.Coordinator;
 import com.io.menu.view.MenuButton;
+import com.io.menu.view.MenuLevelText;
 import com.io.menu.view.MenuSoundManager;
 import com.io.menu.view.MenuTextureManager;
+import com.io.service.LevelService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ public class MenuPresenter {
     private final MenuSoundManager sm;
     private final SpriteBatch batch;
     private final MenuButton backButton;
+    private final MenuLevelText levelText;
     private final MenuButton levelPicture;
     private final MenuButton leftArrow;
     private final MenuButton rightArrow;
@@ -34,6 +37,9 @@ public class MenuPresenter {
         float windowWidth = Gdx.graphics.getWidth();
         windowHeight = Gdx.graphics.getHeight();
         float tileSize = windowHeight / 5;
+
+        Vector2 levelTextPosition = new Vector2(windowWidth / 2 - 65, windowHeight - 20); // TODO
+        levelText = new MenuLevelText(levelTextPosition);
 
         Vector2 mainPosition = new Vector2(windowWidth / 2 - tileSize * 1.5f, tileSize * 1.5f);
         levelPicture = new MenuButton(tm.getLevel(), mainPosition, 3 * tileSize, 3 * tileSize);
@@ -71,7 +77,7 @@ public class MenuPresenter {
             } else if (levelPicture.contains(mousePosition)) {
                 System.out.println("Start game level");
                 sm.playSelectSound();
-                coordinator.startLevel();
+                coordinator.setGameScreen();
             } else if (leftArrow.contains(mousePosition)) {
                 System.out.println("Go left");
                 sm.playSelectSound();
@@ -82,11 +88,14 @@ public class MenuPresenter {
                 coordinator.nextLevel();
             }
         }
+
+        levelText.setValue("Level " + coordinator.getCurrentLevel());
     }
 
     public void render() {
         batch.begin();
         for (MenuButton button : buttons) button.draw(batch);
+        levelText.draw(batch);
         batch.end();
     }
 

@@ -2,7 +2,6 @@ package com.io;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.io.db.DatabaseEngine;
 import com.io.menu.presenters.MenuPresenter;
 import com.io.menu.presenters.StartPresenter;
 import com.io.presenter.GamePresenter;
@@ -14,26 +13,20 @@ import com.io.service.LevelService;
 import com.io.service.SnapshotService;
 import com.io.service.TurnService;
 
-import java.util.List;
-
 public class Coordinator {
     //TODO: disposing resources after screen is not used
 
     //TODO: loading snapshots from db
     private final Game game;
-    private final DatabaseEngine dbEngine;
+    private final LevelService ls;
+    private final SnapshotService sns;
 
     private GameService gs;
 
-    private List<Long> levels;
-    private int levelIdx;
-
-    public Coordinator(Game game, DatabaseEngine dbEngine) {
+    public Coordinator(Game game, LevelService ls, SnapshotService sns) {
         this.game = game;
-        this.dbEngine = dbEngine;
-
-        levels = List.of();
-        levelIdx = 0;
+        this.ls = ls;
+        this.sns = sns;
     }
 
     public void setStartScreen() {
@@ -43,21 +36,17 @@ public class Coordinator {
     }
 
     public void setMenuScreen() {
-        LevelService ls = new LevelService(dbEngine);
-        levels = ls.getLevels();
-
         MenuPresenter menuPresenter = new MenuPresenter(this);
         MenuScreen menuScreen = new MenuScreen(menuPresenter);
         game.setScreen(menuScreen);
     }
 
-    public void setGameScreen(long levelId) {
-        SnapshotService sns = new SnapshotService(dbEngine);
+    public void setGameScreen() {
         TurnService ts = new TurnService();
         gs = new GameService();
         GamePresenter gamePresenter = new GamePresenter();
 
-        gs.init(ts, gamePresenter, sns, levelId);
+        gs.init(ts, gamePresenter, sns, ls.getCurrentLevel());
         gamePresenter.init(gs, this);
         game.setScreen(new GameScreen(gamePresenter));
 
@@ -69,15 +58,15 @@ public class Coordinator {
         Gdx.app.exit();
     }
 
-    public void startLevel() {
-        setGameScreen(levels.get(levelIdx));
+    public long getCurrentLevel() {
+        return ls.getCurrentLevel();
     }
 
     public void previousLevel() {
-        levelIdx = (levelIdx + levels.size() - 1) % levels.size();
+        ls.previousLevel();
     }
 
     public void nextLevel() {
-        levelIdx = (levelIdx + 1) % levels.size();
+        ls.nextLevel();
     }
 }
