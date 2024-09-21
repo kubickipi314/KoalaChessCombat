@@ -11,9 +11,9 @@ import java.util.Queue;
 public class TurnService {
     public GameService gs;
 
-    private Queue<Character> turnQueue;
-    private Board board;
 
+    private Board board;
+    private Queue<Character> turnQueue;
     private boolean firstTurn;
 
     public void init(GameService gs, List<Character> characters, Board board) {

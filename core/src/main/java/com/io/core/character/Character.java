@@ -2,6 +2,7 @@ package com.io.core.character;
 
 import com.io.core.board.BoardPosition;
 import com.io.db.entity.CharacterEntity;
+import com.io.service.CharacterRegister;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -14,6 +15,7 @@ public abstract class Character {
     protected final int maxHealth;
 
     protected BoardPosition position;
+
 
     public Character(int maxMana, int maxHealth, BoardPosition position, int team) {
         this.maxMana = maxMana;
@@ -70,4 +72,5 @@ public abstract class Character {
     public boolean isDead() {
         return currentHealth <= 0;
     }
+
 }

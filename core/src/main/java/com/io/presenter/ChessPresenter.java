@@ -1,5 +1,6 @@
 package com.io.presenter;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,6 +15,8 @@ import java.util.List;
 
 public class ChessPresenter {
     private ChessTileView[] chessBoard;
+
+    private final GamePresenter gamePresenter;
     private final SoundManager sm;
     private final CoordinatesManager cm;
     private final TextureManager tm;
@@ -26,13 +29,15 @@ public class ChessPresenter {
     private float tileSize;
 
     private List<Move> moves;
-    private int selectedMove = -1;
+    private int selectedMoveNumber = -1;
 
 
-    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, List<Move> moves) {
+    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gamePresenter, List<Move> moves) {
         this.sm = sm;
         this.cm = cm;
         this.tm = tm;
+
+        this.gamePresenter = gamePresenter;
 
         setMoves(moves);
         selectMove(0);
@@ -47,6 +52,7 @@ public class ChessPresenter {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 selectMove(actualTile);
                 sm.playSelectSound();
+                gamePresenter.updateAvailableTiles();
             }
         }
     }
@@ -95,8 +101,8 @@ public class ChessPresenter {
     }
 
     public void selectMove(int i) {
-        if (i == selectedMove) return;
-        selectedMove = i;
+        if (i == selectedMoveNumber) return;
+        selectedMoveNumber = i;
         for (int j = 0; j < numberOfMoves; j++) {
             chessBoard[j].unselect();
         }
@@ -111,7 +117,7 @@ public class ChessPresenter {
         }
     }
 
-    public int getSelectedMove() {
-        return selectedMove;
+    public Move getSelectedMove() {
+        return moves.get(selectedMoveNumber);
     }
 }

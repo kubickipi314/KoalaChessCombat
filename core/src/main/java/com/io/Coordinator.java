@@ -44,10 +44,10 @@ public class Coordinator {
         SnapshotService sns = new SnapshotService(dbEngine);
         GameSnapshot gameSnapshot = sns.getLastSnapshot();
 
-        TurnService ts = new TurnService();
+        //TurnService ts = new TurnService();
         gs = new GameService();
         GamePresenter gamePresenter = new GamePresenter();
-        gs.init(ts, gamePresenter, sns, gameSnapshot);
+        gs.init(sns, gameSnapshot);
         gamePresenter.init(gs, this);
         game.setScreen(new GameScreen(gamePresenter));
         gs.startGame();

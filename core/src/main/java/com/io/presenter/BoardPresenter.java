@@ -26,8 +26,8 @@ public class BoardPresenter {
     private int actualRow;
     private int actualCol;
 
-    public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gp, List<SpecialCell> specialCells) {
-        this.gamePresenter = gp;
+    public BoardPresenter(TextureManager tm, CoordinatesManager cm, GamePresenter gamePresenter, List<SpecialCell> specialCells) {
+        this.gamePresenter = gamePresenter;
 
         rows = cm.getRows();
         cols = cm.getCols();
