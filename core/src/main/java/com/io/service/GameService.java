@@ -11,6 +11,7 @@ import com.io.core.moves.*;
 import com.io.core.snapshot.GameSnapshot;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
+import com.io.presenter.GamePresenter;
 import com.io.db.entity.SnapshotEntity;
 
 import java.util.*;
@@ -19,7 +20,8 @@ public class GameService implements GameServiceInterface {
     private int roomWidth;
     private int roomHeight;
     private SnapshotService sns;
-    private Long gameSnapshotId;
+    private long levelId;
+    private GameSnapshot gameSnapshot;
     private boolean gameEnded = false;
     private Board board;
     private Player player;
@@ -28,18 +30,13 @@ public class GameService implements GameServiceInterface {
     private List<MoveResult> movesHistory;
     private Queue<Character> turnQueue;
 
-    public void init(SnapshotService sns, GameSnapshot gameSnapshot) {
+    public void init(SnapshotService sns, long levelId) {
         this.sns = sns;
         movesHistory = new ArrayList<>();
 
-        if (gameSnapshot == null) {
-            gameSnapshotId = null;
-            loadGame();
-        } else {
-            gameSnapshotId = gameSnapshot.getId();
-            System.out.println("Game loaded from snapshot with id=" + gameSnapshotId);
-            loadGame(gameSnapshot);
-        }
+        this.levelId = levelId;
+        this.gameSnapshot = sns.getLevelSnapshot(levelId);
+        loadGame(gameSnapshot);
 
         movesHistory = new ArrayList<>();
 
@@ -247,9 +244,13 @@ public class GameService implements GameServiceInterface {
 
     private void endGame() {
         gameEnded = true;
+        gameInProgress = false;
+        sns.removeLevelSnapshot(levelId);
     }
 
     public void abort() {
+        if (gameInProgress)
+            createSnapshot();
         if (!gameEnded)
             createGameSnapshot(gameSnapshotId);
         else if (gameSnapshotId != null)
@@ -270,16 +271,16 @@ public class GameService implements GameServiceInterface {
         return null;
     }
 
-    private void createGameSnapshot(Long id) {
-        var snapshotEntity = new SnapshotEntity(board.boardWidth, board.boardHeight);
+    private void createSnapshot() {
+        var snapshotEntity = gameSnapshot.snapshotEntity();
         var characterEntityList = characters.stream()
                 .map(ch -> new CharacterEntity(
                         ch.getPosition().x(),
                         ch.getPosition().y(),
                         getCharacterEnum(ch),
+                        ch.getTeam(),
                         ch.getCurrentHealth(),
-                        ch.getCurrentMana(),
-                        ch.getTeam()
+                        ch.getCurrentMana()
                 )).toList();
         var cellEntityList = board.getSpecialCells().stream()
                 .map(cell -> new CellEntity(
@@ -288,6 +289,6 @@ public class GameService implements GameServiceInterface {
                         cell.isBlocked()
                 )).toList();
 
-        sns.createSnapshot(id, snapshotEntity, characterEntityList, cellEntityList);
+        sns.createLevelSnapshot(levelId, snapshotEntity, characterEntityList, cellEntityList);
     }
 }

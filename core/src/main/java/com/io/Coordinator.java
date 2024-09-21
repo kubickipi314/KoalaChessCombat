@@ -2,8 +2,6 @@ package com.io;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.io.core.snapshot.GameSnapshot;
-import com.io.db.DatabaseEngine;
 import com.io.menu.presenters.MenuPresenter;
 import com.io.menu.presenters.StartPresenter;
 import com.io.presenter.GamePresenter;
@@ -11,6 +9,7 @@ import com.io.screens.GameScreen;
 import com.io.screens.MenuScreen;
 import com.io.screens.StartScreen;
 import com.io.service.GameService;
+import com.io.service.LevelService;
 import com.io.service.SnapshotService;
 
 public class Coordinator {
@@ -18,13 +17,15 @@ public class Coordinator {
 
     //TODO: loading snapshots from db
     private final Game game;
-    private final DatabaseEngine dbEngine;
+    private final LevelService ls;
+    private final SnapshotService sns;
 
     private GameService gs;
 
-    public Coordinator(Game game, DatabaseEngine dbEngine) {
+    public Coordinator(Game game, LevelService ls, SnapshotService sns) {
         this.game = game;
-        this.dbEngine = dbEngine;
+        this.ls = ls;
+        this.sns = sns;
     }
 
     public void setStartScreen() {
@@ -52,11 +53,19 @@ public class Coordinator {
     }
 
     public void quit() {
-        if (gs != null) {
-            gs.abort();
-            gs = null;
-        }
-
+        if (gs != null) gs.abort();
         Gdx.app.exit();
+    }
+
+    public long getCurrentLevel() {
+        return ls.getCurrentLevel();
+    }
+
+    public void previousLevel() {
+        ls.previousLevel();
+    }
+
+    public void nextLevel() {
+        ls.nextLevel();
     }
 }
