@@ -16,6 +16,15 @@ public class LevelLoaderService {
         this.dbEngine = dbEngine;
     }
 
+    public List<Long> getLevels() {
+        var levelDAO = dbEngine.getDAO(LevelEntity.class);
+        try {
+            return levelDAO.queryForAll().stream().map(LevelEntity::getId).toList();
+        } catch (SQLException ignored) {
+        }
+        return List.of();
+    }
+
     public void createLevel(
         LevelEntity levelEntity,
         SnapshotEntity snapshotEntity,

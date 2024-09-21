@@ -10,8 +10,11 @@ import com.io.screens.GameScreen;
 import com.io.screens.MenuScreen;
 import com.io.screens.StartScreen;
 import com.io.service.GameService;
+import com.io.service.LevelLoaderService;
 import com.io.service.SnapshotService;
 import com.io.service.TurnService;
+
+import java.util.List;
 
 public class Coordinator {
     //TODO: disposing resources after screen is not used
@@ -22,9 +25,15 @@ public class Coordinator {
 
     private GameService gs;
 
+    private List<Long> levels;
+    private int levelIdx;
+
     public Coordinator(Game game, DatabaseEngine dbEngine) {
         this.game = game;
         this.dbEngine = dbEngine;
+
+        levels = List.of();
+        levelIdx = 0;
     }
 
     public void setStartScreen() {
@@ -34,12 +43,15 @@ public class Coordinator {
     }
 
     public void setMenuScreen() {
+        LevelLoaderService lls = new LevelLoaderService(dbEngine);
+        levels = lls.getLevels();
+
         MenuPresenter menuPresenter = new MenuPresenter(this);
         MenuScreen menuScreen = new MenuScreen(menuPresenter);
         game.setScreen(menuScreen);
     }
 
-    public void setGameScreen(int levelId) {
+    public void setGameScreen(long levelId) {
         SnapshotService sns = new SnapshotService(dbEngine);
         TurnService ts = new TurnService();
         gs = new GameService();
@@ -53,11 +65,19 @@ public class Coordinator {
     }
 
     public void quit() {
-        if (gs != null) {
-            gs.abort();
-            gs = null;
-        }
-
+        if (gs != null) gs.abort();
         Gdx.app.exit();
+    }
+
+    public void startLevel() {
+        setGameScreen(levels.get(levelIdx));
+    }
+
+    public void previousLevel() {
+        levelIdx = (levelIdx + levels.size() - 1) % levels.size();
+    }
+
+    public void nextLevel() {
+        levelIdx = (levelIdx + 1) % levels.size();
     }
 }

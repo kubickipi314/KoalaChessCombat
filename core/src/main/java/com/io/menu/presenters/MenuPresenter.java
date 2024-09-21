@@ -59,25 +59,27 @@ public class MenuPresenter {
 
         Vector2 mousePosition = getMousePosition();
 
-        for (MenuButton button: buttons) {
+        for (MenuButton button : buttons) {
             if (button.contains(mousePosition)) button.mark();
         }
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            if (backButton.contains(mousePosition)){
+            if (backButton.contains(mousePosition)) {
                 System.out.println("Go back");
                 sm.playSelectSound();
                 coordinator.setStartScreen();
             } else if (levelPicture.contains(mousePosition)) {
                 System.out.println("Start game level");
                 sm.playSelectSound();
-                coordinator.setGameScreen(1);
+                coordinator.startLevel();
             } else if (leftArrow.contains(mousePosition)) {
                 System.out.println("Go left");
                 sm.playSelectSound();
+                coordinator.previousLevel();
             } else if (rightArrow.contains(mousePosition)) {
                 System.out.println("Go right");
                 sm.playSelectSound();
+                coordinator.nextLevel();
             }
         }
     }
