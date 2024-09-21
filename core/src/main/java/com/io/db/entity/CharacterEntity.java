@@ -24,10 +24,10 @@ public class CharacterEntity {
     private CharacterEnum characterEnum;
 
     @DatabaseField
-    private int currentHealth;
+    private Integer currentHealth;
 
     @DatabaseField
-    private int currentMana;
+    private Integer currentMana;
 
     @DatabaseField
     private int team;
@@ -35,13 +35,17 @@ public class CharacterEntity {
     private CharacterEntity() {
     }
 
-    public CharacterEntity(int positionX, int positionY, CharacterEnum characterEnum, int currentHealth, int currentMana, int team) {
+    public CharacterEntity(int positionX, int positionY, CharacterEnum characterEnum, int team) {
         this.positionX = positionX;
         this.positionY = positionY;
         this.characterEnum = characterEnum;
+        this.team = team;
+    }
+
+    public CharacterEntity(int positionX, int positionY, CharacterEnum characterEnum, int team, int currentHealth, int currentMana) {
+        this(positionX, positionY, characterEnum, team);
         this.currentHealth = currentHealth;
         this.currentMana = currentMana;
-        this.team = team;
     }
 
     public void setSnapshotId(long snapshotId) {
@@ -56,15 +60,15 @@ public class CharacterEntity {
         return new BoardPosition(positionX, positionY);
     }
 
-    public int getCurrentHealth() {
+    public int getTeam() {
+        return team;
+    }
+
+    public Integer getCurrentHealth() {
         return currentHealth;
     }
 
-    public int getCurrentMana() {
+    public Integer getCurrentMana() {
         return currentMana;
-    }
-
-    public int getTeam() {
-        return team;
     }
 }

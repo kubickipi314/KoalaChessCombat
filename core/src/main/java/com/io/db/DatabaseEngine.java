@@ -2,6 +2,7 @@ package com.io.db;
 
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
+import com.io.db.entity.LevelEntity;
 import com.io.db.entity.SnapshotEntity;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -15,15 +16,25 @@ public class DatabaseEngine {
 
     public DatabaseEngine(String url) {
         try {
-            connectionSource
-                    = new JdbcPooledConnectionSource(url);
-            TableUtils.createTableIfNotExists(connectionSource, SnapshotEntity.class);
-            TableUtils.createTableIfNotExists(connectionSource, CharacterEntity.class);
-            TableUtils.createTableIfNotExists(connectionSource, CellEntity.class);
+            connectionSource = new JdbcPooledConnectionSource(url);
         } catch (SQLException e) {
             System.err.println("Failed to create db connection.\t" + e);
         }
+    }
 
+    public void clear() {
+        try {
+            TableUtils.dropTable(connectionSource, LevelEntity.class, true);
+            TableUtils.dropTable(connectionSource, SnapshotEntity.class, true);
+            TableUtils.dropTable(connectionSource, CharacterEntity.class, true);
+            TableUtils.dropTable(connectionSource, CellEntity.class, true);
+
+            TableUtils.createTable(connectionSource, LevelEntity.class);
+            TableUtils.createTable(connectionSource, SnapshotEntity.class);
+            TableUtils.createTable(connectionSource, CharacterEntity.class);
+            TableUtils.createTable(connectionSource, CellEntity.class);
+        } catch (SQLException ignored) {
+        }
     }
 
     public void closeConnection() {

@@ -24,6 +24,7 @@ public final class MovesUtils {
 
     public static boolean isValidRayMove(int x, int y, int maxReach, BoardPosition startPosition, BoardPosition endPosition, Board board) {
         if (startPosition == endPosition) return false;
+        if (!board.isValidCell(endPosition)) return false;
         if (!onRay(x, y, startPosition, endPosition)) return false;
         int currentX = startPosition.x();
         int currentY = startPosition.y();
@@ -60,13 +61,13 @@ public final class MovesUtils {
 
     public static List<BoardPosition> sanitizeAccessibleCells(List<BoardPosition> accessibleCells, Character character, Board board) {
         return accessibleCells.stream()
-                .filter(currentPosition -> {
-                    var attackedCharacter = board.getCharacter(currentPosition);
-                    if (attackedCharacter == null) {
-                        return true;
-                    }
-                    return attackedCharacter.getTeam() != character.getTeam();
-                })
-                .toList();
+            .filter(currentPosition -> {
+                var attackedCharacter = board.getCharacter(currentPosition);
+                if (attackedCharacter == null) {
+                    return true;
+                }
+                return attackedCharacter.getTeam() != character.getTeam();
+            })
+            .toList();
     }
 }
