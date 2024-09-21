@@ -59,9 +59,15 @@ public class TextureManager {
         minix.add(new Texture("textures/characters/minix_1.png"));
         minix.add(new Texture("textures/characters/minix_2.png"));
 
-        characters.put(PLAYER, player);
+        List<Texture> firefox = new ArrayList<>();
+        firefox.add(new Texture("textures/characters/firefox_0.png"));
+        firefox.add(new Texture("textures/characters/firefox_1.png"));
+        firefox.add(new Texture("textures/characters/firefox_2.png"));
+
+        characters.put(KOALA, player);
         characters.put(MINIX, minix);
         characters.put(LINUX, linux);
+        characters.put(FIREFOX, firefox);
 
         List<Texture> shuriken = new ArrayList<>();
         shuriken.add(new Texture("textures/attacks/shuriken_0.png"));
@@ -71,9 +77,14 @@ public class TextureManager {
         fireball.add(new Texture("textures/attacks/fireball_0.png"));
         fireball.add(new Texture("textures/attacks/fireball_1.png"));
 
-        attacks.put(PLAYER, fireball);
+        List<Texture> arch = new ArrayList<>();
+        arch.add(new Texture("textures/attacks/arch_0.png"));
+        arch.add(new Texture("textures/attacks/arch_1.png"));
+
+        attacks.put(KOALA, fireball);
         attacks.put(MINIX, shuriken);
-        attacks.put(LINUX, shuriken);
+        attacks.put(LINUX, arch);
+        attacks.put(FIREFOX, fireball);
 
         chess.put(KING, new Texture("textures/figures/king.png"));
         chess.put(BISHOP, new Texture("textures/figures/bishop.png"));

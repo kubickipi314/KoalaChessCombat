@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.io.core.CharacterType.PLAYER;
 
 public class GamePresenter {
     private GameServiceInterface gs;
@@ -59,13 +58,13 @@ public class GamePresenter {
 
         for (var register : characterRegisters) {
             int id = register.characterId();
-            if (register.type() == PLAYER) {
+            CharacterType type = register.type();
+            if (register.player()) {
                 charactersIdList.add(id);
-                charactersMap.put(id, new PlayerPresenter(tm, sm, cm, register.position()));
+                charactersMap.put(id, new PlayerPresenter(tm, sm, cm, register.position(), type));
             } else {
                 BoardPosition position = register.position();
                 int health = register.maxHealth();
-                CharacterType type = register.type();
                 charactersIdList.add(id);
                 charactersMap.put(id, new EnemyPresenter(tm, sm, cm, position, health, type));
             }

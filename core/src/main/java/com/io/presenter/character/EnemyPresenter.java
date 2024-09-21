@@ -14,7 +14,7 @@ public class EnemyPresenter extends CharacterPresenter {
     private int health;
 
     public EnemyPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, BoardPosition boardPosition, int maxHealth, CharacterType type) {
-        super(sm, cm, boardPosition);
+        super(sm, cm, boardPosition, type);
 
         Vector2 position = cm.calculatePosition(boardPosition);
         characterView = new EnemyView(tm, position, cm.getTileSize(), type);
@@ -26,8 +26,6 @@ public class EnemyPresenter extends CharacterPresenter {
     }
 
     public void setHealth(int value) {
-        if (value < health)
-            sm.playRoarSound();
         health = value;
         ((EnemyView) characterView).changeHealth((float) health / maxHealth);
     }

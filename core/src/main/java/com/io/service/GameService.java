@@ -91,7 +91,7 @@ public class GameService implements GameServiceInterface {
             var type = CharacterTypesMapper.getPresenterType(getCharacterEnum(character));
             var position = character.getPosition();
             var health = character.getCurrentHealth();
-            characterRegisters.add(new CharacterRegister(idCounter, type, position, health));
+            characterRegisters.add(new CharacterRegister( character instanceof Player, idCounter, type, position, health));
             idCounter++;
         }
         return characterRegisters;

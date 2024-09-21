@@ -11,22 +11,12 @@ import com.io.view.characters.PlayerView;
 
 public class PlayerPresenter extends CharacterPresenter {
 
-    public PlayerPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, BoardPosition startBoardPosition) {
-        super(sm, cm, startBoardPosition);
+    public PlayerPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, BoardPosition startBoardPosition, CharacterType type) {
+        super(sm, cm, startBoardPosition, type);
 
         Vector2 position = cm.calculatePosition(boardPosition);
-        characterView = new PlayerView(tm, position, cm.getTileSize());
-        characterType = CharacterType.PLAYER;
+        characterView = new PlayerView(tm, position, cm.getTileSize(),type);
     }
 
-    @Override
-    public void startAttack(BoardPosition position) {
-        movementTime = 0;
-        attackTime = 0;
-        sm.playSwordSound();
-        isAttacking = true;
-        attackPosition = cm.calculatePosition(position);
-        attackerPosition = cm.calculatePosition(boardPosition);
-    }
 }
 

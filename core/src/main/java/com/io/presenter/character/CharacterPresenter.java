@@ -33,13 +33,14 @@ public abstract class CharacterPresenter implements CharacterPresenterInterface 
 
     protected CharacterType characterType;
 
-    public CharacterPresenter(SoundManager sm, CoordinatesManager cm, BoardPosition boardPosition) {
+    public CharacterPresenter(SoundManager sm, CoordinatesManager cm, BoardPosition boardPosition, CharacterType characterType) {
         this.sm = sm;
         this.cm = cm;
 
         isMoving = false;
         isAttacking = false;
         this.boardPosition = boardPosition;
+        this.characterType = characterType;
 
         stateInterval = randomFloat(6);
     }
@@ -82,7 +83,7 @@ public abstract class CharacterPresenter implements CharacterPresenterInterface 
     public void startAttack(BoardPosition position) {
         movementTime = 0;
         attackTime = 0;
-        sm.playRoarSound();
+        sm.playAttackSound(characterType);
         isAttacking = true;
         attackPosition = cm.calculatePosition(position);
         attackerPosition = cm.calculatePosition(boardPosition);
@@ -92,7 +93,7 @@ public abstract class CharacterPresenter implements CharacterPresenterInterface 
         float deltaTime = Gdx.graphics.getDeltaTime();
         movementTime += deltaTime;
         attackTime += deltaTime;
-        float animationDuration = 0.5f;
+        float animationDuration = 0.8f;
         float progress = Math.min(1.0f, movementTime / animationDuration);
 
         if (attackTime >= 0.2f) {

@@ -1,7 +1,9 @@
 package com.io.core;
 
 public enum CharacterType {
-    PLAYER,
+    KOALA,
     MINIX,
-    LINUX
+    LINUX,
+    FIREFOX
 }
+
