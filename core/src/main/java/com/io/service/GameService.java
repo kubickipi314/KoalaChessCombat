@@ -1,6 +1,5 @@
 package com.io.service;
 
-import com.io.CONST;
 import com.io.core.GameResult;
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
@@ -11,7 +10,6 @@ import com.io.core.moves.*;
 import com.io.core.snapshot.GameSnapshot;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
-import com.io.db.entity.SnapshotEntity;
 import com.io.presenter.GamePresenter;
 
 import java.util.ArrayList;
@@ -25,52 +23,21 @@ public class GameService {
     private GamePresenter gp;
     private SnapshotService sns;
 
-    private Long gameSnapshotId;
+    private long levelId;
+    private GameSnapshot gameSnapshot;
 
     private boolean gameInProgress = false;
     private Board board;
     private Player player;
 
-    public void init(TurnService ts, GamePresenter gp, SnapshotService sns, GameSnapshot gameSnapshot) {
+    public void init(TurnService ts, GamePresenter gp, SnapshotService sns, long levelId) {
         this.ts = ts;
         this.gp = gp;
         this.sns = sns;
 
-        if (gameSnapshot == null) {
-            gameSnapshotId = null;
-            loadGame();
-        } else {
-            gameSnapshotId = gameSnapshot.getId();
-            System.out.println("Game loaded from snapshot with id=" + gameSnapshotId);
-            loadGame(gameSnapshot);
-        }
-    }
-
-    public void loadGame() {
-        var moves = List.of(
-            new KingMove(2, 1),
-            new KnightMove(3, 3),
-            new RookMove(5, 4),
-            new BishopMove(3, 2),
-            new QueenMove(7, 5)
-        );
-
-        player = new Player(new BoardPosition(1, 0), moves);
-        var characters = new ArrayList<>(List.of(
-            player,
-            new MeleeEnemy(new BoardPosition(1, 4)),
-            new MeleeEnemy(new BoardPosition(2, 4)),
-            new MeleeEnemy(new BoardPosition(3, 3))
-        ));
-
-        roomWidth = CONST.DEFAULT_ROOM_WIDTH;
-        roomHeight = CONST.DEFAULT_ROOM_HEIGHT;
-        var specialCells = List.of(
-            new SpecialCell(2, 2, true)
-        );
-        board = new Board(roomWidth, roomHeight, characters, specialCells);
-
-        ts.init(this, characters, board);
+        this.levelId = levelId;
+        this.gameSnapshot = sns.getLevelSnapshot(levelId);
+        loadGame(gameSnapshot);
     }
 
     public void loadGame(GameSnapshot gameSnapshot) {
@@ -125,13 +92,12 @@ public class GameService {
         ts.stop();
 
         gameInProgress = false;
+        sns.removeLevelSnapshot(levelId);
     }
 
     public void abort() {
         if (gameInProgress)
-            createGameSnapshot(gameSnapshotId);
-        else if (gameSnapshotId != null)
-            sns.deleteSnapshot(gameSnapshotId);
+            createSnapshot();
     }
 
     public Player getPlayer() {
@@ -186,16 +152,16 @@ public class GameService {
         return null;
     }
 
-    private void createGameSnapshot(Long id) {
-        var snapshotEntity = new SnapshotEntity(board.boardWidth, board.boardHeight);
+    private void createSnapshot() {
+        var snapshotEntity = gameSnapshot.snapshotEntity();
         var characterEntityList = getCharacters().stream()
             .map(ch -> new CharacterEntity(
                 ch.getPosition().x(),
                 ch.getPosition().y(),
                 getCharacterEnum(ch),
+                ch.getTeam(),
                 ch.getCurrentHealth(),
-                ch.getCurrentMana(),
-                ch.getTeam()
+                ch.getCurrentMana()
             )).toList();
         var cellEntityList = board.getSpecialCells().stream()
             .map(cell -> new CellEntity(
@@ -204,7 +170,7 @@ public class GameService {
                 cell.isBlocked()
             )).toList();
 
-        sns.createSnapshot(id, snapshotEntity, characterEntityList, cellEntityList);
+        sns.createLevelSnapshot(levelId, snapshotEntity, characterEntityList, cellEntityList);
     }
 
     public boolean moveEnemy(Enemy enemy) {

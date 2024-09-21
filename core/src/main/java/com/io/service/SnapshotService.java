@@ -1,11 +1,10 @@
 package com.io.service;
 
-//import com.io.core.snapshot.GameSnapshot;
-
 import com.io.core.snapshot.GameSnapshot;
 import com.io.db.DatabaseEngine;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
+import com.io.db.entity.LevelEntity;
 import com.io.db.entity.SnapshotEntity;
 
 import java.sql.SQLException;
@@ -18,14 +17,13 @@ public class SnapshotService {
         this.dbEngine = dbEngine;
     }
 
-    public void createSnapshot(Long id, SnapshotEntity snapshotEntity, List<CharacterEntity> charactersEntityList, List<CellEntity> cellEntityList) {
+    public void createLevelSnapshot(long levelId, SnapshotEntity snapshotEntity, List<CharacterEntity> charactersEntityList, List<CellEntity> cellEntityList) {
+        var levelDAO = dbEngine.getDAO(LevelEntity.class);
         var snapshotDAO = dbEngine.getDAO(SnapshotEntity.class);
         var characterDAO = dbEngine.getDAO(CharacterEntity.class);
         var cellDAO = dbEngine.getDAO(CellEntity.class);
 
         try {
-            if (id != null) deleteSnapshot(id);
-
             snapshotDAO.create(snapshotEntity);
             var snapshotId = snapshotEntity.getId();
             System.out.println("Created new snapshot with id=" + snapshotId);
@@ -37,11 +35,42 @@ public class SnapshotService {
                 cellEntity.setSnapshotId(snapshotId);
                 cellDAO.create(cellEntity);
             }
+            var updateBuilder = levelDAO.updateBuilder();
+            updateBuilder.where().idEq(levelId);
+            updateBuilder.updateColumnValue("currentSnapshot", snapshotId);
+            updateBuilder.update();
         } catch (SQLException ignored) {
         }
     }
 
-    public GameSnapshot getSnapshot(long id) {
+    public GameSnapshot getLevelSnapshot(long id) {
+        var levelDAO = dbEngine.getDAO(LevelEntity.class);
+
+        try {
+            System.out.println("id:" + id);
+            var levelEntity = levelDAO.queryForId(id);
+            System.out.println(id);
+            long snapshotId = levelEntity.getCurrentSnapshot() == null
+                ? levelEntity.getStartingSnapshot()
+                : levelEntity.getCurrentSnapshot();
+            return getSnapshot(snapshotId);
+        } catch (SQLException ignored) {
+        }
+        return null;
+    }
+
+    public void removeLevelSnapshot(long levelId) {
+        var levelDAO = dbEngine.getDAO(LevelEntity.class);
+        try {
+            var updateBuilder = levelDAO.updateBuilder();
+            updateBuilder.where().idEq(levelId);
+            updateBuilder.updateColumnValue("currentSnapshot", null);
+            updateBuilder.update();
+        } catch (SQLException ignored) {
+        }
+    }
+
+    private GameSnapshot getSnapshot(long id) {
         var snapshotDAO = dbEngine.getDAO(SnapshotEntity.class);
         var characterDAO = dbEngine.getDAO(CharacterEntity.class);
         var cellDAO = dbEngine.getDAO(CellEntity.class);
@@ -53,31 +82,6 @@ public class SnapshotService {
             return new GameSnapshot(snapshotEntity, characterEntityList, cellEntityList);
         } catch (SQLException ignored) {
             return null;
-        }
-    }
-
-    public GameSnapshot getLastSnapshot() {
-        var snapshotDAO = dbEngine.getDAO(SnapshotEntity.class);
-        try {
-            var lastSnapshotEntity = snapshotDAO.queryBuilder().orderBy("id", false).queryForFirst();
-            if (lastSnapshotEntity == null) return null;
-            return getSnapshot(lastSnapshotEntity.getId());
-        } catch (SQLException ignored) {
-            return null;
-        }
-    }
-
-    public void deleteSnapshot(long id) {
-        System.out.println("DELETE");
-        var snapshotDAO = dbEngine.getDAO(SnapshotEntity.class);
-        var characterDAO = dbEngine.getDAO(CharacterEntity.class);
-        try {
-            snapshotDAO.deleteById(id);
-
-            var deleteBuilder = characterDAO.deleteBuilder();
-            deleteBuilder.where().eq("snapshotId", id);
-            deleteBuilder.delete();
-        } catch (SQLException ignored) {
         }
     }
 }

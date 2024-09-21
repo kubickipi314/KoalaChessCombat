@@ -26,8 +26,8 @@ public abstract class Character {
 
     public Character(int maxMana, int maxHealth, CharacterEntity che) {
         this(maxMana, maxHealth, che.getPosition(), che.getTeam());
-        this.currentHealth = che.getCurrentHealth();
-        this.currentMana = che.getCurrentMana();
+        this.currentHealth = che.getCurrentHealth() != null ? che.getCurrentHealth() : maxHealth;
+        this.currentMana = che.getCurrentMana() != null ? che.getCurrentMana() : maxHealth;
     }
 
 

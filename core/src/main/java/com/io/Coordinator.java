@@ -2,7 +2,6 @@ package com.io;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.io.core.snapshot.GameSnapshot;
 import com.io.db.DatabaseEngine;
 import com.io.menu.presenters.MenuPresenter;
 import com.io.menu.presenters.StartPresenter;
@@ -40,16 +39,16 @@ public class Coordinator {
         game.setScreen(menuScreen);
     }
 
-    public void setGameScreen() {
+    public void setGameScreen(int levelId) {
         SnapshotService sns = new SnapshotService(dbEngine);
-        GameSnapshot gameSnapshot = sns.getLastSnapshot();
-
         TurnService ts = new TurnService();
         gs = new GameService();
         GamePresenter gamePresenter = new GamePresenter();
-        gs.init(ts, gamePresenter, sns, gameSnapshot);
+
+        gs.init(ts, gamePresenter, sns, levelId);
         gamePresenter.init(gs, this);
         game.setScreen(new GameScreen(gamePresenter));
+
         gs.startGame();
     }
 

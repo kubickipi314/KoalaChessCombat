@@ -71,7 +71,7 @@ public class MenuPresenter {
             } else if (levelPicture.contains(mousePosition)) {
                 System.out.println("Start game level");
                 sm.playSelectSound();
-                coordinator.setGameScreen();
+                coordinator.setGameScreen(1);
             } else if (leftArrow.contains(mousePosition)) {
                 System.out.println("Go left");
                 sm.playSelectSound();

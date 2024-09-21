@@ -5,7 +5,6 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "Snapshot")
 public class SnapshotEntity {
-
     @DatabaseField(generatedId = true)
     private long id;
 
