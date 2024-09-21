@@ -10,7 +10,7 @@ import com.io.screens.GameScreen;
 import com.io.screens.MenuScreen;
 import com.io.screens.StartScreen;
 import com.io.service.GameService;
-import com.io.service.LevelLoaderService;
+import com.io.service.LevelService;
 import com.io.service.SnapshotService;
 import com.io.service.TurnService;
 
@@ -43,8 +43,8 @@ public class Coordinator {
     }
 
     public void setMenuScreen() {
-        LevelLoaderService lls = new LevelLoaderService(dbEngine);
-        levels = lls.getLevels();
+        LevelService ls = new LevelService(dbEngine);
+        levels = ls.getLevels();
 
         MenuPresenter menuPresenter = new MenuPresenter(this);
         MenuScreen menuScreen = new MenuScreen(menuPresenter);
