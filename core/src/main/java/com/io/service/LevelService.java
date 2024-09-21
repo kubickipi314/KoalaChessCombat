@@ -67,6 +67,8 @@ public class LevelService {
     }
 
     private void loadLevels() {
+        dbEngine.clear();
+
         {
             // LEVEL 1
             SnapshotEntity snapshotEntity = new SnapshotEntity(5, 5);

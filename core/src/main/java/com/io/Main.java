@@ -15,7 +15,6 @@ public class Main extends Game {
     @Override
     public void create() {
         dbEngine = new DatabaseEngine("jdbc:sqlite:game.db");
-//        dbEngine.clear();
 
         var ls = new LevelService(dbEngine);
         var sns = new SnapshotService(dbEngine);
