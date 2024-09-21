@@ -2,7 +2,6 @@ package com.io.core.board;
 
 import com.io.core.character.Character;
 import com.io.core.moves.MoveDTO;
-import com.io.service.MoveResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;

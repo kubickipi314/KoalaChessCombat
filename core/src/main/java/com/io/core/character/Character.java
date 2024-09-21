@@ -2,7 +2,6 @@ package com.io.core.character;
 
 import com.io.core.board.BoardPosition;
 import com.io.db.entity.CharacterEntity;
-import com.io.service.CharacterRegister;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
