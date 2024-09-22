@@ -15,6 +15,10 @@ public class Board {
     private final List<Character> characters;
     private final Map<Integer, Integer> teamCount;
 
+    private boolean hasMoved;
+    private boolean hasAttacked;
+    private Character attacked;
+
     public Board(int width, int height, List<Character> characters, List<SpecialCell> specialCells) {
         this.board = new Cell[height][width];
         for (int i = 0; i < height; i++) {
@@ -48,6 +52,10 @@ public class Board {
     }
 
     public boolean tryMakeMove(MoveDTO moveDTO) {
+        hasMoved = false;
+        hasAttacked = false;
+        attacked = null;
+
         var move = moveDTO.move();
         var movePosition = moveDTO.boardPosition();
         var character = moveDTO.character();
@@ -63,10 +71,12 @@ public class Board {
         boolean moveCharacter = false;
         if (attackedCharacter != null) {
             attackedCharacter.changeHealth(-move.getDamage());
-            if (attackedCharacter.getCurrentHealth() <= 0) {
+            hasAttacked = true;
+            attacked = attackedCharacter;
+            if (attackedCharacter.isDead()) {
                 characters.remove(attackedCharacter);
-                decreaseTeamCount(attackedCharacter.getTeam());
                 destinationCell.setCharacter(null);
+                decreaseTeamCount(attackedCharacter.getTeam());
             }
             moveCharacter = move.moveOnKill();
         } else {
@@ -74,6 +84,7 @@ public class Board {
         }
 
         if (moveCharacter) {
+            hasMoved = true;
             destinationCell.setCharacter(character);
             character.setPosition(movePosition);
             startCell.setCharacter(null);
@@ -145,5 +156,17 @@ public class Board {
 
     public Map<Integer, Integer> getTeamCount() {
         return teamCount;
+    }
+
+    public boolean hasAttacked() {
+        return hasAttacked;
+    }
+
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    public Character getAttacked() {
+        return attacked;
     }
 }

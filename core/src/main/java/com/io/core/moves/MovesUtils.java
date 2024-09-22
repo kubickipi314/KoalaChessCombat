@@ -64,14 +64,14 @@ public final class MovesUtils {
 
     public static List<BoardPosition> sanitizeAccessibleCells(List<BoardPosition> accessibleCells, Character character, Board board) {
         return accessibleCells.stream()
-            .filter(currentPosition -> {
-                var attackedCharacter = board.getCharacter(currentPosition);
-                if (attackedCharacter == null) {
-                    return true;
-                }
-                return attackedCharacter.getTeam() != character.getTeam();
-            })
-            .toList();
+                .filter(currentPosition -> {
+                    var attackedCharacter = board.getCharacter(currentPosition);
+                    if (attackedCharacter == null) {
+                        return true;
+                    }
+                    return attackedCharacter.getTeam() != character.getTeam();
+                })
+                .toList();
     }
 
     public static int kingDistance(BoardPosition p, BoardPosition q) {

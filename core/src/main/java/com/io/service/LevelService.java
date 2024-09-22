@@ -88,8 +88,10 @@ public class LevelService {
             LevelEntity levelEntity = new LevelEntity();
             List<CharacterEntity> characterEntityList = List.of(
                 new CharacterEntity(0, 0, CharacterEnum.Player, 0),
-                new CharacterEntity(2, 4, CharacterEnum.RangeEnemy, 1),
-                new CharacterEntity(4, 4, CharacterEnum.RangeEnemy, 1)
+                new CharacterEntity(1, 4, CharacterEnum.MeleeEnemy, 1),
+                new CharacterEntity(2, 4, CharacterEnum.MeleeEnemy, 1),
+                new CharacterEntity(3, 4, CharacterEnum.MeleeEnemy, 1),
+                new CharacterEntity(4, 4, CharacterEnum.MeleeEnemy, 1)
             );
             List<CellEntity> cellEntityList = List.of(
                 new CellEntity(0, 3, true),
