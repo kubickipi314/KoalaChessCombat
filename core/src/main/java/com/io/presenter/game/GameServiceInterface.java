@@ -1,4 +1,4 @@
-package com.io.service;
+package com.io.presenter.game;
 
 import com.io.core.GameResult;
 import com.io.core.board.BoardPosition;

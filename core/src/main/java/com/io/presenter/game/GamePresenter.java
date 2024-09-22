@@ -15,7 +15,6 @@ import com.io.core.moves.Move;
 import com.io.presenter.game.character.CharacterPresenterInterface;
 import com.io.presenter.game.character.EnemyPresenter;
 import com.io.presenter.game.character.PlayerPresenter;
-import com.io.service.GameServiceInterface;
 import com.io.view.game.TextureManager;
 import com.io.view.game.SoundManager;
 
