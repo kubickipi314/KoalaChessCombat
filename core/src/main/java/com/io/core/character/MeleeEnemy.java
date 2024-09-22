@@ -16,10 +16,12 @@ public class MeleeEnemy extends Enemy {
 
     public MeleeEnemy(BoardPosition position, Board board) {
         super(maxMana, maxHealth, position, board);
+        this.type = CharacterEnum.MeleeEnemy;
     }
 
     public MeleeEnemy(CharacterEntity che, Board board) {
         super(maxMana, maxHealth, che, board);
+        this.type = CharacterEnum.MeleeEnemy;
     }
 
     @Override

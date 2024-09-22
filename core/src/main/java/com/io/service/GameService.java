@@ -3,8 +3,7 @@ package com.io.service;
 import com.io.core.GameResult;
 import com.io.core.board.BoardPosition;
 import com.io.core.board.SpecialCell;
-import com.io.core.character.Character;
-import com.io.core.character.*;
+import com.io.core.character.CharacterEnum;
 import com.io.core.moves.Move;
 import com.io.core.moves.MoveDTO;
 import com.io.core.snapshot.GameSnapshot;
@@ -58,7 +57,7 @@ public class GameService implements GameServiceInterface {
             var type = CharacterTypesMapper.getPresenterType(getCharacterEnum(character));
             var position = character.getPosition();
             var health = character.getCurrentHealth();
-            characterRegisters.add(new CharacterRegister(character instanceof Player, idCounter, type, position, health));
+            characterRegisters.add(new CharacterRegister(character.getTeam() == 0, idCounter, type, position, health));
             idCounter++;
         }
         return characterRegisters;
@@ -81,7 +80,8 @@ public class GameService implements GameServiceInterface {
     }
 
     public boolean isPlayersTurn() {
-        return turnQueue.peek() instanceof Player;
+        if (turnQueue.isEmpty()) return false;
+        return turnQueue.peek().getTeam() == 0;
     }
 
     public boolean movePlayer(BoardPosition boardPosition, Move move) {
@@ -106,7 +106,7 @@ public class GameService implements GameServiceInterface {
         if (isPlayersTurn()) return false;
 
         assert !turnQueue.isEmpty();
-        Enemy enemy = (Enemy) turnQueue.peek();
+        EnemyInterface enemy = (EnemyInterface) turnQueue.peek();
 
         if (enemy.isDead()) {
             turnQueue.poll();
@@ -135,7 +135,7 @@ public class GameService implements GameServiceInterface {
         BoardPosition targetPosition = move.boardPosition();
         boolean hasAttacked = board.hasAttacked();
         if (hasAttacked) {
-            Character attacked = board.getAttacked();
+            CharacterInterface attacked = board.getAttacked();
             boolean isAttackedDead = attacked.isDead();
             int attackedId = characterIdMap.get(attacked);
             int attackedHealth = attacked.getCurrentHealth();
@@ -188,12 +188,7 @@ public class GameService implements GameServiceInterface {
     }
 
     private CharacterEnum getCharacterEnum(CharacterInterface character) {
-        if (character instanceof Player)
-            return CharacterEnum.Player;
-        if (character instanceof MeleeEnemy) {
-            return CharacterEnum.MeleeEnemy;
-        }
-        return null;
+        return character.getType();
     }
 
     private void createSnapshot() {

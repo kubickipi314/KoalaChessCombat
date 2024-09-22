@@ -16,11 +16,13 @@ public class Player extends Character implements PlayerInterface {
     public Player(BoardPosition position, List<Move> moves, Board board) {
         super(maxMana, maxHealth, position, 0, board);
         this.moves = moves;
+        this.type = CharacterEnum.Player;
     }
 
     public Player(CharacterEntity che, List<Move> moves, Board board) {
         super(maxMana, maxHealth, che, board);
         this.moves = moves;
+        this.type = CharacterEnum.Player;
     }
 
     public Move getMove(int idx) {

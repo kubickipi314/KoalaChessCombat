@@ -111,7 +111,7 @@ public class Board implements BoardInterface {
         var move = moveDTO.move();
         var movePosition = moveDTO.boardPosition();
         var characterI = moveDTO.character();
-        var character = this.getCharacter(characterI.getPosition());
+        var character = getCharacter(characterI.getPosition());
         var destinationCell = getCell(movePosition);
         var startCell = getCell(characterI.getPosition());
         var attackedCharacter = destinationCell.getCharacter();

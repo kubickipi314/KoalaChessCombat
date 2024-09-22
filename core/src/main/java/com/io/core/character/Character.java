@@ -15,6 +15,7 @@ public abstract class Character implements CharacterInterface {
     protected int currentHealth;
     protected final int maxHealth;
     protected Board board;
+    protected CharacterEnum type;
 
     protected BoardPosition position;
 
@@ -73,6 +74,10 @@ public abstract class Character implements CharacterInterface {
 
     public boolean isDead() {
         return currentHealth <= 0;
+    }
+
+    public CharacterEnum getType() {
+        return type;
     }
 
 }
