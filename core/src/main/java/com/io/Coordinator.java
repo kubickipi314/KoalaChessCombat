@@ -2,9 +2,9 @@ package com.io;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.io.menu.presenters.MenuPresenter;
-import com.io.menu.presenters.StartPresenter;
-import com.io.presenter.GamePresenter;
+import com.io.presenter.menu.MenuPresenter;
+import com.io.presenter.menu.StartPresenter;
+import com.io.presenter.game.GamePresenter;
 import com.io.screens.GameScreen;
 import com.io.screens.MenuScreen;
 import com.io.screens.StartScreen;

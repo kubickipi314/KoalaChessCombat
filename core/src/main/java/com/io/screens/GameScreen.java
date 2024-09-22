@@ -3,7 +3,7 @@ package com.io.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.io.presenter.GamePresenter;
+import com.io.presenter.game.GamePresenter;
 
 /**
  * First screen of the application. Displayed after the application is created.

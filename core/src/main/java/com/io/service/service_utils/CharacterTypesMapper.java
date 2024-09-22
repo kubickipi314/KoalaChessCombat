@@ -1,6 +1,6 @@
 package com.io.service.service_utils;
 
-import com.io.view.characters.CharacterViewType;
+import com.io.view.game.characters.CharacterViewType;
 import com.io.core.character.CharacterEnum;
 
 import java.util.EnumMap;

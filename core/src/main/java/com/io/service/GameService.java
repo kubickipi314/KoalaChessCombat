@@ -123,7 +123,7 @@ public class GameService implements GameServiceInterface {
     public boolean movePlayer(BoardPosition boardPosition, Move move) {
         if (!isPlayersTurn()) return false;
         var moveDTO = new MoveDTO(move, boardPosition, player);
-        if (board.tryMakeMove(new MoveDTO(move, boardPosition, player))) {
+        if (board.tryMakeMove(moveDTO)) {
             collectMoveInformation(moveDTO);
             if (checkEndGameCondition() != GameResult.NONE) endGame();
             return true;
