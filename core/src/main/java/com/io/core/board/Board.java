@@ -60,15 +60,20 @@ public class Board {
         if (!move.isMoveValid(character, movePosition, this)) return false;
 
         character.changeMana(-move.getCost());
+        boolean moveCharacter = false;
         if (attackedCharacter != null) {
             attackedCharacter.changeHealth(-move.getDamage());
             if (attackedCharacter.getCurrentHealth() <= 0) {
                 characters.remove(attackedCharacter);
-                destinationCell.setCharacter(null);
                 decreaseTeamCount(attackedCharacter.getTeam());
+                destinationCell.setCharacter(null);
             }
+            moveCharacter = move.moveOnKill();
+        } else {
+            moveCharacter = true;
         }
-        if (destinationCell.getCharacter() == null) {
+
+        if (moveCharacter) {
             destinationCell.setCharacter(character);
             character.setPosition(movePosition);
             startCell.setCharacter(null);

@@ -64,4 +64,9 @@ public class LongRangeMove implements Move {
     public int getDamage() {
         return damage;
     }
+
+    @Override
+    public boolean moveOnKill() {
+        return false;
+    }
 }

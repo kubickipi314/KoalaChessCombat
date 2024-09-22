@@ -67,4 +67,9 @@ public class PawnMove implements Move {
     public int getDamage() {
         return damage;
     }
+
+    @Override
+    public boolean moveOnKill() {
+        return true;
+    }
 }

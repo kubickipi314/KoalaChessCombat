@@ -16,4 +16,6 @@ public interface Move {
     int getCost();
 
     int getDamage();
+
+     boolean moveOnKill();
 }

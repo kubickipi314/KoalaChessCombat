@@ -12,7 +12,7 @@ public class Player extends Character {
     private final List<Move> moves;
 
     public Player(BoardPosition position, List<Move> moves) {
-        super(maxMana, maxHealth, position, 0);
+        super(maxMana, maxHealth, position, CONST.PLAYER_TEAM);
         this.moves = moves;
     }
 

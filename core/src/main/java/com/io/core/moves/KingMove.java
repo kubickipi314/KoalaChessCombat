@@ -67,4 +67,8 @@ public class KingMove implements Move {
         return damage;
     }
 
+    @Override
+    public boolean moveOnKill() {
+        return true;
+    }
 }

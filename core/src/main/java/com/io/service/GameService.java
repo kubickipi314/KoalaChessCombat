@@ -62,6 +62,8 @@ public class GameService {
                 character = player;
             } else if (characterEnum == CharacterEnum.MeleeEnemy) {
                 character = new MeleeEnemy(che);
+            } else if (characterEnum == CharacterEnum.RangeEnemy) {
+                character = new RangeEnemy(che);
             } else {
                 System.err.println("Found unrecognised character(" + characterEnum + "when importing snapshot.");
                 continue;
@@ -148,6 +150,9 @@ public class GameService {
             return CharacterEnum.Player;
         if (character instanceof MeleeEnemy) {
             return CharacterEnum.MeleeEnemy;
+        }
+        if (character instanceof RangeEnemy) {
+            return CharacterEnum.RangeEnemy;
         }
         return null;
     }
