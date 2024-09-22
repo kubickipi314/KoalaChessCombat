@@ -17,14 +17,16 @@ public class KingMove implements Move {
     private static final int[] DY = {1, -1, 1, -1, 1, 0, 0, -1};
     private static final int maxReach = 1;
     private static final MoveType type = KING;
+    private final Board board;
 
-    public KingMove(int cost, int damage) {
+    public KingMove(int cost, int damage, Board board) {
         this.cost = cost;
         this.damage = damage;
+        this.board = board;
     }
 
     @Override
-    public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
+    public boolean isMoveValid(Character character, BoardPosition endPosition) {
         var startPosition = character.getPosition();
         var attackedCharacter = board.getCharacter(endPosition);
 
@@ -41,8 +43,8 @@ public class KingMove implements Move {
     }
 
     @Override
-    public List<BoardPosition> getAccessibleCells(Character character, Board board) {
-        var position = character.getPosition();
+    public List<BoardPosition> getAccessibleCells(BoardPosition position) {
+        var character = board.getCharacter(position);
         var accessibleCells = new ArrayList<BoardPosition>();
 
         for (int i = 0; i < DX.length; i++) {

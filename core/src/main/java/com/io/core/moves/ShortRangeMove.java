@@ -11,11 +11,13 @@ import java.util.Objects;
 public class ShortRangeMove implements Move {
     private final int cost, damage;
     private final int maxRange;
+    private final Board board;
 
-    public ShortRangeMove(int cost, int damage, int maxRange) {
+    public ShortRangeMove(int cost, int damage, int maxRange, Board board) {
         this.cost = cost;
         this.damage = damage;
         this.maxRange = maxRange;
+        this.board = board;
     }
 
     private boolean isInRange(BoardPosition start, BoardPosition end) {
@@ -23,7 +25,7 @@ public class ShortRangeMove implements Move {
     }
 
     @Override
-    public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
+    public boolean isMoveValid(Character character, BoardPosition endPosition) {
         var startPosition = character.getPosition();
         if (!board.isValidCell(endPosition)) return false;
         var attackedCharacter = board.getCharacter(endPosition);
@@ -32,8 +34,8 @@ public class ShortRangeMove implements Move {
     }
 
     @Override
-    public List<BoardPosition> getAccessibleCells(Character character, Board board) {
-        var position = character.getPosition();
+    public List<BoardPosition> getAccessibleCells(BoardPosition position) {
+        var character = board.getCharacter(position);
         ArrayList<BoardPosition> accessibleCells = new ArrayList<>();
         for (int i = 0; i <= board.getBoardWidth(); i++) {
             for (int j = 0; j < board.getBoardHeight(); j++) {

@@ -2,9 +2,10 @@ package com.io;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.io.core.board.Board;
+import com.io.presenter.game.GamePresenter;
 import com.io.presenter.menu.MenuPresenter;
 import com.io.presenter.menu.StartPresenter;
-import com.io.presenter.game.GamePresenter;
 import com.io.screens.GameScreen;
 import com.io.screens.MenuScreen;
 import com.io.screens.StartScreen;
@@ -44,7 +45,8 @@ public class Coordinator {
 
         gs = new GameService();
         GamePresenter gamePresenter = new GamePresenter();
-        gs.init(sns, ls.getCurrentLevel());
+        Board board = new Board(sns.getLevelSnapshot(ls.getCurrentLevel()));
+        gs.init(sns, ls.getCurrentLevel(), board, board.getCharacters());
         gamePresenter.init(gs, this);
         game.setScreen(new GameScreen(gamePresenter));
     }

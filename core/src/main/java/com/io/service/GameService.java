@@ -1,12 +1,12 @@
 package com.io.service;
 
 import com.io.core.GameResult;
-import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
 import com.io.core.board.SpecialCell;
 import com.io.core.character.Character;
 import com.io.core.character.*;
-import com.io.core.moves.*;
+import com.io.core.moves.Move;
+import com.io.core.moves.MoveDTO;
 import com.io.core.snapshot.GameSnapshot;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
@@ -24,64 +24,27 @@ public class GameService implements GameServiceInterface {
     private long levelId;
     private GameSnapshot gameSnapshot;
     private boolean gameEnded = false;
-    private Board board;
-    private Player player;
-    private List<Character> characters;
-    private Map<Character, Integer> characterIdMap;
+    private BoardInterface board;
+    private PlayerInterface player;
+    private List<? extends CharacterInterface> characters;
+    private Map<CharacterInterface, Integer> characterIdMap;
     private List<MoveResult> movesHistory;
-    private Queue<Character> turnQueue;
+    private Queue<CharacterInterface> turnQueue;
 
-    public void init(SnapshotService sns, long levelId) {
+    public void init(SnapshotService sns, long levelId, BoardInterface board, List<? extends CharacterInterface> characters) {
         this.sns = sns;
+        this.board = board;
+        this.player = board.getPlayer();
+        this.characters = characters;
+        this.roomHeight = board.getBoardHeight();
+        this.roomWidth = board.getBoardWidth();
         movesHistory = new ArrayList<>();
 
         this.levelId = levelId;
         this.gameSnapshot = sns.getLevelSnapshot(levelId);
-        loadGame(gameSnapshot);
-
         movesHistory = new ArrayList<>();
 
         turnQueue = new LinkedList<>(characters);
-    }
-
-    private void loadGame(GameSnapshot gameSnapshot) {
-        var snapshotEntity = gameSnapshot.snapshotEntity();
-        var characterEntityList = gameSnapshot.characterEntityList();
-        var cellEntityList = gameSnapshot.cellEntityList();
-
-        var moves = List.of(
-                new KingMove(2, 1),
-                new KnightMove(3, 3),
-                new RookMove(5, 4),
-                new BishopMove(3, 2),
-                new QueenMove(7, 5)
-        );
-
-        characters = new ArrayList<>();
-        for (var che : characterEntityList) {
-            var characterEnum = che.getCharacterEnum();
-            Character character;
-            if (characterEnum == CharacterEnum.Player) {
-                player = new Player(che, moves);
-                character = player;
-            } else if (characterEnum == CharacterEnum.MeleeEnemy) {
-                character = new MeleeEnemy(che);
-            } else {
-                System.err.println("Found unrecognised character(" + characterEnum + "when importing snapshot.");
-                continue;
-            }
-            characters.add(character);
-        }
-
-        roomWidth = snapshotEntity.getBoardWidth();
-        roomHeight = snapshotEntity.getBoardHeight();
-        var specialCells = cellEntityList.stream()
-                .map(ce -> new SpecialCell(
-                        ce.getPositionX(),
-                        ce.getPositionY(),
-                        ce.isBlocked()
-                )).toList();
-        board = new Board(roomWidth, roomHeight, characters, specialCells);
     }
 
     public List<CharacterRegister> getCharacterRegisters() {
@@ -149,7 +112,7 @@ public class GameService implements GameServiceInterface {
             turnQueue.poll();
             return false;
         }
-        var moveDTO = enemy.makeNextMove(board);
+        var moveDTO = enemy.makeNextMove();
         if (moveDTO == null) {
             enemy.changeMana(5);
             turnQueue.add(turnQueue.poll());
@@ -166,7 +129,7 @@ public class GameService implements GameServiceInterface {
 
     private void collectMoveInformation(MoveDTO move) {
         MoveResult result;
-        Character character = move.character();
+        CharacterInterface character = move.character();
         int characterId = characterIdMap.get(character);
         boolean hasMoved = board.hasMoved();
         BoardPosition targetPosition = move.boardPosition();
@@ -191,7 +154,7 @@ public class GameService implements GameServiceInterface {
     }
 
     public List<BoardPosition> getAvailableTiles(Move move) {
-        return move.getAccessibleCells(player, board);
+        return move.getAccessibleCells(player.getPosition());
     }
 
     public int getPlayerHealth() {
@@ -224,7 +187,7 @@ public class GameService implements GameServiceInterface {
             createSnapshot();
     }
 
-    private CharacterEnum getCharacterEnum(Character character) {
+    private CharacterEnum getCharacterEnum(CharacterInterface character) {
         if (character instanceof Player)
             return CharacterEnum.Player;
         if (character instanceof MeleeEnemy) {
