@@ -10,6 +10,9 @@ import com.io.core.moves.*;
 import com.io.core.snapshot.GameSnapshot;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
+import com.io.service.service_utils.CharacterRegister;
+import com.io.service.service_utils.CharacterTypesMapper;
+import com.io.service.service_utils.MoveResult;
 
 import java.util.*;
 
@@ -91,7 +94,7 @@ public class GameService implements GameServiceInterface {
             var type = CharacterTypesMapper.getPresenterType(getCharacterEnum(character));
             var position = character.getPosition();
             var health = character.getCurrentHealth();
-            characterRegisters.add(new CharacterRegister( character instanceof Player, idCounter, type, position, health));
+            characterRegisters.add(new CharacterRegister(character instanceof Player, idCounter, type, position, health));
             idCounter++;
         }
         return characterRegisters;
@@ -128,7 +131,7 @@ public class GameService implements GameServiceInterface {
         return false;
     }
 
-    public void endPlayerTour() {
+    public void endPlayerTurn() {
         if (isPlayersTurn()) {
             turnQueue.add(turnQueue.poll());
             player.changeMana(5);
@@ -141,7 +144,7 @@ public class GameService implements GameServiceInterface {
         assert !turnQueue.isEmpty();
         Enemy enemy = (Enemy) turnQueue.peek();
 
-        if (enemy.isDead()){
+        if (enemy.isDead()) {
             turnQueue.poll();
             return false;
         }
@@ -151,7 +154,7 @@ public class GameService implements GameServiceInterface {
             turnQueue.add(turnQueue.poll());
             return false;
         }
-        if (board.tryMakeMove(moveDTO)){
+        if (board.tryMakeMove(moveDTO)) {
             collectMoveInformation(moveDTO);
             if (checkEndGameCondition() != GameResult.NONE) endGame();
             return true;
@@ -174,8 +177,7 @@ public class GameService implements GameServiceInterface {
             int attackedHealth = attacked.getCurrentHealth();
             result = new MoveResult(characterId, hasMoved, targetPosition,
                     true, isAttackedDead, attackedId, attackedHealth);
-        }
-        else {
+        } else {
             result = new MoveResult(characterId, hasMoved, targetPosition,
                     false, false, -1, 0);
         }
@@ -188,7 +190,7 @@ public class GameService implements GameServiceInterface {
     }
 
     public List<BoardPosition> getAvailableTiles(Move move) {
-        return move.getAccessibleCells(player, getBoardSnapshot());
+        return move.getAccessibleCells(player, board);
     }
 
     public int getPlayerHealth() {
@@ -219,11 +221,6 @@ public class GameService implements GameServiceInterface {
     public void abort() {
         if (!gameEnded)
             createSnapshot();
-    }
-
-    private Board getBoardSnapshot() {
-        // TODO: return readonly object
-        return board;
     }
 
     private CharacterEnum getCharacterEnum(Character character) {

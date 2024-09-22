@@ -1,12 +1,12 @@
-package com.io.service;
+package com.io.service.service_utils;
 
-import com.io.core.CharacterType;
+import com.io.view.characters.CharacterViewType;
 import com.io.core.board.BoardPosition;
 
 public record CharacterRegister(
         boolean player,
         int characterId,
-        CharacterType type,
+        CharacterViewType type,
         BoardPosition position,
         int maxHealth) {
 }

@@ -54,12 +54,12 @@ public class StartPresenter {
 
         Vector2 mousePosition = getMousePosition();
 
-        for (MenuButton button: buttons) {
+        for (MenuButton button : buttons) {
             if (button.contains(mousePosition)) button.mark();
         }
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            if (quitButton.contains(mousePosition)){
+            if (quitButton.contains(mousePosition)) {
                 System.out.println("QUIT!!!");
                 sm.playSelectSound();
                 coordinator.quit();

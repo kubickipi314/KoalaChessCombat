@@ -3,7 +3,6 @@ package com.io.view.characters;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.core.CharacterType;
 import com.io.view.assets_managers.TextureManager;
 
 public abstract class CharacterView {
@@ -11,9 +10,9 @@ public abstract class CharacterView {
     protected final Sprite attackSprite;
     protected final TextureManager tm;
     protected final float size;
-    protected final CharacterType type;
+    protected final CharacterViewType type;
 
-    public CharacterView(TextureManager tm, Vector2 position, float size, CharacterType type) {
+    public CharacterView(TextureManager tm, Vector2 position, float size, CharacterViewType type) {
         this.tm = tm;
         this.size = size;
         this.type = type;

@@ -3,10 +3,10 @@ package com.io.presenter.character;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.core.CharacterType;
 import com.io.core.board.BoardPosition;
 import com.io.presenter.CoordinatesManager;
 import com.io.view.assets_managers.SoundManager;
+import com.io.view.characters.CharacterViewType;
 import com.io.view.characters.CharacterView;
 
 import java.util.Random;
@@ -31,9 +31,9 @@ public abstract class CharacterPresenter implements CharacterPresenterInterface 
     protected float stateTime = 0;
     protected float stateInterval;
 
-    protected CharacterType characterType;
+    protected CharacterViewType characterType;
 
-    public CharacterPresenter(SoundManager sm, CoordinatesManager cm, BoardPosition boardPosition, CharacterType characterType) {
+    public CharacterPresenter(SoundManager sm, CoordinatesManager cm, BoardPosition boardPosition, CharacterViewType characterType) {
         this.sm = sm;
         this.cm = cm;
 
@@ -93,7 +93,7 @@ public abstract class CharacterPresenter implements CharacterPresenterInterface 
         float deltaTime = Gdx.graphics.getDeltaTime();
         movementTime += deltaTime;
         attackTime += deltaTime;
-        float animationDuration = 0.8f;
+        float animationDuration = 0.5f;
         float progress = Math.min(1.0f, movementTime / animationDuration);
 
         if (attackTime >= 0.2f) {
@@ -119,10 +119,11 @@ public abstract class CharacterPresenter implements CharacterPresenterInterface 
                 state = 1;
                 characterView.setTexture(state);
                 stateTime = 0f;
-                stateInterval = randomFloat(6);
+                stateInterval = randomFloat(5);
+                if (characterType == CharacterViewType.FIREFOX) stateInterval = 0.5f;
             }
         } else {
-            if (stateTime >= 0.3f) {
+            if (stateTime >= stateInterval) {
                 state = 0;
                 characterView.setTexture(state);
                 stateTime = 0f;

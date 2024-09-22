@@ -1,7 +1,7 @@
 package com.io.view.assets_managers;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.io.core.CharacterType;
+import com.io.view.characters.CharacterViewType;
 import com.io.core.GameResult;
 import com.io.core.moves.MoveType;
 
@@ -10,7 +10,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.io.core.CharacterType.*;
+import static com.io.view.characters.CharacterViewType.*;
 import static com.io.core.GameResult.LOSE;
 import static com.io.core.GameResult.WIN;
 import static com.io.core.moves.MoveType.*;
@@ -22,8 +22,8 @@ public class TextureManager {
     private final Texture availableCover;
     private final Map<MoveType, Texture> chess;
     private final Map<MoveType, Texture> selectedChess;
-    private final Map<CharacterType, List<Texture>> characters;
-    private final Map<CharacterType, List<Texture>> attacks;
+    private final Map<CharacterViewType, List<Texture>> characters;
+    private final Map<CharacterViewType, List<Texture>> attacks;
     private final Map<GameResult, Texture> result;
     private final Texture barBackground;
     private final Texture heart;
@@ -35,8 +35,8 @@ public class TextureManager {
     public TextureManager() {
         chess = new EnumMap<>(MoveType.class);
         selectedChess = new EnumMap<>(MoveType.class);
-        characters = new EnumMap<>(CharacterType.class);
-        attacks = new EnumMap<>(CharacterType.class);
+        characters = new EnumMap<>(CharacterViewType.class);
+        attacks = new EnumMap<>(CharacterViewType.class);
         result = new EnumMap<>(GameResult.class);
 
         normalTile = new Texture("textures/tiles/tile.png");
@@ -103,10 +103,10 @@ public class TextureManager {
         mana = new Texture("textures/bars/mana.png");
 
         tourButtons = new ArrayList<>();
-        tourButtons.add(new Texture("textures/buttons/tour_button_0.png"));
-        tourButtons.add(new Texture("textures/buttons/tour_button_1.png"));
-        tourButtons.add(new Texture("textures/buttons/tour_button_2.png"));
-        tourButtons.add(new Texture("textures/buttons/tour_button_3.png"));
+        tourButtons.add(new Texture("textures/buttons/turn_button_0.png"));
+        tourButtons.add(new Texture("textures/buttons/turn_button_1.png"));
+        tourButtons.add(new Texture("textures/buttons/turn_button_2.png"));
+        tourButtons.add(new Texture("textures/buttons/turn_button_3.png"));
 
         digits = new ArrayList<>();
         digits.add(new Texture("textures/digits/zero.png"));
@@ -127,11 +127,11 @@ public class TextureManager {
 
     }
 
-    public Texture getCharacter(CharacterType type, int stateNumber) {
+    public Texture getCharacter(CharacterViewType type, int stateNumber) {
         return characters.get(type).get(stateNumber);
     }
 
-    public Texture getAttack(CharacterType type, int stateNumber) {
+    public Texture getAttack(CharacterViewType type, int stateNumber) {
         return attacks.get(type).get(stateNumber);
     }
 

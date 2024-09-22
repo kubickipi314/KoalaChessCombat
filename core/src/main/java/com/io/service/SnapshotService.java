@@ -51,8 +51,8 @@ public class SnapshotService {
             var levelEntity = levelDAO.queryForId(id);
             System.out.println(id);
             long snapshotId = levelEntity.getCurrentSnapshot() == null
-                ? levelEntity.getStartingSnapshot()
-                : levelEntity.getCurrentSnapshot();
+                    ? levelEntity.getStartingSnapshot()
+                    : levelEntity.getCurrentSnapshot();
             return getSnapshot(snapshotId);
         } catch (SQLException ignored) {
         }

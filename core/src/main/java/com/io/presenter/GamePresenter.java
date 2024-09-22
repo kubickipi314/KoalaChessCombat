@@ -4,9 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.Coordinator;
-import com.io.core.CharacterType;
+import com.io.presenter.components.BarsPresenter;
+import com.io.presenter.components.BoardPresenter;
+import com.io.presenter.components.ButtonsPresenter;
+import com.io.presenter.components.ChessPresenter;
+import com.io.view.characters.CharacterViewType;
 import com.io.core.board.BoardPosition;
-import com.io.service.MoveResult;
+import com.io.service.service_utils.MoveResult;
 import com.io.core.moves.Move;
 import com.io.presenter.character.CharacterPresenterInterface;
 import com.io.presenter.character.EnemyPresenter;
@@ -15,11 +19,9 @@ import com.io.service.GameServiceInterface;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class GamePresenter {
     private GameServiceInterface gs;
@@ -35,7 +37,6 @@ public class GamePresenter {
     private float gameEndTime = 0;
 
     private Map<Integer, CharacterPresenterInterface> charactersMap;
-    private List<Integer> charactersIdList;
 
 
     public void init(GameServiceInterface gs, Coordinator coordinator) {
@@ -54,18 +55,15 @@ public class GamePresenter {
 
         var characterRegisters = gs.getCharacterRegisters();
         charactersMap = new HashMap<>();
-        charactersIdList = new ArrayList<>();
 
         for (var register : characterRegisters) {
             int id = register.characterId();
-            CharacterType type = register.type();
+            CharacterViewType type = register.type();
             if (register.player()) {
-                charactersIdList.add(id);
                 charactersMap.put(id, new PlayerPresenter(tm, sm, cm, register.position(), type));
             } else {
                 BoardPosition position = register.position();
                 int health = register.maxHealth();
-                charactersIdList.add(id);
                 charactersMap.put(id, new EnemyPresenter(tm, sm, cm, position, health, type));
             }
         }
@@ -104,21 +102,19 @@ public class GamePresenter {
     }
 
     private boolean isActiveCharacter() {
-        for (var characterId : charactersIdList) {
-            var characterPresenter = charactersMap.get(characterId);
+        for (var characterPresenter : charactersMap.values()) {
             if (characterPresenter.isActive()) return true;
         }
         return false;
     }
 
     private void updateCharacters() {
-        for (var characterId : charactersIdList) {
-            var characterPresenter = charactersMap.get(characterId);
+        for (var characterPresenter : charactersMap.values()) {
             characterPresenter.update();
         }
     }
 
-    protected void updateAvailableTiles() {
+    public void updateAvailableTiles() {
         var selectedMove = chessPresenter.getSelectedMove();
         boardPresenter.setAvailableTiles(gs.getAvailableTiles(selectedMove));
     }
@@ -146,8 +142,7 @@ public class GamePresenter {
         batch.begin();
         boardPresenter.render(batch);
 
-        for (var characterId : charactersIdList) {
-            var characterPresenter = charactersMap.get(characterId);
+        for (var characterPresenter : charactersMap.values()) {
             characterPresenter.render(batch);
         }
 
@@ -167,6 +162,7 @@ public class GamePresenter {
             System.err.println("Failed to play Player's move");
         }
     }
+
     public void handlePlayerMove(MoveResult result) {
         var player = charactersMap.get(result.characterId());
         if (result.hasMoved()) player.startMove(result.targetPosition());
@@ -193,10 +189,10 @@ public class GamePresenter {
     }
 
     private void removeDeadCharacter(Integer characterId) {
-        charactersIdList.remove(characterId);
+        charactersMap.remove(characterId);
     }
 
     public void endTurn() {
-        gs.endPlayerTour();
+        gs.endPlayerTurn();
     }
 }

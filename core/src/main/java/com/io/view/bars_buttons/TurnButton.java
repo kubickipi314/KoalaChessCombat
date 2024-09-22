@@ -8,11 +8,11 @@ import com.io.view.assets_managers.TextureManager;
 
 import java.util.List;
 
-public class TourButton {
+public class TurnButton {
     private final Sprite button;
     private final List<Texture> textures;
 
-    public TourButton(TextureManager tm, Vector2 position, float buttonWidth) {
+    public TurnButton(TextureManager tm, Vector2 position, float buttonWidth) {
         textures = tm.getTourButtons();
         button = new Sprite(textures.get(0));
         button.setPosition(position.x, position.y);

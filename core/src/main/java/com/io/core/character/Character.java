@@ -15,7 +15,6 @@ public abstract class Character {
 
     protected BoardPosition position;
 
-
     public Character(int maxMana, int maxHealth, BoardPosition position, int team) {
         this.maxMana = maxMana;
         this.maxHealth = maxHealth;

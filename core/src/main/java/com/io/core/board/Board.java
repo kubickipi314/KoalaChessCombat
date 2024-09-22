@@ -157,9 +157,11 @@ public class Board {
     public boolean hasAttacked() {
         return hasAttacked;
     }
+
     public boolean hasMoved() {
         return hasMoved;
     }
+
     public Character getAttacked() {
         return attacked;
     }

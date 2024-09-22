@@ -1,4 +1,4 @@
-package com.io.presenter;
+package com.io.presenter.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.core.board.BoardPosition;
 import com.io.core.board.SpecialCell;
+import com.io.presenter.CoordinatesManager;
+import com.io.presenter.GamePresenter;
 import com.io.view.assets_managers.TextureManager;
 import com.io.view.tiles.BoardTileView;
 
@@ -46,7 +48,7 @@ public class BoardPresenter {
             }
         }
 
-        for (var cell: specialCells) {
+        for (var cell : specialCells) {
             board[cell.y()][cell.x()].setBlocked(cell.isBlocked());
         }
     }

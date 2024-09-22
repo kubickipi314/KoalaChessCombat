@@ -2,7 +2,7 @@ package com.io.view.assets_managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.io.core.CharacterType;
+import com.io.view.characters.CharacterViewType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,14 +11,14 @@ public class SoundManager {
     private final Sound move;
     private final Sound select;
     private final Sound sword;
-    private final Map<CharacterType, Sound> attacks;
+    private final Map<CharacterViewType, Sound> attacks;
 
     public SoundManager() {
         attacks = new HashMap<>();
-        attacks.put(CharacterType.MINIX, Gdx.audio.newSound(Gdx.files.internal("sounds/roar_1.mp3")));
-        attacks.put(CharacterType.LINUX, Gdx.audio.newSound(Gdx.files.internal("sounds/roar_2.mp3")));
-        attacks.put(CharacterType.KOALA, Gdx.audio.newSound(Gdx.files.internal("sounds/roar_1.mp3")));
-        attacks.put(CharacterType.FIREFOX, Gdx.audio.newSound(Gdx.files.internal("sounds/space_shoot_0.mp3")));
+        attacks.put(CharacterViewType.MINIX, Gdx.audio.newSound(Gdx.files.internal("sounds/roar_1.mp3")));
+        attacks.put(CharacterViewType.LINUX, Gdx.audio.newSound(Gdx.files.internal("sounds/roar_2.mp3")));
+        attacks.put(CharacterViewType.KOALA, Gdx.audio.newSound(Gdx.files.internal("sounds/roar_1.mp3")));
+        attacks.put(CharacterViewType.FIREFOX, Gdx.audio.newSound(Gdx.files.internal("sounds/space_shoot_0.mp3")));
 
         move = Gdx.audio.newSound(Gdx.files.internal("sounds/move_sound_0.mp3"));
         select = Gdx.audio.newSound(Gdx.files.internal("sounds/chess_select_0.mp3"));
@@ -39,7 +39,7 @@ public class SoundManager {
     }
 
 
-    public void playAttackSound(CharacterType characterType) {
+    public void playAttackSound(CharacterViewType characterType) {
         attacks.get(characterType).play();
     }
 }

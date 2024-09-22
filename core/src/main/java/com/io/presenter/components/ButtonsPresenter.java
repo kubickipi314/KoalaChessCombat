@@ -1,14 +1,16 @@
-package com.io.presenter;
+package com.io.presenter.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.core.GameResult;
+import com.io.presenter.CoordinatesManager;
+import com.io.presenter.GamePresenter;
 import com.io.view.assets_managers.SoundManager;
 import com.io.view.assets_managers.TextureManager;
 import com.io.view.bars_buttons.ResultView;
-import com.io.view.bars_buttons.TourButton;
+import com.io.view.bars_buttons.TurnButton;
 
 import static com.io.core.GameResult.WIN;
 
@@ -16,7 +18,7 @@ public class ButtonsPresenter {
     private final SoundManager sm;
     private final TextureManager tm;
     private final GamePresenter gamePresenter;
-    private final TourButton tourButton;
+    private final TurnButton tourButton;
     private final ResultView resultView;
     private boolean isActive;
     private float elapsedTime;
@@ -32,7 +34,7 @@ public class ButtonsPresenter {
 
         float tourButtonX = boardX + (cols - 1) * tileSize;
         Vector2 tourButtonPosition = new Vector2(tourButtonX, cm.getManaBarY());
-        tourButton = new TourButton(tm, tourButtonPosition, tileSize);
+        tourButton = new TurnButton(tm, tourButtonPosition, tileSize);
 
         Vector2 resultPosition = new Vector2(cm.getBoardX(), cm.getBoardY());
         resultView = new ResultView(tm.getResult(WIN), resultPosition, tileSize);
@@ -42,7 +44,7 @@ public class ButtonsPresenter {
     }
 
 
-    void handleInput(Vector2 mousePosition) {
+    public void handleInput(Vector2 mousePosition) {
         if (!isActive) {
             tourButton.setTexture(0);
             if (tourButton.contains(mousePosition)) {

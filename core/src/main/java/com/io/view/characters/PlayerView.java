@@ -2,14 +2,14 @@ package com.io.view.characters;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.core.CharacterType;
 import com.io.view.assets_managers.TextureManager;
 
 
 public class PlayerView extends CharacterView {
-    public PlayerView(TextureManager tm, Vector2 position, float size, CharacterType type) {
+    public PlayerView(TextureManager tm, Vector2 position, float size, CharacterViewType type) {
         super(tm, position, size, type);
     }
+
     @Override
     public void setPosition(Vector2 newPosition) {
         characterSprite.setPosition(newPosition.x, newPosition.y);
