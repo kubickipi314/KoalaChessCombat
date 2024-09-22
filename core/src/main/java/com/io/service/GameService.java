@@ -10,9 +10,9 @@ import com.io.core.moves.*;
 import com.io.core.snapshot.GameSnapshot;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
-import com.io.service.service_utils.CharacterRegister;
-import com.io.service.service_utils.CharacterTypesMapper;
-import com.io.service.service_utils.MoveResult;
+import com.io.service.utils.CharacterRegister;
+import com.io.service.utils.CharacterTypesMapper;
+import com.io.service.utils.MoveResult;
 
 import java.util.*;
 

@@ -10,7 +10,7 @@ import com.io.presenter.game.components.ButtonsPresenter;
 import com.io.presenter.game.components.ChessPresenter;
 import com.io.view.game.characters.CharacterViewType;
 import com.io.core.board.BoardPosition;
-import com.io.service.service_utils.MoveResult;
+import com.io.service.utils.MoveResult;
 import com.io.core.moves.Move;
 import com.io.presenter.game.character.CharacterPresenterInterface;
 import com.io.presenter.game.character.EnemyPresenter;

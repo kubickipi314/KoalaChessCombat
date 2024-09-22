@@ -4,8 +4,8 @@ import com.io.core.GameResult;
 import com.io.core.board.BoardPosition;
 import com.io.core.board.SpecialCell;
 import com.io.core.moves.Move;
-import com.io.service.service_utils.CharacterRegister;
-import com.io.service.service_utils.MoveResult;
+import com.io.service.utils.CharacterRegister;
+import com.io.service.utils.MoveResult;
 
 import java.util.List;
 

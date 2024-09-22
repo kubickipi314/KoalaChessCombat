@@ -1,4 +1,4 @@
-package com.io.service.service_utils;
+package com.io.service.utils;
 
 import com.io.core.board.BoardPosition;
 
