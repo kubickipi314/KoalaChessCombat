@@ -3,7 +3,7 @@ package com.io.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.io.menu.presenters.MenuPresenter;
+import com.io.presenter.menu.MenuPresenter;
 
 public class MenuScreen implements Screen {
     private final MenuPresenter menuPresenter;

@@ -15,6 +15,10 @@ public class Board {
     private final List<Character> characters;
     private final Map<Integer, Integer> teamCount;
 
+    private boolean hasMoved;
+    private boolean hasAttacked;
+    private Character attacked;
+
     public Board(int width, int height, List<Character> characters, List<SpecialCell> specialCells) {
         this.board = new Cell[height][width];
         for (int i = 0; i < height; i++) {
@@ -45,9 +49,14 @@ public class Board {
                 teamCount.put(team, 1);
             }
         }
+
     }
 
     public boolean tryMakeMove(MoveDTO moveDTO) {
+        hasMoved = false;
+        hasAttacked = false;
+        attacked = null;
+
         var move = moveDTO.move();
         var movePosition = moveDTO.boardPosition();
         var character = moveDTO.character();
@@ -59,21 +68,24 @@ public class Board {
         if (attackedCharacter != null && character.getTeam() == attackedCharacter.getTeam()) return false;
         if (!move.isMoveValid(character, movePosition, this)) return false;
 
+
         character.changeMana(-move.getCost());
         if (attackedCharacter != null) {
             attackedCharacter.changeHealth(-move.getDamage());
-            if (attackedCharacter.getCurrentHealth() <= 0) {
+            hasAttacked = true;
+            attacked = attackedCharacter;
+            if (attackedCharacter.isDead()) {
                 characters.remove(attackedCharacter);
                 destinationCell.setCharacter(null);
                 decreaseTeamCount(attackedCharacter.getTeam());
             }
         }
         if (destinationCell.getCharacter() == null) {
+            hasMoved = true;
             destinationCell.setCharacter(character);
             character.setPosition(movePosition);
             startCell.setCharacter(null);
         }
-
         return true;
     }
 
@@ -140,5 +152,17 @@ public class Board {
 
     public Map<Integer, Integer> getTeamCount() {
         return teamCount;
+    }
+
+    public boolean hasAttacked() {
+        return hasAttacked;
+    }
+
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    public Character getAttacked() {
+        return attacked;
     }
 }

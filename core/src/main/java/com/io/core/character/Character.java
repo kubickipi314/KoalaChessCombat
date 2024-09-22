@@ -70,4 +70,5 @@ public abstract class Character {
     public boolean isDead() {
         return currentHealth <= 0;
     }
+
 }
