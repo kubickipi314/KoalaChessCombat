@@ -14,26 +14,27 @@ import static org.mockito.Mockito.when;
 class RookMoveTest {
 
     Board smallBoard;
+    Player player;
 
     @Test
     void testIsValidMove_NoObstacle() {
-        RookMove rookMove = new RookMove(10, 5);
-
         var mockBoard = mock(Board.class);
+        RookMove rookMove = new RookMove(10, 5, mockBoard);
+
+
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         var startPosition = new BoardPosition(0, 0);
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertTrue(rookMove.isMoveValid(mockPlayer, new BoardPosition(0, 3), mockBoard));
+        assertTrue(rookMove.isMoveValid(mockPlayer, new BoardPosition(0, 3)));
     }
 
     @Test
     void testIsValid_Obstacle() {
-        RookMove rookMove = new RookMove(10, 5);
-
         var mockBoard = mock(Board.class);
+        RookMove rookMove = new RookMove(10, 5, mockBoard);
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         when(mockBoard.isValidCell(new BoardPosition(0, 2))).thenReturn(false);
         var startPosition = new BoardPosition(0, 0);
@@ -41,11 +42,14 @@ class RookMoveTest {
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertFalse(rookMove.isMoveValid(mockPlayer, new BoardPosition(0, 3), mockBoard));
+        assertFalse(rookMove.isMoveValid(mockPlayer, new BoardPosition(0, 3)));
     }
 
     void init() {
         smallBoard = mock(Board.class);
+        player = mock(Player.class);
+        when(player.getPosition()).thenReturn(new BoardPosition(0, 0));
+        when(player.getTeam()).thenReturn(0);
         when(smallBoard.isValidCell(any(BoardPosition.class))).thenReturn(false);
         when(smallBoard.isValidCell(new BoardPosition(0, 0))).thenReturn(true);
         when(smallBoard.isValidCell(new BoardPosition(1, 0))).thenReturn(true);
@@ -53,17 +57,18 @@ class RookMoveTest {
         when(smallBoard.isValidCell(new BoardPosition(1, 1))).thenReturn(true);
         when(smallBoard.getBoardHeight()).thenReturn(2);
         when(smallBoard.getBoardWidth()).thenReturn(2);
+        when(smallBoard.getCharacter(new BoardPosition(0, 0))).thenReturn(player);
     }
 
     @Test
     void testGetAccessibleCells_NoObstacle() {
-        RookMove rookMove = new RookMove(10, 5);
         init();
+        RookMove rookMove = new RookMove(10, 5, smallBoard);
 
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
 
-        var result = rookMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = rookMove.getAccessibleCells(new BoardPosition(0, 0));
 
         assertEquals(2, result.size(), "There should be two accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
@@ -72,8 +77,8 @@ class RookMoveTest {
 
     @Test
     void testGetAccessibleCells_Obstacle() {
-        RookMove rookMove = new RookMove(10, 5);
         init();
+        RookMove rookMove = new RookMove(10, 5, smallBoard);
         var mockEnemy = mock(MeleeEnemy.class);
         when(mockEnemy.getTeam()).thenReturn(1);
         when(smallBoard.getCharacter(new BoardPosition(0, 1))).thenReturn(mockEnemy);
@@ -81,7 +86,7 @@ class RookMoveTest {
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
 
-        var result = rookMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = rookMove.getAccessibleCells(new BoardPosition(0, 0));
 
         assertEquals(2, result.size(), "There should be two accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
@@ -91,7 +96,7 @@ class RookMoveTest {
 
     @Test
     void getType() {
-        RookMove rookMove = new RookMove(10, 5);
+        RookMove rookMove = new RookMove(10, 5, null);
 
         var type = rookMove.getType();
 
@@ -100,7 +105,7 @@ class RookMoveTest {
 
     @Test
     public void testGetCost() {
-        RookMove rookMove = new RookMove(10, 5);
+        RookMove rookMove = new RookMove(10, 5, null);
 
         int cost = rookMove.getCost();
 
@@ -109,7 +114,7 @@ class RookMoveTest {
 
     @Test
     public void testGetDamage() {
-        RookMove rookMove = new RookMove(10, 5);
+        RookMove rookMove = new RookMove(10, 5, null);
 
         int damage = rookMove.getDamage();
 

@@ -14,29 +14,30 @@ import static org.mockito.Mockito.when;
 class KingMoveTest {
 
     Board smallBoard;
+    Player player;
 
     @Test
     void testIsValidMove_NoObstacle() {
-        KingMove kingMove = new KingMove(10, 5);
-
         var mockBoard = mock(Board.class);
+        KingMove kingMove = new KingMove(10, 5, mockBoard);
+
+
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         var startPosition = new BoardPosition(0, 0);
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertTrue(kingMove.isMoveValid(mockPlayer, new BoardPosition(1, 1), mockBoard));
-        assertTrue(kingMove.isMoveValid(mockPlayer, new BoardPosition(0, 1), mockBoard));
-        assertTrue(kingMove.isMoveValid(mockPlayer, new BoardPosition(1, 0), mockBoard));
-        assertFalse(kingMove.isMoveValid(mockPlayer, new BoardPosition(2, 2), mockBoard));
+        assertTrue(kingMove.isMoveValid(mockPlayer, new BoardPosition(1, 1)));
+        assertTrue(kingMove.isMoveValid(mockPlayer, new BoardPosition(0, 1)));
+        assertTrue(kingMove.isMoveValid(mockPlayer, new BoardPosition(1, 0)));
+        assertFalse(kingMove.isMoveValid(mockPlayer, new BoardPosition(2, 2)));
     }
 
     @Test
     void testIsValid_Obstacle() {
-        KingMove kingMove = new KingMove(10, 5);
-
         var mockBoard = mock(Board.class);
+        KingMove kingMove = new KingMove(10, 5, mockBoard);
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         when(mockBoard.isValidCell(new BoardPosition(1, 1))).thenReturn(false);
         when(mockBoard.isValidCell(new BoardPosition(0, 1))).thenReturn(false);
@@ -46,11 +47,14 @@ class KingMoveTest {
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertFalse(kingMove.isMoveValid(mockPlayer, new BoardPosition(1, 1), mockBoard));
-        assertFalse(kingMove.isMoveValid(mockPlayer, new BoardPosition(1, 0), mockBoard));
+        assertFalse(kingMove.isMoveValid(mockPlayer, new BoardPosition(1, 1)));
+        assertFalse(kingMove.isMoveValid(mockPlayer, new BoardPosition(1, 0)));
     }
 
     void init() {
+        player = mock(Player.class);
+        when(player.getPosition()).thenReturn(new BoardPosition(0, 0));
+        when(player.getTeam()).thenReturn(0);
         smallBoard = mock(Board.class);
         when(smallBoard.isValidCell(any(BoardPosition.class))).thenReturn(false);
         for (int i = 0; i < 3; i++) {
@@ -60,17 +64,19 @@ class KingMoveTest {
         }
         when(smallBoard.getBoardHeight()).thenReturn(3);
         when(smallBoard.getBoardWidth()).thenReturn(3);
+        when(smallBoard.getCharacter(new BoardPosition(0, 0))).thenReturn(player);
     }
 
     @Test
     void testGetAccessibleCells_NoObstacle() {
-        KingMove kingMove = new KingMove(10, 5);
         init();
+        KingMove kingMove = new KingMove(10, 5, smallBoard);
+
 
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
 
-        var result = kingMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = kingMove.getAccessibleCells(new BoardPosition(0, 0));
 
         assertEquals(3, result.size(), "There should be three accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
@@ -80,8 +86,9 @@ class KingMoveTest {
 
     @Test
     void testGetAccessibleCells_Obstacle() {
-        KingMove kingMove = new KingMove(10, 5);
         init();
+        KingMove kingMove = new KingMove(10, 5, smallBoard);
+
         var mockEnemy = mock(MeleeEnemy.class);
         when(mockEnemy.getTeam()).thenReturn(1);
         when(smallBoard.getCharacter(new BoardPosition(1, 1))).thenReturn(mockEnemy);
@@ -89,7 +96,7 @@ class KingMoveTest {
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
 
-        var result = kingMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = kingMove.getAccessibleCells(new BoardPosition(0, 0));
 
         assertEquals(3, result.size(), "There should be three accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
@@ -100,7 +107,7 @@ class KingMoveTest {
 
     @Test
     void getType() {
-        KingMove kingMove = new KingMove(10, 5);
+        KingMove kingMove = new KingMove(10, 5, null);
 
         var type = kingMove.getType();
 
@@ -109,7 +116,7 @@ class KingMoveTest {
 
     @Test
     public void testGetCost() {
-        KingMove kingMove = new KingMove(10, 5);
+        KingMove kingMove = new KingMove(10, 5, null);
 
         int cost = kingMove.getCost();
 
@@ -118,7 +125,7 @@ class KingMoveTest {
 
     @Test
     public void testGetDamage() {
-        KingMove kingMove = new KingMove(10, 5);
+        KingMove kingMove = new KingMove(10, 5, null);
 
         int damage = kingMove.getDamage();
 
