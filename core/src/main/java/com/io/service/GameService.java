@@ -3,6 +3,7 @@ package com.io.service;
 import com.io.CONST;
 import com.io.core.GameResult;
 import com.io.core.board.Board;
+import com.io.core.board.BoardMoveChange;
 import com.io.core.board.BoardPosition;
 import com.io.core.board.SpecialCell;
 import com.io.core.character.Character;
@@ -51,11 +52,11 @@ public class GameService implements GameServiceInterface {
         var cellEntityList = gameSnapshot.cellEntityList();
 
         var moves = List.of(
-                new KingMove(2, 1),
-                new KnightMove(3, 3),
-                new RookMove(5, 4),
-                new BishopMove(3, 2),
-                new QueenMove(7, 5)
+            new KingMove(2, 1),
+            new KnightMove(3, 3),
+            new RookMove(5, 4),
+            new BishopMove(3, 2),
+            new QueenMove(7, 5)
         );
 
         characters = new ArrayList<>();
@@ -79,11 +80,11 @@ public class GameService implements GameServiceInterface {
         roomWidth = snapshotEntity.getBoardWidth();
         roomHeight = snapshotEntity.getBoardHeight();
         var specialCells = cellEntityList.stream()
-                .map(ce -> new SpecialCell(
-                        ce.getPositionX(),
-                        ce.getPositionY(),
-                        ce.isBlocked()
-                )).toList();
+            .map(ce -> new SpecialCell(
+                ce.getPositionX(),
+                ce.getPositionY(),
+                ce.isBlocked()
+            )).toList();
         board = new Board(roomWidth, roomHeight, characters, specialCells);
     }
 
@@ -127,8 +128,9 @@ public class GameService implements GameServiceInterface {
     public boolean movePlayer(BoardPosition boardPosition, Move move) {
         if (!isPlayersTurn()) return false;
         var moveDTO = new MoveDTO(move, boardPosition, player);
-        if (board.tryMakeMove(moveDTO)) {
-            collectMoveInformation(moveDTO);
+        var boardMoveChange = board.tryMakeMove(moveDTO);
+        if (boardMoveChange.success()) {
+            addMoveHistory(boardMoveChange);
             if (checkEndGameCondition() != GameResult.NONE) endGame();
             return true;
         }
@@ -158,8 +160,9 @@ public class GameService implements GameServiceInterface {
             turnQueue.add(turnQueue.poll());
             return false;
         }
-        if (board.tryMakeMove(moveDTO)) {
-            collectMoveInformation(moveDTO);
+        var boardMoveChange = board.tryMakeMove(moveDTO);
+        if (boardMoveChange.success()) {
+            addMoveHistory(boardMoveChange);
             if (checkEndGameCondition() != GameResult.NONE) endGame();
             return true;
         }
@@ -167,23 +170,23 @@ public class GameService implements GameServiceInterface {
         return false;
     }
 
-    private void collectMoveInformation(MoveDTO move) {
+    private void addMoveHistory(BoardMoveChange boardMoveChange) {
         MoveResult result;
-        Character character = move.character();
+        Character character = boardMoveChange.move().character();
         int characterId = characterIdMap.get(character);
-        boolean hasMoved = board.hasMoved();
-        BoardPosition targetPosition = move.boardPosition();
-        boolean hasAttacked = board.hasAttacked();
+        boolean hasMoved = boardMoveChange.hasMoved();
+        BoardPosition targetPosition = boardMoveChange.move().boardPosition();
+        boolean hasAttacked = boardMoveChange.hasAttacked();
         if (hasAttacked) {
-            Character attacked = board.getAttacked();
+            Character attacked = boardMoveChange.attacked();
             boolean isAttackedDead = attacked.isDead();
             int attackedId = characterIdMap.get(attacked);
             int attackedHealth = attacked.getCurrentHealth();
             result = new MoveResult(characterId, hasMoved, targetPosition,
-                    true, isAttackedDead, attackedId, attackedHealth);
+                true, isAttackedDead, attackedId, attackedHealth);
         } else {
             result = new MoveResult(characterId, hasMoved, targetPosition,
-                    false, false, -1, 0);
+                false, false, -1, 0);
         }
         movesHistory.add(result);
     }
@@ -242,20 +245,20 @@ public class GameService implements GameServiceInterface {
     private void createSnapshot() {
         var snapshotEntity = gameSnapshot.snapshotEntity();
         var characterEntityList = characters.stream()
-                .map(ch -> new CharacterEntity(
-                        ch.getPosition().x(),
-                        ch.getPosition().y(),
-                        getCharacterEnum(ch),
-                        ch.getTeam(),
-                        ch.getCurrentHealth(),
-                        ch.getCurrentMana()
-                )).toList();
+            .map(ch -> new CharacterEntity(
+                ch.getPosition().x(),
+                ch.getPosition().y(),
+                getCharacterEnum(ch),
+                ch.getTeam(),
+                ch.getCurrentHealth(),
+                ch.getCurrentMana()
+            )).toList();
         var cellEntityList = board.getSpecialCells().stream()
-                .map(cell -> new CellEntity(
-                        cell.x(),
-                        cell.y(),
-                        cell.isBlocked()
-                )).toList();
+            .map(cell -> new CellEntity(
+                cell.x(),
+                cell.y(),
+                cell.isBlocked()
+            )).toList();
 
         sns.createLevelSnapshot(levelId, snapshotEntity, characterEntityList, cellEntityList);
     }
