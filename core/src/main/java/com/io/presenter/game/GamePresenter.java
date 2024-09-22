@@ -4,41 +4,41 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.Coordinator;
-import com.io.presenter.game.components.BarsPresenter;
-import com.io.presenter.game.components.BoardPresenter;
-import com.io.presenter.game.components.ButtonsPresenter;
-import com.io.presenter.game.components.ChessPresenter;
-import com.io.view.game.characters.CharacterViewType;
 import com.io.core.board.BoardPosition;
-import com.io.service.utils.MoveResult;
 import com.io.core.moves.Move;
 import com.io.presenter.game.character.CharacterPresenterInterface;
 import com.io.presenter.game.character.EnemyPresenter;
 import com.io.presenter.game.character.PlayerPresenter;
-import com.io.view.game.TextureManager;
+import com.io.presenter.game.components.BarsPresenter;
+import com.io.presenter.game.components.BoardPresenter;
+import com.io.presenter.game.components.ButtonsPresenter;
+import com.io.presenter.game.components.ChessPresenter;
+import com.io.service.utils.MoveResult;
 import com.io.view.game.SoundManager;
+import com.io.view.game.TextureManager;
+import com.io.view.game.characters.CharacterViewType;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class GamePresenter {
-    private GameServiceInterface gs;
-    private Coordinator coordinator;
-    private SpriteBatch batch;
-    private BoardPresenter boardPresenter;
-    private ChessPresenter chessPresenter;
-    private BarsPresenter barsPresenter;
-    private ButtonsPresenter buttonsPresenter;
+    private final GameServiceInterface gs;
+    private final Coordinator coordinator;
+    private final SpriteBatch batch;
+    private final BoardPresenter boardPresenter;
+    private final ChessPresenter chessPresenter;
+    private final BarsPresenter barsPresenter;
+    private final ButtonsPresenter buttonsPresenter;
 
     protected float windowHeight;
     private boolean gameEnded = false;
     private float gameEndTime = 0;
 
-    private Map<Integer, CharacterPresenterInterface> charactersMap;
+    private final Map<Integer, CharacterPresenterInterface> charactersMap;
 
 
-    public void init(GameServiceInterface gs, Coordinator coordinator) {
+    public GamePresenter(GameServiceInterface gs, Coordinator coordinator) {
         this.gs = gs;
         this.coordinator = coordinator;
 

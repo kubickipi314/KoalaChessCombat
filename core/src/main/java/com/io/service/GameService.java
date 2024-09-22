@@ -17,20 +17,20 @@ import com.io.service.utils.MoveResult;
 import java.util.*;
 
 public class GameService implements GameServiceInterface {
-    private int roomWidth;
-    private int roomHeight;
-    private SnapshotService sns;
-    private long levelId;
-    private GameSnapshot gameSnapshot;
+    private final int roomWidth;
+    private final int roomHeight;
+    private final SnapshotService sns;
+    private final long levelId;
+    private final GameSnapshot gameSnapshot;
     private boolean gameEnded = false;
-    private BoardInterface board;
-    private PlayerInterface player;
-    private List<? extends CharacterInterface> characters;
+    private final BoardInterface board;
+    private final PlayerInterface player;
+    private final List<? extends CharacterInterface> characters;
     private Map<CharacterInterface, Integer> characterIdMap;
     private List<MoveResult> movesHistory;
-    private Queue<CharacterInterface> turnQueue;
+    private final Queue<CharacterInterface> turnQueue;
 
-    public void init(SnapshotService sns, long levelId, BoardInterface board, List<? extends CharacterInterface> characters) {
+    public GameService(SnapshotService sns, long levelId, BoardInterface board, List<? extends CharacterInterface> characters) {
         this.sns = sns;
         this.board = board;
         this.player = board.getPlayer();

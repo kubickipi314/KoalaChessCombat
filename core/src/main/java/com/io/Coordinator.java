@@ -42,12 +42,9 @@ public class Coordinator {
     }
 
     public void setGameScreen() {
-
-        gs = new GameService();
-        GamePresenter gamePresenter = new GamePresenter();
         Board board = new Board(sns.getLevelSnapshot(ls.getCurrentLevel()));
-        gs.init(sns, ls.getCurrentLevel(), board, board.getCharacters());
-        gamePresenter.init(gs, this);
+        gs = new GameService(sns, ls.getCurrentLevel(), board, board.getCharacters());
+        GamePresenter gamePresenter = new GamePresenter(gs, this);
         game.setScreen(new GameScreen(gamePresenter));
     }
 
