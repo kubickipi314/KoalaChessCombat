@@ -2,19 +2,20 @@ package com.io.core.board;
 
 import com.io.core.character.Character;
 import com.io.core.moves.MoveDTO;
+import com.io.service.CharacterInterface;
 
 public record BoardMoveChange(
     boolean success,
     boolean hasMoved,
     boolean hasAttacked,
     MoveDTO move,
-    Character attacked
+    CharacterInterface attacked
 ) {
     static BoardMoveChange SUCCESS(
         boolean hasMoved,
         boolean hasAttacked,
         MoveDTO move,
-        Character attacked
+        CharacterInterface attacked
     ) {
         return new BoardMoveChange(true, hasMoved, hasAttacked, move, attacked);
     }

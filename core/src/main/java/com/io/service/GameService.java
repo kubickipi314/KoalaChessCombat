@@ -21,18 +21,21 @@ import com.io.service.utils.MoveResult;
 import java.util.*;
 
 public class GameService implements GameServiceInterface {
+    private final SnapshotService sns;
+    private final GameSnapshot gameSnapshot;
+
     private final int roomWidth;
     private final int roomHeight;
-    private final SnapshotService sns;
     private final long levelId;
-    private final GameSnapshot gameSnapshot;
-    private boolean gameEnded = false;
+
     private final BoardInterface board;
     private final PlayerInterface player;
     private final List<? extends CharacterInterface> characters;
-    private Map<CharacterInterface, Integer> characterIdMap;
-    private List<MoveResult> movesHistory;
+    private final Map<CharacterInterface, Integer> characterIdMap;
+    private final List<MoveResult> movesHistory;
     private final Queue<CharacterInterface> turnQueue;
+
+    private boolean gameEnded = false;
 
     public GameService(SnapshotService sns, long levelId, BoardInterface board, List<? extends CharacterInterface> characters) {
         this.sns = sns;
@@ -41,17 +44,16 @@ public class GameService implements GameServiceInterface {
         this.characters = characters;
         this.roomHeight = board.getBoardHeight();
         this.roomWidth = board.getBoardWidth();
-        movesHistory = new ArrayList<>();
 
         this.levelId = levelId;
         this.gameSnapshot = sns.getLevelSnapshot(levelId);
-        movesHistory = new ArrayList<>();
 
+        movesHistory = new ArrayList<>();
         turnQueue = new LinkedList<>(characters);
+        characterIdMap = new HashMap<>();
     }
 
     public List<CharacterRegister> getCharacterRegisters() {
-        characterIdMap = new HashMap<>();
         List<CharacterRegister> characterRegisters = new ArrayList<>();
 
         int idCounter = 0;
