@@ -48,10 +48,10 @@ public class MenuPresenter {
         backButton = new MenuButton(tm.getBackButton(), playPosition, tileSize, tileSize);
 
         Vector2 rightPosition = new Vector2(windowWidth / 2 + tileSize * 1.5f, tileSize * 2.5f);
-        leftArrow = new MenuButton(tm.getRightArrow(), rightPosition, tileSize, tileSize);
+        rightArrow = new MenuButton(tm.getRightArrow(), rightPosition, tileSize, tileSize);
 
         Vector2 leftPosition = new Vector2(windowWidth / 2 - tileSize * 2.5f, tileSize * 2.5f);
-        rightArrow = new MenuButton(tm.getLeftArrow(), leftPosition, tileSize, tileSize);
+        leftArrow = new MenuButton(tm.getLeftArrow(), leftPosition, tileSize, tileSize);
 
         buttons = new ArrayList<>();
         buttons.add(levelPicture);
