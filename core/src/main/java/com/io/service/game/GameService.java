@@ -1,6 +1,9 @@
 package com.io.service.game;
 
+import com.io.CONST;
 import com.io.core.GameResult;
+import com.io.core.board.Board;
+import com.io.core.board.BoardMoveChange;
 import com.io.core.board.BoardPosition;
 import com.io.core.board.SpecialCell;
 import com.io.core.character.CharacterEnum;
@@ -19,18 +22,21 @@ import com.io.service.utils.MoveResult;
 import java.util.*;
 
 public class GameService implements GameServiceInterface {
+    private final SnapshotService sns;
+    private final GameSnapshot gameSnapshot;
+
     private final int roomWidth;
     private final int roomHeight;
-    private final SnapshotService sns;
     private final long levelId;
-    private final GameSnapshot gameSnapshot;
-    private boolean gameEnded = false;
+
     private final BoardInterface board;
     private final PlayerInterface player;
     private final List<? extends CharacterInterface> characters;
-    private Map<CharacterInterface, Integer> characterIdMap;
-    private List<MoveResult> movesHistory;
+    private final Map<CharacterInterface, Integer> characterIdMap;
+    private final List<MoveResult> movesHistory;
     private final Queue<CharacterInterface> turnQueue;
+
+    private boolean gameEnded = false;
 
     public GameService(SnapshotService sns, long levelId, BoardInterface board, List<? extends CharacterInterface> characters) {
         this.sns = sns;
@@ -39,17 +45,16 @@ public class GameService implements GameServiceInterface {
         this.characters = characters;
         this.roomHeight = board.getBoardHeight();
         this.roomWidth = board.getBoardWidth();
-        movesHistory = new ArrayList<>();
 
         this.levelId = levelId;
         this.gameSnapshot = sns.getLevelSnapshot(levelId);
-        movesHistory = new ArrayList<>();
 
+        movesHistory = new ArrayList<>();
         turnQueue = new LinkedList<>(characters);
+        characterIdMap = new HashMap<>();
     }
 
     public List<CharacterRegister> getCharacterRegisters() {
-        characterIdMap = new HashMap<>();
         List<CharacterRegister> characterRegisters = new ArrayList<>();
 
         int idCounter = 0;
@@ -59,7 +64,7 @@ public class GameService implements GameServiceInterface {
             var type = CharacterTypesMapper.getPresenterType(getCharacterEnum(character));
             var position = character.getPosition();
             var health = character.getCurrentHealth();
-            characterRegisters.add(new CharacterRegister(character.getTeam() == 0, idCounter, type, position, health));
+            characterRegisters.add(new CharacterRegister(character.getType() == CharacterEnum.Player, idCounter, type, position, health));
             idCounter++;
         }
         return characterRegisters;
@@ -80,22 +85,23 @@ public class GameService implements GameServiceInterface {
     public GameResult checkEndGameCondition() {
         var teamCount = board.getTeamCount();
         if (teamCount.size() == 1) {
-            return teamCount.containsKey(0) ? GameResult.WIN : GameResult.LOSE;
+            return teamCount.containsKey(CONST.PLAYER_TEAM) ? GameResult.WIN : GameResult.LOSE;
         }
         return GameResult.NONE;
     }
 
     public boolean isPlayersTurn() {
         if (turnQueue.isEmpty()) return false;
-        return turnQueue.peek().getTeam() == 0;
+        return turnQueue.peek().getType() == CharacterEnum.Player;
     }
 
     public boolean movePlayer(BoardPosition boardPosition, int moveNumber) {
         if (!isPlayersTurn()) return false;
         Move move = player.getMove(moveNumber);
         var moveDTO = new MoveDTO(move, boardPosition, player);
-        if (board.tryMakeMove(moveDTO)) {
-            collectMoveInformation(moveDTO);
+        var boardMoveChange = board.tryMakeMove(moveDTO);
+        if (boardMoveChange.success()) {
+            addMoveHistory(boardMoveChange);
             if (checkEndGameCondition() != GameResult.NONE) endGame();
             return true;
         }
@@ -125,8 +131,9 @@ public class GameService implements GameServiceInterface {
             turnQueue.add(turnQueue.poll());
             return false;
         }
-        if (board.tryMakeMove(moveDTO)) {
-            collectMoveInformation(moveDTO);
+        var boardMoveChange = board.tryMakeMove(moveDTO);
+        if (boardMoveChange.success()) {
+            addMoveHistory(boardMoveChange);
             if (checkEndGameCondition() != GameResult.NONE) endGame();
             return true;
         }
@@ -134,23 +141,23 @@ public class GameService implements GameServiceInterface {
         return false;
     }
 
-    private void collectMoveInformation(MoveDTO move) {
+    private void addMoveHistory(BoardMoveChange boardMoveChange) {
         MoveResult result;
-        CharacterInterface character = move.character();
+        CharacterInterface character = boardMoveChange.move().character();
         int characterId = characterIdMap.get(character);
-        boolean hasMoved = board.hasMoved();
-        BoardPosition targetPosition = move.boardPosition();
-        boolean hasAttacked = board.hasAttacked();
+        boolean hasMoved = boardMoveChange.hasMoved();
+        BoardPosition targetPosition = boardMoveChange.move().boardPosition();
+        boolean hasAttacked = boardMoveChange.hasAttacked();
         if (hasAttacked) {
-            CharacterInterface attacked = board.getAttacked();
+            var attacked = boardMoveChange.attacked();
             boolean isAttackedDead = attacked.isDead();
             int attackedId = characterIdMap.get(attacked);
             int attackedHealth = attacked.getCurrentHealth();
             result = new MoveResult(characterId, hasMoved, targetPosition,
-                    true, isAttackedDead, attackedId, attackedHealth);
+                true, isAttackedDead, attackedId, attackedHealth);
         } else {
             result = new MoveResult(characterId, hasMoved, targetPosition,
-                    false, false, -1, 0);
+                false, false, -1, 0);
         }
         movesHistory.add(result);
     }
@@ -202,20 +209,20 @@ public class GameService implements GameServiceInterface {
     private void createSnapshot() {
         var snapshotEntity = gameSnapshot.snapshotEntity();
         var characterEntityList = characters.stream()
-                .map(ch -> new CharacterEntity(
-                        ch.getPosition().x(),
-                        ch.getPosition().y(),
-                        getCharacterEnum(ch),
-                        ch.getTeam(),
-                        ch.getCurrentHealth(),
-                        ch.getCurrentMana()
-                )).toList();
+            .map(ch -> new CharacterEntity(
+                ch.getPosition().x(),
+                ch.getPosition().y(),
+                getCharacterEnum(ch),
+                ch.getTeam(),
+                ch.getCurrentHealth(),
+                ch.getCurrentMana()
+            )).toList();
         var cellEntityList = board.getSpecialCells().stream()
-                .map(cell -> new CellEntity(
-                        cell.x(),
-                        cell.y(),
-                        cell.isBlocked()
-                )).toList();
+            .map(cell -> new CellEntity(
+                cell.x(),
+                cell.y(),
+                cell.isBlocked()
+            )).toList();
 
         sns.createLevelSnapshot(levelId, snapshotEntity, characterEntityList, cellEntityList);
     }

@@ -7,6 +7,9 @@ import com.io.core.character.Character;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.max;
+
 public final class MovesUtils {
     private MovesUtils() {
         throw new UnsupportedOperationException();
@@ -69,5 +72,9 @@ public final class MovesUtils {
                     return attackedCharacter.getTeam() != character.getTeam();
                 })
                 .toList();
+    }
+
+    public static int kingDistance(BoardPosition p, BoardPosition q) {
+        return max(abs(p.x() - q.x()), abs(p.y() - q.y()));
     }
 }

@@ -1,5 +1,6 @@
 package com.io.service.game;
 
+import com.io.core.board.BoardMoveChange;
 import com.io.core.board.SpecialCell;
 import com.io.core.character.Character;
 import com.io.core.moves.MoveDTO;
@@ -8,22 +9,16 @@ import java.util.List;
 import java.util.Map;
 
 public interface BoardInterface {
-    boolean tryMakeMove(MoveDTO move);
+    BoardMoveChange tryMakeMove(MoveDTO move);
 
     PlayerInterface getPlayer();
 
     Map<Integer, Integer> getTeamCount();
 
-    boolean hasMoved();
-
-    boolean hasAttacked();
-
-    Character getAttacked();
-
     List<SpecialCell> getSpecialCells();
 
-    public int getBoardWidth();
+    int getBoardWidth();
 
-    public int getBoardHeight();
+    int getBoardHeight();
 
 }

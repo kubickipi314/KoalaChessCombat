@@ -1,7 +1,7 @@
 package com.io.service.utils;
 
-import com.io.view.game.characters.CharacterViewType;
 import com.io.core.character.CharacterEnum;
+import com.io.view.game.characters.CharacterViewType;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -12,6 +12,7 @@ public abstract class CharacterTypesMapper {
     static {
         map.put(CharacterEnum.Player, CharacterViewType.KOALA);
         map.put(CharacterEnum.MeleeEnemy, CharacterViewType.LINUX);
+        map.put(CharacterEnum.RangeEnemy, CharacterViewType.MINIX);
     }
 
     public static CharacterViewType getPresenterType(CharacterEnum type) {

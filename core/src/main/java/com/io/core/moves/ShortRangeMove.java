@@ -65,4 +65,9 @@ public class ShortRangeMove implements Move {
     public int getDamage() {
         return damage;
     }
+
+    @Override
+    public boolean moveOnKill() {
+        return true;
+    }
 }

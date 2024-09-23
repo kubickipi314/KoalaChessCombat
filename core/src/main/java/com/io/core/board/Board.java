@@ -1,9 +1,7 @@
 package com.io.core.board;
 
+import com.io.core.character.*;
 import com.io.core.character.Character;
-import com.io.core.character.CharacterEnum;
-import com.io.core.character.MeleeEnemy;
-import com.io.core.character.Player;
 import com.io.core.moves.*;
 import com.io.service.snapshot.GameSnapshot;
 import com.io.service.game.BoardInterface;
@@ -21,21 +19,17 @@ public class Board implements BoardInterface {
     private final Player player;
     private final Map<Integer, Integer> teamCount;
 
-    private boolean hasMoved;
-    private boolean hasAttacked;
-    private Character attacked;
-
     public Board(GameSnapshot gameSnapshot) {
         var snapshotEntity = gameSnapshot.snapshotEntity();
         var characterEntityList = gameSnapshot.characterEntityList();
         var cellEntityList = gameSnapshot.cellEntityList();
 
         var moves = List.of(
-                new KingMove(2, 1, this),
-                new KnightMove(3, 3, this),
-                new RookMove(5, 4, this),
-                new BishopMove(3, 2, this),
-                new QueenMove(7, 5, this)
+            new KingMove(2, 1, this),
+            new KnightMove(3, 3, this),
+            new RookMove(5, 4, this),
+            new BishopMove(3, 2, this),
+            new QueenMove(7, 5, this)
         );
 
         characters = new ArrayList<>();
@@ -48,8 +42,10 @@ public class Board implements BoardInterface {
                 character = playerCharacter;
             } else if (characterEnum == CharacterEnum.MeleeEnemy) {
                 character = new MeleeEnemy(che, this);
+            } else if (characterEnum == CharacterEnum.RangeEnemy) {
+                character = new RangeEnemy(che, this);
             } else {
-                System.err.println("Found unrecognised character(" + characterEnum + "when importing snapshot.");
+                System.err.println("Found unrecognised character(" + characterEnum + ") when importing snapshot.");
                 continue;
             }
             characters.add(character);
@@ -62,11 +58,11 @@ public class Board implements BoardInterface {
         var height = snapshotEntity.getBoardHeight();
 
         var specialCells = cellEntityList.stream()
-                .map(ce -> new SpecialCell(
-                        ce.getPositionX(),
-                        ce.getPositionY(),
-                        ce.isBlocked()
-                )).toList();
+            .map(ce -> new SpecialCell(
+                ce.getPositionX(),
+                ce.getPositionY(),
+                ce.isBlocked()
+            )).toList();
         this.board = new Cell[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -103,11 +99,7 @@ public class Board implements BoardInterface {
         return player;
     }
 
-    public boolean tryMakeMove(MoveDTO moveDTO) {
-        hasMoved = false;
-        hasAttacked = false;
-        attacked = null;
-
+    public BoardMoveChange tryMakeMove(MoveDTO moveDTO) {
         var move = moveDTO.move();
         var movePosition = moveDTO.boardPosition();
         var characterI = moveDTO.character();
@@ -116,29 +108,39 @@ public class Board implements BoardInterface {
         var startCell = getCell(characterI.getPosition());
         var attackedCharacter = destinationCell.getCharacter();
 
-        if (character.getCurrentMana() < move.getCost()) return false;
-        if (attackedCharacter != null && character.getTeam() == attackedCharacter.getTeam()) return false;
-        if (!move.isMoveValid(character, movePosition)) return false;
+        boolean hasMoved = false;
+        boolean hasAttacked = false;
 
+        if (character.getCurrentMana() < move.getCost())
+            return BoardMoveChange.FAIL();
+        if (attackedCharacter != null && character.getTeam() == attackedCharacter.getTeam())
+            return BoardMoveChange.FAIL();
+        if (!move.isMoveValid(character, movePosition))
+            return BoardMoveChange.FAIL();
 
         character.changeMana(-move.getCost());
         if (attackedCharacter != null) {
-            attackedCharacter.changeHealth(-move.getDamage());
-            hasAttacked = true;
-            attacked = attackedCharacter;
+            var damage = move.getDamage();
+            attackedCharacter.changeHealth(-damage);
+            if (damage > 0)
+                hasAttacked = true;
             if (attackedCharacter.isDead()) {
                 characters.remove(attackedCharacter);
                 destinationCell.setCharacter(null);
                 decreaseTeamCount(attackedCharacter.getTeam());
+                hasMoved = move.moveOnKill();
             }
-        }
-        if (destinationCell.getCharacter() == null) {
+        } else {
             hasMoved = true;
+        }
+
+        if (hasMoved) {
             destinationCell.setCharacter(character);
             character.setPosition(movePosition);
             startCell.setCharacter(null);
         }
-        return true;
+
+        return BoardMoveChange.SUCCESS(hasMoved, hasAttacked, moveDTO, attackedCharacter);
     }
 
     public int getBoardWidth() {
@@ -204,17 +206,5 @@ public class Board implements BoardInterface {
 
     public Map<Integer, Integer> getTeamCount() {
         return teamCount;
-    }
-
-    public boolean hasAttacked() {
-        return hasAttacked;
-    }
-
-    public boolean hasMoved() {
-        return hasMoved;
-    }
-
-    public Character getAttacked() {
-        return attacked;
     }
 }

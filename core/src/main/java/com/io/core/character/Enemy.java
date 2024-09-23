@@ -1,5 +1,6 @@
 package com.io.core.character;
 
+import com.io.CONST;
 import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
 import com.io.core.moves.MoveDTO;
@@ -8,7 +9,7 @@ import com.io.service.game.EnemyInterface;
 
 public abstract class Enemy extends Character implements EnemyInterface {
     public Enemy(int maxMana, int maxHealth, BoardPosition position, Board board) {
-        super(maxMana, maxHealth, position, 1, board);
+        super(maxMana, maxHealth, position, CONST.ENEMY_TEAM, board);
     }
 
     public Enemy(int maxMana, int maxHealth, CharacterEntity che, Board board) {

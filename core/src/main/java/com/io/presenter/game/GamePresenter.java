@@ -169,11 +169,11 @@ public class GamePresenter {
     public void handleEnemyMove(MoveResult result) {
         var enemy = charactersMap.get(result.characterId());
         if (result.hasMoved()) enemy.startMove(result.targetPosition());
-        else enemy.startAttack(result.targetPosition());
         if (result.hasAttacked()) {
             if (result.isAttackedDead()) {
                 removeDeadCharacter(result.attackedId());
             }
+            enemy.startAttack(result.targetPosition());
         }
     }
 
