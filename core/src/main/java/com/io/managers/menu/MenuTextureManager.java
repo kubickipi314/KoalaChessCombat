@@ -1,4 +1,4 @@
-package com.io.view.menu;
+package com.io.managers.menu;
 
 import com.badlogic.gdx.graphics.Texture;
 

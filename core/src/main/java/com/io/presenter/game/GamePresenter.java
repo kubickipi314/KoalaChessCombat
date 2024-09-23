@@ -13,9 +13,10 @@ import com.io.presenter.game.components.BarsPresenter;
 import com.io.presenter.game.components.BoardPresenter;
 import com.io.presenter.game.components.ButtonsPresenter;
 import com.io.presenter.game.components.ChessPresenter;
+import com.io.managers.game.CoordinatesManager;
 import com.io.service.utils.MoveResult;
-import com.io.view.game.SoundManager;
-import com.io.view.game.TextureManager;
+import com.io.managers.game.SoundManager;
+import com.io.managers.game.TextureManager;
 import com.io.view.game.characters.CharacterViewType;
 
 import java.util.HashMap;

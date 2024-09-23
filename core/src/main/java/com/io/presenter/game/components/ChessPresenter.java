@@ -5,10 +5,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.core.moves.Move;
-import com.io.presenter.game.CoordinatesManager;
+import com.io.managers.game.CoordinatesManager;
 import com.io.presenter.game.GamePresenter;
-import com.io.view.game.SoundManager;
-import com.io.view.game.TextureManager;
+import com.io.managers.game.SoundManager;
+import com.io.managers.game.TextureManager;
 import com.io.view.game.tiles.ChessTileView;
 
 import java.util.List;

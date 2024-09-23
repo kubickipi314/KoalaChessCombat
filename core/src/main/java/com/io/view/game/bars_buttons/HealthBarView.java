@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.CONST;
-import com.io.view.game.TextureManager;
+import com.io.managers.game.TextureManager;
 
 public class HealthBarView {
 

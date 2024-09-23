@@ -2,8 +2,8 @@ package com.io.presenter.game.components;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.presenter.game.CoordinatesManager;
-import com.io.view.game.TextureManager;
+import com.io.managers.game.CoordinatesManager;
+import com.io.managers.game.TextureManager;
 import com.io.view.game.bars_buttons.HealthBarView;
 import com.io.view.game.bars_buttons.ManaBarView;
 

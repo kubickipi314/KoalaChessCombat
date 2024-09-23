@@ -1,7 +1,6 @@
-package com.io.view.game;
+package com.io.managers.game;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.Array;
 import com.io.view.game.characters.CharacterViewType;
 import com.io.core.GameResult;
 import com.io.core.moves.MoveType;
@@ -137,12 +136,12 @@ public class TextureManager {
 
     }
 
-    public Texture getCharacter(CharacterViewType type, int stateNumber) {
-        return characters.get(type).get(stateNumber);
+    public List<Texture> getCharacter(CharacterViewType type) {
+        return characters.get(type);
     }
 
-    public Texture getAttack(CharacterViewType type, int stateNumber) {
-        return attacks.get(type).get(stateNumber);
+    public List<Texture> getAttack(CharacterViewType type) {
+        return attacks.get(type);
     }
 
     public Texture getChess(MoveType move) {

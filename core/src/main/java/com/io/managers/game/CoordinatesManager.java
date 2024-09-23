@@ -1,4 +1,4 @@
-package com.io.presenter.game;
+package com.io.managers.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;

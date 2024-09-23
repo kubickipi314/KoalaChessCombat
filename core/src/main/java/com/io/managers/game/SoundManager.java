@@ -1,4 +1,4 @@
-package com.io.view.game;
+package com.io.managers.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;

@@ -3,7 +3,7 @@ package com.io.view.game.characters;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.view.game.TextureManager;
+import com.io.managers.game.TextureManager;
 
 public class EnemyView extends CharacterView {
     private final Sprite healthSprite;
