@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.core.moves.Move;
 import com.io.managers.game.CoordinatesManager;
 import com.io.presenter.game.GamePresenter;
 import com.io.managers.game.SoundManager;

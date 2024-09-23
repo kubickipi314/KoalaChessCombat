@@ -3,7 +3,6 @@ package com.io.presenter.game;
 import com.io.core.GameResult;
 import com.io.core.board.BoardPosition;
 import com.io.core.board.SpecialCell;
-import com.io.core.moves.Move;
 import com.io.presenter.game.components.MoveData;
 import com.io.service.utils.CharacterRegister;
 import com.io.service.utils.MoveResult;
