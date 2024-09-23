@@ -1,7 +1,7 @@
 package com.io.core.moves;
 
 import com.io.core.board.BoardPosition;
-import com.io.core.character.Character;
+import com.io.service.CharacterInterface;
 
-public record MoveDTO(Move move, BoardPosition boardPosition, Character character) {
+public record MoveDTO(Move move, BoardPosition boardPosition, CharacterInterface character) {
 }

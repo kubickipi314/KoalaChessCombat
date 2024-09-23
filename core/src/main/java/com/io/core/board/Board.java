@@ -1,21 +1,68 @@
 package com.io.core.board;
 
+import com.io.core.character.*;
 import com.io.core.character.Character;
-import com.io.core.moves.MoveDTO;
+import com.io.core.moves.*;
+import com.io.core.snapshot.GameSnapshot;
+import com.io.service.BoardInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Board {
+public class Board implements BoardInterface {
     private final Cell[][] board;
     public final int boardWidth, boardHeight;
 
     private final List<Character> characters;
+    private final Player player;
     private final Map<Integer, Integer> teamCount;
 
-    public Board(int width, int height, List<Character> characters, List<SpecialCell> specialCells) {
+    public Board(GameSnapshot gameSnapshot) {
+        var snapshotEntity = gameSnapshot.snapshotEntity();
+        var characterEntityList = gameSnapshot.characterEntityList();
+        var cellEntityList = gameSnapshot.cellEntityList();
+
+        var moves = List.of(
+            new KingMove(2, 1, this),
+            new KnightMove(3, 3, this),
+            new RookMove(5, 4, this),
+            new BishopMove(3, 2, this),
+            new QueenMove(7, 5, this)
+        );
+
+        characters = new ArrayList<>();
+        Player playerCharacter = null;
+        for (var che : characterEntityList) {
+            var characterEnum = che.getCharacterEnum();
+            Character character;
+            if (characterEnum == CharacterEnum.Player) {
+                playerCharacter = new Player(che, moves, this);
+                character = playerCharacter;
+            } else if (characterEnum == CharacterEnum.MeleeEnemy) {
+                character = new MeleeEnemy(che, this);
+            } else if (characterEnum == CharacterEnum.RangeEnemy) {
+                character = new RangeEnemy(che, this);
+            } else {
+                System.err.println("Found unrecognised character(" + characterEnum + ") when importing snapshot.");
+                continue;
+            }
+            characters.add(character);
+        }
+        if (playerCharacter == null) {
+            throw new Error("cannot make board without player");
+        }
+        this.player = playerCharacter;
+        var width = snapshotEntity.getBoardWidth();
+        var height = snapshotEntity.getBoardHeight();
+
+        var specialCells = cellEntityList.stream()
+            .map(ce -> new SpecialCell(
+                ce.getPositionX(),
+                ce.getPositionY(),
+                ce.isBlocked()
+            )).toList();
         this.board = new Cell[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -26,7 +73,6 @@ public class Board {
             board[cell.y()][cell.x()].setBlocked(cell.isBlocked());
         }
 
-        this.characters = characters;
         for (var character : characters) {
             Cell cell = getCell(character.getPosition());
             cell.setCharacter(character);
@@ -45,14 +91,21 @@ public class Board {
                 teamCount.put(team, 1);
             }
         }
+
+    }
+
+    @Override
+    public Player getPlayer() {
+        return player;
     }
 
     public BoardMoveChange tryMakeMove(MoveDTO moveDTO) {
         var move = moveDTO.move();
         var movePosition = moveDTO.boardPosition();
-        var character = moveDTO.character();
+        var characterI = moveDTO.character();
+        var character = getCharacter(characterI.getPosition());
         var destinationCell = getCell(movePosition);
-        var startCell = getCell(character.getPosition());
+        var startCell = getCell(characterI.getPosition());
         var attackedCharacter = destinationCell.getCharacter();
 
         boolean hasMoved = false;
@@ -62,13 +115,15 @@ public class Board {
             return BoardMoveChange.FAIL();
         if (attackedCharacter != null && character.getTeam() == attackedCharacter.getTeam())
             return BoardMoveChange.FAIL();
-        if (!move.isMoveValid(character, movePosition, this))
+        if (!move.isMoveValid(character, movePosition))
             return BoardMoveChange.FAIL();
 
         character.changeMana(-move.getCost());
         if (attackedCharacter != null) {
-            attackedCharacter.changeHealth(-move.getDamage());
-            hasAttacked = true;
+            var damage = move.getDamage();
+            attackedCharacter.changeHealth(-damage);
+            if (damage > 0)
+                hasAttacked = true;
             if (attackedCharacter.isDead()) {
                 characters.remove(attackedCharacter);
                 destinationCell.setCharacter(null);

@@ -10,14 +10,16 @@ import java.util.List;
 public class PawnMove implements Move {
 
     private final int cost, damage;
+    private final Board board;
 
-    public PawnMove(int cost, int damage) {
+    public PawnMove(int cost, int damage, Board board) {
         this.cost = cost;
         this.damage = damage;
+        this.board = board;
     }
 
     @Override
-    public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
+    public boolean isMoveValid(Character character, BoardPosition endPosition) {
         var startPosition = character.getPosition();
 
         if (!board.isValidCell(startPosition) || !board.isValidCell(endPosition)) return false;
@@ -31,8 +33,8 @@ public class PawnMove implements Move {
     }
 
     @Override
-    public List<BoardPosition> getAccessibleCells(Character character, Board board) {
-        var position = character.getPosition();
+    public List<BoardPosition> getAccessibleCells(BoardPosition position) {
+        var character = board.getCharacter(position);
         var accessibleCells = new ArrayList<BoardPosition>();
         int x = position.x();
         int y = position.y();

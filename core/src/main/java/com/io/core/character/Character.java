@@ -1,31 +1,36 @@
 package com.io.core.character;
 
+import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
 import com.io.db.entity.CharacterEntity;
+import com.io.service.CharacterInterface;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public abstract class Character {
+public abstract class Character implements CharacterInterface {
     protected final int team;
     protected int currentMana;
     protected final int maxMana;
     protected int currentHealth;
     protected final int maxHealth;
+    protected Board board;
+    protected CharacterEnum type;
 
     protected BoardPosition position;
 
-    public Character(int maxMana, int maxHealth, BoardPosition position, int team) {
+    public Character(int maxMana, int maxHealth, BoardPosition position, int team, Board board) {
         this.maxMana = maxMana;
         this.maxHealth = maxHealth;
         this.currentHealth = maxHealth;
         this.currentMana = maxMana;
         this.position = position;
         this.team = team;
+        this.board = board;
     }
 
-    public Character(int maxMana, int maxHealth, CharacterEntity che) {
-        this(maxMana, maxHealth, che.getPosition(), che.getTeam());
+    public Character(int maxMana, int maxHealth, CharacterEntity che, Board board) {
+        this(maxMana, maxHealth, che.getPosition(), che.getTeam(), board);
         this.currentHealth = che.getCurrentHealth() != null ? che.getCurrentHealth() : maxHealth;
         this.currentMana = che.getCurrentMana() != null ? che.getCurrentMana() : maxHealth;
     }
@@ -69,6 +74,10 @@ public abstract class Character {
 
     public boolean isDead() {
         return currentHealth <= 0;
+    }
+
+    public CharacterEnum getType() {
+        return type;
     }
 
 }

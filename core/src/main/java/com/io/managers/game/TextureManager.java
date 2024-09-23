@@ -1,4 +1,4 @@
-package com.io.view.game;
+package com.io.managers.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.io.view.game.characters.CharacterViewType;
@@ -28,7 +28,8 @@ public class TextureManager {
     private final Texture barBackground;
     private final Texture heart;
     private final Texture mana;
-    private final List<Texture> tourButtons;
+    private final List<Texture> tourButton;
+    private final List<Texture> exitButton;
     private final List<Texture> digits;
     private final Texture enemyHealth;
 
@@ -81,7 +82,11 @@ public class TextureManager {
         arch.add(new Texture("textures/attacks/arch_0.png"));
         arch.add(new Texture("textures/attacks/arch_1.png"));
 
-        attacks.put(KOALA, fireball);
+        List<Texture> knife = new ArrayList<>();
+        knife.add(new Texture("textures/attacks/knife_0.png"));
+        knife.add(new Texture("textures/attacks/knife_1.png"));
+
+        attacks.put(KOALA, knife);
         attacks.put(MINIX, shuriken);
         attacks.put(LINUX, arch);
         attacks.put(FIREFOX, fireball);
@@ -102,11 +107,15 @@ public class TextureManager {
         heart = new Texture("textures/bars/heart.png");
         mana = new Texture("textures/bars/mana.png");
 
-        tourButtons = new ArrayList<>();
-        tourButtons.add(new Texture("textures/buttons/turn_button_0.png"));
-        tourButtons.add(new Texture("textures/buttons/turn_button_1.png"));
-        tourButtons.add(new Texture("textures/buttons/turn_button_2.png"));
-        tourButtons.add(new Texture("textures/buttons/turn_button_3.png"));
+        tourButton = new ArrayList<>();
+        tourButton.add(new Texture("textures/buttons/turn_button_0.png"));
+        tourButton.add(new Texture("textures/buttons/turn_button_1.png"));
+        tourButton.add(new Texture("textures/buttons/turn_button_2.png"));
+        tourButton.add(new Texture("textures/buttons/turn_button_3.png"));
+
+        exitButton = new ArrayList<>();
+        exitButton.add(new Texture("textures/menu/back_button_0.png"));
+        exitButton.add(new Texture("textures/menu/back_button_1.png"));
 
         digits = new ArrayList<>();
         digits.add(new Texture("textures/digits/zero.png"));
@@ -127,12 +136,12 @@ public class TextureManager {
 
     }
 
-    public Texture getCharacter(CharacterViewType type, int stateNumber) {
-        return characters.get(type).get(stateNumber);
+    public List<Texture> getCharacter(CharacterViewType type) {
+        return characters.get(type);
     }
 
-    public Texture getAttack(CharacterViewType type, int stateNumber) {
-        return attacks.get(type).get(stateNumber);
+    public List<Texture> getAttack(CharacterViewType type) {
+        return attacks.get(type);
     }
 
     public Texture getChess(MoveType move) {
@@ -171,9 +180,11 @@ public class TextureManager {
         return mana;
     }
 
-    public List<Texture> getTourButtons() {
-        return tourButtons;
+    public List<Texture> getTurnButton() {
+        return tourButton;
     }
+
+    public List<Texture> getExitButton() { return exitButton; }
 
     public Texture getEnemyHealth() {
         return enemyHealth;

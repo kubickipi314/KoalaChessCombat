@@ -14,26 +14,27 @@ import static org.mockito.Mockito.when;
 class QueenMoveTest {
 
     Board smallBoard;
+    Player player;
 
     @Test
     void testIsValidMove_NoObstacle() {
-        QueenMove queenMove = new QueenMove(10, 5);
-
         var mockBoard = mock(Board.class);
+        QueenMove queenMove = new QueenMove(10, 5, mockBoard);
+
+
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         var startPosition = new BoardPosition(0, 0);
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertTrue(queenMove.isMoveValid(mockPlayer, new BoardPosition(0, 3), mockBoard));
+        assertTrue(queenMove.isMoveValid(mockPlayer, new BoardPosition(0, 3)));
     }
 
     @Test
     void testIsValid_Obstacle() {
-        QueenMove queenMove = new QueenMove(10, 5);
-
         var mockBoard = mock(Board.class);
+        QueenMove queenMove = new QueenMove(10, 5, mockBoard);
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         when(mockBoard.isValidCell(new BoardPosition(2, 2))).thenReturn(false);
         var startPosition = new BoardPosition(0, 0);
@@ -41,11 +42,14 @@ class QueenMoveTest {
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertFalse(queenMove.isMoveValid(mockPlayer, new BoardPosition(3, 3), mockBoard));
+        assertFalse(queenMove.isMoveValid(mockPlayer, new BoardPosition(3, 3)));
     }
 
     void init() {
         smallBoard = mock(Board.class);
+        player = mock(Player.class);
+        when(player.getPosition()).thenReturn(new BoardPosition(0, 0));
+        when(player.getTeam()).thenReturn(0);
         when(smallBoard.isValidCell(any(BoardPosition.class))).thenReturn(false);
         when(smallBoard.isValidCell(new BoardPosition(0, 0))).thenReturn(true);
         when(smallBoard.isValidCell(new BoardPosition(1, 0))).thenReturn(true);
@@ -53,17 +57,15 @@ class QueenMoveTest {
         when(smallBoard.isValidCell(new BoardPosition(1, 1))).thenReturn(true);
         when(smallBoard.getBoardHeight()).thenReturn(2);
         when(smallBoard.getBoardWidth()).thenReturn(2);
+        when(smallBoard.getCharacter(new BoardPosition(0, 0))).thenReturn(player);
     }
 
     @Test
     void testGetAccessibleCells_NoObstacle() {
-        QueenMove queenMove = new QueenMove(10, 5);
         init();
+        QueenMove queenMove = new QueenMove(10, 5, smallBoard);
 
-        var mockPlayer = mock(Player.class);
-        when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
-
-        var result = queenMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = queenMove.getAccessibleCells(new BoardPosition(0, 0));
 
         assertEquals(3, result.size(), "There should be three accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
@@ -73,16 +75,13 @@ class QueenMoveTest {
 
     @Test
     void testGetAccessibleCells_Obstacle() {
-        QueenMove queenMove = new QueenMove(10, 5);
         init();
+        QueenMove queenMove = new QueenMove(10, 5, smallBoard);
         var mockEnemy = mock(MeleeEnemy.class);
         when(mockEnemy.getTeam()).thenReturn(1);
         when(smallBoard.getCharacter(new BoardPosition(0, 1))).thenReturn(mockEnemy);
 
-        var mockPlayer = mock(Player.class);
-        when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
-
-        var result = queenMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = queenMove.getAccessibleCells(new BoardPosition(0, 0));
 
         assertEquals(3, result.size(), "There should be three accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
@@ -93,7 +92,7 @@ class QueenMoveTest {
 
     @Test
     void getType() {
-        QueenMove queenMove = new QueenMove(10, 5);
+        QueenMove queenMove = new QueenMove(10, 5, null);
 
         var type = queenMove.getType();
 
@@ -102,7 +101,7 @@ class QueenMoveTest {
 
     @Test
     public void testGetCost() {
-        QueenMove queenMove = new QueenMove(10, 5);
+        QueenMove queenMove = new QueenMove(10, 5, null);
 
         int cost = queenMove.getCost();
 
@@ -111,7 +110,7 @@ class QueenMoveTest {
 
     @Test
     public void testGetDamage() {
-        QueenMove queenMove = new QueenMove(10, 5);
+        QueenMove queenMove = new QueenMove(10, 5, null);
 
         int damage = queenMove.getDamage();
 

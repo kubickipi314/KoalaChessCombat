@@ -4,19 +4,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.view.game.TextureManager;
 
 import java.util.List;
 
-public class TurnButton {
+public class GameButtonView {
     private final Sprite button;
     private final List<Texture> textures;
 
-    public TurnButton(TextureManager tm, Vector2 position, float buttonWidth) {
-        textures = tm.getTourButtons();
+    public GameButtonView(List<Texture> textures, Vector2 position, float buttonWidth, float buttonHeight) {
+        this.textures = textures;
         button = new Sprite(textures.get(0));
         button.setPosition(position.x, position.y);
-        button.setSize(buttonWidth, buttonWidth * 1.25f);
+        button.setSize(buttonWidth, buttonHeight);
     }
 
     public void draw(SpriteBatch batch) {

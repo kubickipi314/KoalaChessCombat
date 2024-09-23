@@ -26,13 +26,13 @@ public class PawnMoveTest {
         Enemy mockEnemy = Mockito.mock(MeleeEnemy.class);
         when(mockEnemy.getTeam()).thenReturn(0);//player group
 
-        PawnMove pawnMove = new PawnMove(10, 5);
+        PawnMove pawnMove = new PawnMove(10, 5, mockBoard);
 
         when(mockBoard.isValidCell(startPosition)).thenReturn(true);
         when(mockBoard.isValidCell(endPosition)).thenReturn(true);
         when(mockBoard.getCharacter(endPosition)).thenReturn(mockEnemy);
 
-        boolean result = pawnMove.isMoveValid(mockPlayer, endPosition, mockBoard);
+        boolean result = pawnMove.isMoveValid(mockPlayer, endPosition);
 
         assertFalse(result, "The move should be not valid.");
     }
@@ -48,23 +48,28 @@ public class PawnMoveTest {
         Enemy mockEnemy = Mockito.mock(MeleeEnemy.class);
         when(mockEnemy.getTeam()).thenReturn(1);
 
-        PawnMove pawnMove = new PawnMove(10, 5);
+        PawnMove pawnMove = new PawnMove(10, 5, mockBoard);
 
         when(mockBoard.isValidCell(startPosition)).thenReturn(true);
         when(mockBoard.isValidCell(endPosition)).thenReturn(true);
         when(mockBoard.getCharacter(endPosition)).thenReturn(mockEnemy);
 
-        boolean result = pawnMove.isMoveValid(mockPlayer, endPosition, mockBoard);
+        boolean result = pawnMove.isMoveValid(mockPlayer, endPosition);
 
         assertTrue(result, "The move should be valid.");
     }
 
     @Test
     public void testGetAccessibleCells() {
-        Board mockBoard = Mockito.mock(Board.class);
         BoardPosition position = new BoardPosition(1, 1);
+        Player mockPlayer = Mockito.mock(Player.class);
+        when(mockPlayer.getPosition()).thenReturn(position);
+        when(mockPlayer.getTeam()).thenReturn(0);
+        Board mockBoard = Mockito.mock(Board.class);
+        when(mockBoard.getCharacter(position)).thenReturn(mockPlayer);
 
-        PawnMove pawnMove = new PawnMove(10, 5);
+
+        PawnMove pawnMove = new PawnMove(10, 5, mockBoard);
 
         var mockEnemy = Mockito.mock(MeleeEnemy.class);
         when(mockEnemy.getTeam()).thenReturn(1);
@@ -73,12 +78,8 @@ public class PawnMoveTest {
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         when(mockBoard.getCharacter(new BoardPosition(2, 2))).thenReturn(mockEnemy);
 
-        Player mockPlayer = Mockito.mock(Player.class);
-        when(mockPlayer.getPosition()).thenReturn(position);
-        when(mockPlayer.getTeam()).thenReturn(0);
 
-        List<BoardPosition> accessibleCells = pawnMove.getAccessibleCells(mockPlayer, mockBoard);
-
+        List<BoardPosition> accessibleCells = pawnMove.getAccessibleCells(position);
         assertEquals(2, accessibleCells.size(), "There should be two accessible cells.");
         assertTrue(accessibleCells.contains(new BoardPosition(1, 2)), "Front-left position should be accessible.");
         assertTrue(accessibleCells.contains(new BoardPosition(2, 2)), "Front-right position should be accessible.");
@@ -86,7 +87,7 @@ public class PawnMoveTest {
 
     @Test
     public void testGetCost() {
-        PawnMove pawnMove = new PawnMove(10, 5);
+        PawnMove pawnMove = new PawnMove(10, 5, null);
 
         int cost = pawnMove.getCost();
 
@@ -95,7 +96,7 @@ public class PawnMoveTest {
 
     @Test
     public void testGetDamage() {
-        PawnMove pawnMove = new PawnMove(10, 5);
+        PawnMove pawnMove = new PawnMove(10, 5, null);
 
         int damage = pawnMove.getDamage();
 
@@ -104,7 +105,7 @@ public class PawnMoveTest {
 
     @Test
     void getType() {
-        PawnMove pawnMove = new PawnMove(10, 5);
+        PawnMove pawnMove = new PawnMove(10, 5, null);
 
         var type = pawnMove.getType();
 

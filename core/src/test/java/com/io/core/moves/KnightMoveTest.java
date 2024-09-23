@@ -15,26 +15,25 @@ import static org.mockito.Mockito.when;
 class KnightMoveTest {
 
     Board smallBoard;
+    Player player;
 
     @Test
     void testIsValidMove_NoObstacle() {
-        KnightMove knightMove = new KnightMove(10, 5);
-
         var mockBoard = mock(Board.class);
+        KnightMove knightMove = new KnightMove(10, 5, mockBoard);
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         var startPosition = new BoardPosition(0, 0);
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertTrue(knightMove.isMoveValid(mockPlayer, new BoardPosition(1, 2), mockBoard));
+        assertTrue(knightMove.isMoveValid(mockPlayer, new BoardPosition(1, 2)));
     }
 
     @Test
     void testIsValid_Obstacle() {
-        KnightMove knightMove = new KnightMove(10, 5);
-
         var mockBoard = mock(Board.class);
+        KnightMove knightMove = new KnightMove(10, 5, mockBoard);
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         when(mockBoard.isValidCell(new BoardPosition(1, 1))).thenReturn(false);
         when(mockBoard.isValidCell(new BoardPosition(0, 1))).thenReturn(false);
@@ -44,11 +43,14 @@ class KnightMoveTest {
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertTrue(knightMove.isMoveValid(mockPlayer, new BoardPosition(2, 1), mockBoard));
-        assertTrue(knightMove.isMoveValid(mockPlayer, new BoardPosition(1, 2), mockBoard));
+        assertTrue(knightMove.isMoveValid(mockPlayer, new BoardPosition(2, 1)));
+        assertTrue(knightMove.isMoveValid(mockPlayer, new BoardPosition(1, 2)));
     }
 
     void init() {
+        player = mock(Player.class);
+        when(player.getPosition()).thenReturn(new BoardPosition(0, 0));
+        when(player.getTeam()).thenReturn(0);
         smallBoard = mock(Board.class);
         when(smallBoard.isValidCell(any(BoardPosition.class))).thenReturn(false);
         for (int i = 0; i < 3; i++) {
@@ -58,17 +60,19 @@ class KnightMoveTest {
         }
         when(smallBoard.getBoardHeight()).thenReturn(3);
         when(smallBoard.getBoardWidth()).thenReturn(3);
+        when(smallBoard.getCharacter(new BoardPosition(0, 0))).thenReturn(player);
     }
 
     @Test
     void testGetAccessibleCells_NoObstacle() {
-        KnightMove knightMove = new KnightMove(10, 5);
         init();
+        KnightMove knightMove = new KnightMove(10, 5, smallBoard);
+
 
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
 
-        var result = knightMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = knightMove.getAccessibleCells(new BoardPosition(0, 0));
 
         assertEquals(2, result.size(), "There should be two accessible cells.");
         assertTrue(result.contains(new BoardPosition(2, 1)), "position should be accessible.");
@@ -77,8 +81,8 @@ class KnightMoveTest {
 
     @Test
     void testGetAccessibleCells_Obstacle() {
-        KnightMove knightMove = new KnightMove(10, 5);
         init();
+        KnightMove knightMove = new KnightMove(10, 5, smallBoard);
         var mockEnemy = mock(MeleeEnemy.class);
         when(mockEnemy.getTeam()).thenReturn(1);
         when(smallBoard.getCharacter(new BoardPosition(2, 1))).thenReturn(mockEnemy);
@@ -86,7 +90,7 @@ class KnightMoveTest {
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
 
-        var result = knightMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = knightMove.getAccessibleCells(new BoardPosition(0, 0));
 
         assertEquals(2, result.size(), "There should be two accessible cells.");
         assertTrue(result.contains(new BoardPosition(2, 1)), "position should be accessible.");
@@ -96,7 +100,7 @@ class KnightMoveTest {
 
     @Test
     void getType() {
-        KnightMove knightMove = new KnightMove(10, 5);
+        KnightMove knightMove = new KnightMove(10, 5, null);
 
         var type = knightMove.getType();
 
@@ -105,7 +109,7 @@ class KnightMoveTest {
 
     @Test
     public void testGetCost() {
-        KnightMove knightMove = new KnightMove(10, 5);
+        KnightMove knightMove = new KnightMove(10, 5, null);
 
         int cost = knightMove.getCost();
 
@@ -114,7 +118,7 @@ class KnightMoveTest {
 
     @Test
     public void testGetDamage() {
-        KnightMove knightMove = new KnightMove(10, 5);
+        KnightMove knightMove = new KnightMove(10, 5, null);
 
         int damage = knightMove.getDamage();
 

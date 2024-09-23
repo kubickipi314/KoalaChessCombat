@@ -5,12 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.core.GameResult;
-import com.io.presenter.game.CoordinatesManager;
+import com.io.managers.game.CoordinatesManager;
 import com.io.presenter.game.GamePresenter;
-import com.io.view.game.SoundManager;
-import com.io.view.game.TextureManager;
+import com.io.managers.game.SoundManager;
+import com.io.managers.game.TextureManager;
 import com.io.view.game.bars_buttons.ResultView;
-import com.io.view.game.bars_buttons.TurnButton;
+import com.io.view.game.bars_buttons.GameButtonView;
 
 import static com.io.core.GameResult.WIN;
 
@@ -18,7 +18,8 @@ public class ButtonsPresenter {
     private final SoundManager sm;
     private final TextureManager tm;
     private final GamePresenter gamePresenter;
-    private final TurnButton tourButton;
+    private final GameButtonView turnButtonView;
+    private final GameButtonView exitButtonView;
     private final ResultView resultView;
     private boolean isActive;
     private float elapsedTime;
@@ -34,10 +35,14 @@ public class ButtonsPresenter {
 
         float tourButtonX = boardX + (cols - 1) * tileSize;
         Vector2 tourButtonPosition = new Vector2(tourButtonX, cm.getManaBarY());
-        tourButton = new TurnButton(tm, tourButtonPosition, tileSize);
+        turnButtonView = new GameButtonView(tm.getTurnButton(), tourButtonPosition, tileSize, tileSize * 1.25f);
 
         Vector2 resultPosition = new Vector2(cm.getBoardX(), cm.getBoardY());
         resultView = new ResultView(tm.getResult(WIN), resultPosition, tileSize);
+
+        float exitButtonX = boardX - tileSize * 1.25f;
+        Vector2 exitButtonPosition = new Vector2(exitButtonX, cm.getManaBarY());
+        exitButtonView = new GameButtonView(tm.getExitButton(), exitButtonPosition, tileSize, tileSize);
 
         isActive = false;
         isResultShown = false;
@@ -46,13 +51,21 @@ public class ButtonsPresenter {
 
     public void handleInput(Vector2 mousePosition) {
         if (!isActive) {
-            tourButton.setTexture(0);
-            if (tourButton.contains(mousePosition)) {
-                tourButton.setTexture(1);
+            turnButtonView.setTexture(0);
+            if (turnButtonView.contains(mousePosition)) {
+                turnButtonView.setTexture(1);
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                     sm.playSwordSound();
                     startAnimation();
                     gamePresenter.endTurn();
+                }
+            }
+            exitButtonView.setTexture(0);
+            if (exitButtonView.contains(mousePosition)) {
+                exitButtonView.setTexture(1);
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    sm.playSelectSound();
+                    gamePresenter.exitGame();
                 }
             }
         }
@@ -65,19 +78,19 @@ public class ButtonsPresenter {
 
     public void update() {
         if (isActive) {
-            updateAnimation();
+            updateNextTurnAnimation();
         }
     }
 
-    private void updateAnimation() {
+    private void updateNextTurnAnimation() {
         elapsedTime += Gdx.graphics.getDeltaTime();
         float animationDuration = 0.5f;
         float progress = Math.min(1.0f, elapsedTime / animationDuration);
 
-        if (progress > 0.8f) tourButton.setTexture(1);
-        else if (progress > 0.6f) tourButton.setTexture(2);
-        else if (progress > 0.2f) tourButton.setTexture(3);
-        else tourButton.setTexture(2);
+        if (progress > 0.8f) turnButtonView.setTexture(1);
+        else if (progress > 0.6f) turnButtonView.setTexture(2);
+        else if (progress > 0.2f) turnButtonView.setTexture(3);
+        else turnButtonView.setTexture(2);
 
         if (progress >= 1.0f) {
             isActive = false;
@@ -85,7 +98,8 @@ public class ButtonsPresenter {
     }
 
     public void render(SpriteBatch batch) {
-        tourButton.draw(batch);
+        turnButtonView.draw(batch);
+        exitButtonView.draw(batch);
         if (isResultShown) resultView.draw(batch);
     }
 

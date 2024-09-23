@@ -1,7 +1,8 @@
-package com.io.view.menu;
+package com.io.managers;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -14,13 +15,17 @@ public class MenuTextureManager {
     private final List<Texture> quitButton = getTextureList("textures/menu/quit_button", 2);
     private final List<Texture> playButton = getTextureList("textures/menu/play_button", 2);
     private final List<Texture> backButton = getTextureList("textures/menu/back_button", 2);
-    private final List<Texture> levels = getTextureList("textures/menu/level", 2);
+    private final List<List<Texture>> levels;
     private final List<Texture> rightArrow = getTextureList("textures/menu/right_arrow", 2);
     private final List<Texture> leftArrow = getTextureList("textures/menu/left_arrow", 2);
     private final List<Texture> player = List.of(new Texture("textures/characters/koala_0.png"),
             new Texture("textures/characters/koala_2.png"));
 
     public MenuTextureManager() {
+        levels = new ArrayList<>();
+        levels.add(getTextureList("textures/menu/level1", 2));
+        levels.add(getTextureList("textures/menu/level2", 2));
+        levels.add(getTextureList("textures/menu/level3", 2));
     }
 
     public List<Texture> getQuitButton() {
@@ -39,8 +44,8 @@ public class MenuTextureManager {
         return backButton;
     }
 
-    public List<Texture> getLevel() {
-        return levels;
+    public List<Texture> getLevel(long levelNumber) {
+        return levels.get((int)levelNumber - 1);
     }
 
     public List<Texture> getRightArrow() {

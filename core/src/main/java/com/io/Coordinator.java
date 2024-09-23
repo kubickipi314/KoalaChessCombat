@@ -2,9 +2,10 @@ package com.io;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.io.core.board.Board;
+import com.io.presenter.game.GamePresenter;
 import com.io.presenter.menu.MenuPresenter;
 import com.io.presenter.menu.StartPresenter;
-import com.io.presenter.game.GamePresenter;
 import com.io.screens.GameScreen;
 import com.io.screens.MenuScreen;
 import com.io.screens.StartScreen;
@@ -15,7 +16,6 @@ import com.io.service.SnapshotService;
 public class Coordinator {
     //TODO: disposing resources after screen is not used
 
-    //TODO: loading snapshots from db
     private final Game game;
     private final LevelService ls;
     private final SnapshotService sns;
@@ -41,17 +41,21 @@ public class Coordinator {
     }
 
     public void setGameScreen() {
-
-        gs = new GameService();
-        GamePresenter gamePresenter = new GamePresenter();
-        gs.init(sns, ls.getCurrentLevel());
-        gamePresenter.init(gs, this);
+        Board board = new Board(sns.getLevelSnapshot(ls.getCurrentLevel()));
+        gs = new GameService(sns, ls.getCurrentLevel(), board, board.getCharacters());
+        GamePresenter gamePresenter = new GamePresenter(gs, this);
         game.setScreen(new GameScreen(gamePresenter));
     }
 
     public void quit() {
         if (gs != null) gs.abort();
         Gdx.app.exit();
+    }
+
+    public void exitGame() {
+        if (gs != null) gs.abort();
+        gs = null;
+        setMenuScreen();
     }
 
     public long getCurrentLevel() {
