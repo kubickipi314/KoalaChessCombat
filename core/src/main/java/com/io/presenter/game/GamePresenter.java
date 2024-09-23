@@ -5,17 +5,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.Coordinator;
 import com.io.core.board.BoardPosition;
-import com.io.core.moves.Move;
 import com.io.presenter.game.character.CharacterPresenterInterface;
 import com.io.presenter.game.character.EnemyPresenter;
 import com.io.presenter.game.character.PlayerPresenter;
-import com.io.presenter.game.components.BarsPresenter;
-import com.io.presenter.game.components.BoardPresenter;
-import com.io.presenter.game.components.ButtonsPresenter;
-import com.io.presenter.game.components.ChessPresenter;
+import com.io.presenter.game.components.*;
+import com.io.managers.game.CoordinatesManager;
 import com.io.service.utils.MoveResult;
-import com.io.view.game.SoundManager;
-import com.io.view.game.TextureManager;
+import com.io.managers.game.SoundManager;
+import com.io.managers.game.TextureManager;
 import com.io.view.game.characters.CharacterViewType;
 
 import java.util.HashMap;
@@ -46,7 +43,7 @@ public class GamePresenter {
         windowHeight = Gdx.graphics.getHeight();
 
 
-        List<Move> moves = gs.getPlayerMoves();
+        List<MoveData> moves = gs.getPlayerMovesData();
 
         CoordinatesManager cm = new CoordinatesManager(gs.getRoomHeight(), gs.getRoomWidth(), moves.size());
         TextureManager tm = new TextureManager();
@@ -114,20 +111,13 @@ public class GamePresenter {
     }
 
     public void updateAvailableTiles() {
-        var selectedMove = chessPresenter.getSelectedMove();
-        boardPresenter.setAvailableTiles(gs.getAvailableTiles(selectedMove));
+        int selectedMoveNumber = chessPresenter.getSelectedMoveNumber();
+        boardPresenter.setAvailableTiles(gs.getAvailableTiles(selectedMoveNumber));
     }
 
     private void updateBars() {
         barsPresenter.setMana(gs.getPlayerMana());
         barsPresenter.setHealth(gs.getPlayerHealth());
-    }
-
-    private void updateGameEnd() {
-        if (gameEnded) {
-            gameEndTime += Gdx.graphics.getDeltaTime();
-            if (gameEndTime >= 5) coordinator.setMenuScreen();
-        }
     }
 
     private Vector2 getMousePosition() {
@@ -153,8 +143,8 @@ public class GamePresenter {
     }
 
     public void movePlayer(BoardPosition boardPosition) {
-        var chosenMove = chessPresenter.getSelectedMove();
-        if (gs.movePlayer(boardPosition, chosenMove)) {
+        int chosenMoveNumber = chessPresenter.getSelectedMoveNumber();
+        if (gs.movePlayer(boardPosition, chosenMoveNumber)) {
             MoveResult result = gs.getLastMoveResult();
             handlePlayerMove(result);
         } else {
@@ -193,5 +183,16 @@ public class GamePresenter {
 
     public void endTurn() {
         gs.endPlayerTurn();
+    }
+
+    private void updateGameEnd() {
+        if (gameEnded) {
+            gameEndTime += Gdx.graphics.getDeltaTime();
+            if (gameEndTime >= 5) coordinator.setMenuScreen();
+        }
+    }
+
+    public void exitGame() {
+        coordinator.exitGame();
     }
 }

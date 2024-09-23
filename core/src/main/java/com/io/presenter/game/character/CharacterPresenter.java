@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.io.core.board.BoardPosition;
-import com.io.presenter.game.CoordinatesManager;
-import com.io.view.game.SoundManager;
+import com.io.managers.game.CoordinatesManager;
+import com.io.managers.game.SoundManager;
 import com.io.view.game.characters.CharacterViewType;
 import com.io.view.game.characters.CharacterView;
 

@@ -4,11 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.io.core.moves.Move;
-import com.io.presenter.game.CoordinatesManager;
+import com.io.managers.game.CoordinatesManager;
 import com.io.presenter.game.GamePresenter;
-import com.io.view.game.SoundManager;
-import com.io.view.game.TextureManager;
+import com.io.managers.game.SoundManager;
+import com.io.managers.game.TextureManager;
 import com.io.view.game.tiles.ChessTileView;
 
 import java.util.List;
@@ -29,11 +28,11 @@ public class ChessPresenter {
     private float chessBoardY;
     private float tileSize;
 
-    private List<Move> moves;
+    private List<MoveData> moves;
     private int selectedMoveNumber = -1;
 
 
-    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gamePresenter, List<Move> moves) {
+    public ChessPresenter(TextureManager tm, SoundManager sm, CoordinatesManager cm, GamePresenter gamePresenter, List<MoveData> moves) {
         this.sm = sm;
         this.cm = cm;
         this.tm = tm;
@@ -68,7 +67,7 @@ public class ChessPresenter {
         throw new Error("mousePosition outside any tile but inside chessBoard");
     }
 
-    private void setMoves(List<Move> moves) {
+    private void setMoves(List<MoveData> moves) {
         if (moves.equals(this.moves)) return;
 
         this.moves = moves;
@@ -83,13 +82,13 @@ public class ChessPresenter {
         for (int number = 0; number < numberOfMoves; number++) {
             float x = chessBoardX + number * tileSize;
             Vector2 position = new Vector2(x, chessBoardY);
-            Move move = moves.get(number);
-            var type = move.getType();
+            MoveData move = moves.get(number);
+            var type = move.type();
             chessBoard[number] = new ChessTileView(tm.getChess(type),
                     tm.getSelectedChess(type), position, tileSize);
 
-            int damageNumber = move.getDamage();
-            int costNumber = move.getCost();
+            int damageNumber = move.damage();
+            int costNumber = move.cost();
             chessBoard[number].setDamage(tm.getDigit(damageNumber));
             chessBoard[number].setCost(tm.getDigit(costNumber));
         }
@@ -118,7 +117,7 @@ public class ChessPresenter {
         }
     }
 
-    public Move getSelectedMove() {
-        return moves.get(selectedMoveNumber);
+    public int getSelectedMoveNumber() {
+        return selectedMoveNumber;
     }
 }

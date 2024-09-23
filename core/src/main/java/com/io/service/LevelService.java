@@ -102,6 +102,27 @@ public class LevelService {
             );
             createLevel(levelEntity, snapshotEntity, characterEntityList, cellEntityList);
         }
+        {
+            // LEVEL 3
+            SnapshotEntity snapshotEntity = new SnapshotEntity(5, 5);
+            LevelEntity levelEntity = new LevelEntity();
+            List<CharacterEntity> characterEntityList = List.of(
+                    new CharacterEntity(2, 0, CharacterEnum.Player, 0),
+                    new CharacterEntity(0, 4, CharacterEnum.MeleeEnemy, 1),
+                    new CharacterEntity(1, 4, CharacterEnum.MeleeEnemy, 1),
+                    new CharacterEntity(3, 4, CharacterEnum.MeleeEnemy, 1),
+                    new CharacterEntity(4, 4, CharacterEnum.MeleeEnemy, 1)
+            );
+            List<CellEntity> cellEntityList = List.of(
+                    new CellEntity(1, 1, true),
+                    new CellEntity(1, 2, true),
+                    new CellEntity(1, 3, true),
+                    new CellEntity(3, 1, true),
+                    new CellEntity(3, 2, true),
+                    new CellEntity(3, 3, true)
+            );
+            createLevel(levelEntity, snapshotEntity, characterEntityList, cellEntityList);
+        }
     }
 
     private List<Long> getLevels() {
