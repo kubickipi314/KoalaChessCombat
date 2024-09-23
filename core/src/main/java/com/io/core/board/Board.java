@@ -55,7 +55,7 @@ public class Board {
         var startCell = getCell(character.getPosition());
         var attackedCharacter = destinationCell.getCharacter();
 
-        boolean hasMoved;
+        boolean hasMoved = false;
         boolean hasAttacked = false;
 
         if (character.getCurrentMana() < move.getCost())
@@ -73,8 +73,8 @@ public class Board {
                 characters.remove(attackedCharacter);
                 destinationCell.setCharacter(null);
                 decreaseTeamCount(attackedCharacter.getTeam());
+                hasMoved = move.moveOnKill();
             }
-            hasMoved = move.moveOnKill();
         } else {
             hasMoved = true;
         }
