@@ -32,7 +32,7 @@ public abstract class Character implements CharacterInterface {
     public Character(int maxMana, int maxHealth, CharacterEntity che, Board board) {
         this(maxMana, maxHealth, che.getPosition(), che.getTeam(), board);
         this.currentHealth = che.getCurrentHealth() != null ? che.getCurrentHealth() : maxHealth;
-        this.currentMana = che.getCurrentMana() != null ? che.getCurrentMana() : maxHealth;
+        this.currentMana = che.getCurrentMana() != null ? che.getCurrentMana() : maxMana;
     }
 
 

@@ -44,7 +44,9 @@ public class Board implements BoardInterface {
                 character = new MeleeEnemy(che, this);
             } else if (characterEnum == CharacterEnum.RangeEnemy) {
                 character = new RangeEnemy(che, this);
-            } else {
+            } else if (characterEnum == CharacterEnum.GoodEnemy) {
+                character = new GoodEnemy(che, this);
+            }else {
                 System.err.println("Found unrecognised character(" + characterEnum + ") when importing snapshot.");
                 continue;
             }

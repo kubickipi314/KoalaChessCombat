@@ -19,6 +19,7 @@ import com.io.service.utils.CharacterRegister;
 import com.io.service.utils.CharacterTypesMapper;
 import com.io.service.utils.MoveResult;
 
+import javax.sound.midi.SysexMessage;
 import java.util.*;
 
 public class GameService implements GameServiceInterface {
@@ -125,6 +126,7 @@ public class GameService implements GameServiceInterface {
             turnQueue.poll();
             return false;
         }
+        System.out.print(enemy.getCurrentMana());
         var moveDTO = enemy.makeNextMove();
         if (moveDTO == null) {
             enemy.changeMana(5);

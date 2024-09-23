@@ -13,6 +13,7 @@ public abstract class CharacterTypesMapper {
         map.put(CharacterEnum.Player, CharacterViewType.KOALA);
         map.put(CharacterEnum.MeleeEnemy, CharacterViewType.LINUX);
         map.put(CharacterEnum.RangeEnemy, CharacterViewType.MINIX);
+        map.put(CharacterEnum.GoodEnemy, CharacterViewType.FIREFOX);
     }
 
     public static CharacterViewType getPresenterType(CharacterEnum type) {
