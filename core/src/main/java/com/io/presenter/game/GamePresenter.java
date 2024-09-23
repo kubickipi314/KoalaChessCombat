@@ -123,13 +123,6 @@ public class GamePresenter {
         barsPresenter.setHealth(gs.getPlayerHealth());
     }
 
-    private void updateGameEnd() {
-        if (gameEnded) {
-            gameEndTime += Gdx.graphics.getDeltaTime();
-            if (gameEndTime >= 5) coordinator.setMenuScreen();
-        }
-    }
-
     private Vector2 getMousePosition() {
         Vector2 mouseWorldCoords = new Vector2(Gdx.input.getX(), Gdx.input.getY());
         float mouseX = mouseWorldCoords.x;
@@ -193,5 +186,16 @@ public class GamePresenter {
 
     public void endTurn() {
         gs.endPlayerTurn();
+    }
+
+    private void updateGameEnd() {
+        if (gameEnded) {
+            gameEndTime += Gdx.graphics.getDeltaTime();
+            if (gameEndTime >= 5) coordinator.setMenuScreen();
+        }
+    }
+
+    public void exitGame() {
+        coordinator.exitGame();
     }
 }

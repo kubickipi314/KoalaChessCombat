@@ -9,8 +9,8 @@ import java.util.List;
 
 public class MenuButton {
     private final Sprite button;
-    private final Texture normal;
-    private final Texture marked;
+    private Texture normal;
+    private Texture marked;
 
     public MenuButton(List<Texture> textures, Vector2 position, float height, float width) {
         this.normal = textures.get(0);
@@ -28,6 +28,11 @@ public class MenuButton {
         float mouseX = mousePosition.x;
         float mouseY = mousePosition.y;
         return button.getBoundingRectangle().contains(mouseX, mouseY);
+    }
+
+    public void setTexture(List<Texture> textures){
+        this.normal = textures.get(0);
+        this.marked = textures.get(1);
     }
 
     public void mark() {

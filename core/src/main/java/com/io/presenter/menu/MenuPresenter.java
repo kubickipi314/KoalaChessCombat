@@ -17,6 +17,7 @@ public class MenuPresenter {
     //TODO: keeping and managing list of snapshot (exture,id)
     private final Coordinator coordinator;
     private final MenuSoundManager sm;
+    private final MenuTextureManager tm;
     private final SpriteBatch batch;
     private final MenuButton backButton;
     private final MenuLevelText levelText;
@@ -30,7 +31,7 @@ public class MenuPresenter {
         this.coordinator = coordinator;
 
         batch = new SpriteBatch();
-        MenuTextureManager tm = new MenuTextureManager();
+        tm = new MenuTextureManager();
         sm = new MenuSoundManager();
 
         float windowWidth = Gdx.graphics.getWidth();
@@ -41,7 +42,7 @@ public class MenuPresenter {
         levelText = new MenuLevelText(levelTextPosition);
 
         Vector2 mainPosition = new Vector2(windowWidth / 2 - tileSize * 1.5f, tileSize * 1.5f);
-        levelPicture = new MenuButton(tm.getLevel(), mainPosition, 3 * tileSize, 3 * tileSize);
+        levelPicture = new MenuButton(tm.getLevel(coordinator.getCurrentLevel()), mainPosition, 3 * tileSize, 3 * tileSize);
 
         Vector2 playPosition = new Vector2(windowWidth / 2 - tileSize * 2.5f, tileSize * 0.5f);
         backButton = new MenuButton(tm.getBackButton(), playPosition, tileSize, tileSize);
@@ -57,6 +58,7 @@ public class MenuPresenter {
         buttons.add(backButton);
         buttons.add(leftArrow);
         buttons.add(rightArrow);
+        levelText.setValue("Level " + coordinator.getCurrentLevel());
     }
 
     public void update() {
@@ -81,14 +83,18 @@ public class MenuPresenter {
                 System.out.println("Go left");
                 sm.playSelectSound();
                 coordinator.previousLevel();
+                long levelNumber = coordinator.getCurrentLevel();
+                levelText.setValue("Level " + levelNumber);
+                levelPicture.setTexture(tm.getLevel(levelNumber));
             } else if (rightArrow.contains(mousePosition)) {
                 System.out.println("Go right");
                 sm.playSelectSound();
                 coordinator.nextLevel();
+                long levelNumber = coordinator.getCurrentLevel();
+                levelText.setValue("Level " + levelNumber);
+                levelPicture.setTexture(tm.getLevel(levelNumber));
             }
         }
-
-        levelText.setValue("Level " + coordinator.getCurrentLevel());
     }
 
     public void render() {

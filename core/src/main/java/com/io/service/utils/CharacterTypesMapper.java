@@ -10,7 +10,7 @@ public abstract class CharacterTypesMapper {
     private static final Map<CharacterEnum, CharacterViewType> map = new EnumMap<>(CharacterEnum.class);
 
     static {
-        map.put(CharacterEnum.Player, CharacterViewType.FIREFOX);
+        map.put(CharacterEnum.Player, CharacterViewType.KOALA);
         map.put(CharacterEnum.MeleeEnemy, CharacterViewType.LINUX);
     }
 

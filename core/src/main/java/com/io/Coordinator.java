@@ -16,7 +16,6 @@ import com.io.service.SnapshotService;
 public class Coordinator {
     //TODO: disposing resources after screen is not used
 
-    //TODO: loading snapshots from db
     private final Game game;
     private final LevelService ls;
     private final SnapshotService sns;
@@ -51,6 +50,12 @@ public class Coordinator {
     public void quit() {
         if (gs != null) gs.abort();
         Gdx.app.exit();
+    }
+
+    public void exitGame() {
+        if (gs != null) gs.abort();
+        gs = null;
+        setMenuScreen();
     }
 
     public long getCurrentLevel() {
