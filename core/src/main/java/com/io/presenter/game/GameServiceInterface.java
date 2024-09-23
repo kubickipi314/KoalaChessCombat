@@ -4,6 +4,7 @@ import com.io.core.GameResult;
 import com.io.core.board.BoardPosition;
 import com.io.core.board.SpecialCell;
 import com.io.core.moves.Move;
+import com.io.presenter.game.components.MoveData;
 import com.io.service.utils.CharacterRegister;
 import com.io.service.utils.MoveResult;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public interface GameServiceInterface {
     List<CharacterRegister> getCharacterRegisters();
 
-    List<Move> getPlayerMoves();
+    List<MoveData> getPlayerMovesData();
 
     boolean hasGameEnded();
 
@@ -20,7 +21,7 @@ public interface GameServiceInterface {
 
     boolean isPlayersTurn();
 
-    boolean movePlayer(BoardPosition boardPosition, Move move);
+    boolean movePlayer(BoardPosition boardPosition, int moveNumber);
 
     void endPlayerTurn();
 
@@ -29,7 +30,7 @@ public interface GameServiceInterface {
     MoveResult getLastMoveResult();
 
 
-    List<BoardPosition> getAvailableTiles(Move move);
+    List<BoardPosition> getAvailableTiles(int moveNumber);
 
 
     int getPlayerHealth();

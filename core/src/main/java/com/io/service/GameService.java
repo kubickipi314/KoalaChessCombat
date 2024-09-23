@@ -10,6 +10,7 @@ import com.io.core.snapshot.GameSnapshot;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
 import com.io.presenter.game.GameServiceInterface;
+import com.io.presenter.game.components.MoveData;
 import com.io.service.utils.CharacterRegister;
 import com.io.service.utils.CharacterTypesMapper;
 import com.io.service.utils.MoveResult;
@@ -63,8 +64,12 @@ public class GameService implements GameServiceInterface {
         return characterRegisters;
     }
 
-    public List<Move> getPlayerMoves() {
-        return player.getMoves();
+    public List<MoveData> getPlayerMovesData() {
+        List<MoveData> movesData = new ArrayList<>();
+        for (var move : player.getMoves()){
+            movesData.add(new MoveData(move.getType(), move.getCost(), move.getDamage()));
+        }
+        return movesData;
     }
 
     public boolean hasGameEnded() {
@@ -84,8 +89,9 @@ public class GameService implements GameServiceInterface {
         return turnQueue.peek().getTeam() == 0;
     }
 
-    public boolean movePlayer(BoardPosition boardPosition, Move move) {
+    public boolean movePlayer(BoardPosition boardPosition, int moveNumber) {
         if (!isPlayersTurn()) return false;
+        Move move = player.getMove(moveNumber);
         var moveDTO = new MoveDTO(move, boardPosition, player);
         if (board.tryMakeMove(moveDTO)) {
             collectMoveInformation(moveDTO);
@@ -153,7 +159,8 @@ public class GameService implements GameServiceInterface {
         return movesHistory.get(historySize - 1);
     }
 
-    public List<BoardPosition> getAvailableTiles(Move move) {
+    public List<BoardPosition> getAvailableTiles(int moveNumber) {
+        Move move = player.getMove(moveNumber);
         return move.getAccessibleCells(player.getPosition());
     }
 
