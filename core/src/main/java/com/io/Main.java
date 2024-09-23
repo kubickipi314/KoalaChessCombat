@@ -2,8 +2,8 @@ package com.io;
 
 import com.badlogic.gdx.Game;
 import com.io.db.DatabaseEngine;
-import com.io.service.LevelService;
-import com.io.service.SnapshotService;
+import com.io.service.level.LevelService;
+import com.io.service.snapshot.SnapshotService;
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.

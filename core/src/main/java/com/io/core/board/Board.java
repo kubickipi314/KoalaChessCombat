@@ -3,8 +3,8 @@ package com.io.core.board;
 import com.io.core.character.*;
 import com.io.core.character.Character;
 import com.io.core.moves.*;
-import com.io.core.snapshot.GameSnapshot;
-import com.io.service.BoardInterface;
+import com.io.service.snapshot.GameSnapshot;
+import com.io.service.game.BoardInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;

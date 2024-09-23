@@ -9,9 +9,9 @@ import com.io.presenter.menu.StartPresenter;
 import com.io.screens.GameScreen;
 import com.io.screens.MenuScreen;
 import com.io.screens.StartScreen;
-import com.io.service.GameService;
-import com.io.service.LevelService;
-import com.io.service.SnapshotService;
+import com.io.service.game.GameService;
+import com.io.service.level.LevelService;
+import com.io.service.snapshot.SnapshotService;
 
 public class Coordinator {
     //TODO: disposing resources after screen is not used
