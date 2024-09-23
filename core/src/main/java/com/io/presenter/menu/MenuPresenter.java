@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.io.Coordinator;
 import com.io.view.menu.MenuButton;
 import com.io.view.menu.MenuLevelText;
-import com.io.managers.menu.MenuSoundManager;
-import com.io.managers.menu.MenuTextureManager;
+import com.io.managers.MenuSoundManager;
+import com.io.managers.MenuTextureManager;
 
 import java.util.ArrayList;
 import java.util.List;

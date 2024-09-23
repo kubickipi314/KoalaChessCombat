@@ -14,7 +14,6 @@ public class ManaBarView {
     Sprite[] manaSprites;
 
     public ManaBarView(TextureManager tm, Vector2 position, float barHeight) {
-
         float barLength = barHeight * 7;
         backgroudSprite = new Sprite(tm.getBarBackground());
         backgroudSprite.setPosition(position.x, position.y);
