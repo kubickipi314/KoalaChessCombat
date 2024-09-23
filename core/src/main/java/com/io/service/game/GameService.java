@@ -6,7 +6,7 @@ import com.io.core.board.SpecialCell;
 import com.io.core.character.CharacterEnum;
 import com.io.core.moves.Move;
 import com.io.core.moves.MoveDTO;
-import com.io.core.snapshot.GameSnapshot;
+import com.io.service.snapshot.GameSnapshot;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
 import com.io.presenter.game.GameServiceInterface;

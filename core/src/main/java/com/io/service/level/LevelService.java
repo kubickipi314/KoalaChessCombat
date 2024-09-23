@@ -1,7 +1,6 @@
 package com.io.service.level;
 
 import com.io.core.character.CharacterEnum;
-import com.io.db.DatabaseEngine;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
 import com.io.db.entity.LevelEntity;
@@ -11,12 +10,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class LevelService {
-    private final DatabaseEngine dbEngine;
+    private final DatabaseLevelInterface dbEngine;
 
     private final List<Long> levels;
     private int levelIdx = 0;
 
-    public LevelService(DatabaseEngine dbEngine) {
+    public LevelService(DatabaseLevelInterface dbEngine) {
         this.dbEngine = dbEngine;
 
         var lvl = getLevels();

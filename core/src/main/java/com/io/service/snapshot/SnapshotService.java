@@ -1,7 +1,5 @@
 package com.io.service.snapshot;
 
-import com.io.core.snapshot.GameSnapshot;
-import com.io.db.DatabaseEngine;
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
 import com.io.db.entity.LevelEntity;
@@ -11,9 +9,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class SnapshotService {
-    private final DatabaseEngine dbEngine;
+    private final DatabaseSnapshotInterface dbEngine;
 
-    public SnapshotService(DatabaseEngine dbEngine) {
+    public SnapshotService(DatabaseSnapshotInterface dbEngine) {
         this.dbEngine = dbEngine;
     }
 

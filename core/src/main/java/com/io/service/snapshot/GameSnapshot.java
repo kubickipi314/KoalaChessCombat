@@ -1,4 +1,4 @@
-package com.io.core.snapshot;
+package com.io.service.snapshot;
 
 import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;

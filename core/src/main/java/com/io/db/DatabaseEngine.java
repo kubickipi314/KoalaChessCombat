@@ -4,6 +4,8 @@ import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
 import com.io.db.entity.LevelEntity;
 import com.io.db.entity.SnapshotEntity;
+import com.io.service.level.DatabaseLevelInterface;
+import com.io.service.snapshot.DatabaseSnapshotInterface;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
@@ -11,7 +13,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
-public class DatabaseEngine {
+public class DatabaseEngine implements DatabaseSnapshotInterface, DatabaseLevelInterface {
     private JdbcPooledConnectionSource connectionSource;
 
     public DatabaseEngine(String url) {
