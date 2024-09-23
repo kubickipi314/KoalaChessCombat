@@ -14,16 +14,18 @@ import java.util.List;
 public class MeleeEnemy extends Enemy {
     static int maxMana = 2, maxHealth = 5;
 
-    public MeleeEnemy(BoardPosition position) {
-        super(maxMana, maxHealth, position);
+    public MeleeEnemy(BoardPosition position, Board board) {
+        super(maxMana, maxHealth, position, board);
+        this.type = CharacterEnum.MeleeEnemy;
     }
 
-    public MeleeEnemy(CharacterEntity che) {
-        super(maxMana, maxHealth, che);
+    public MeleeEnemy(CharacterEntity che, Board board) {
+        super(maxMana, maxHealth, che, board);
+        this.type = CharacterEnum.MeleeEnemy;
     }
 
     @Override
-    public MoveDTO makeNextMove(Board board) {
+    public MoveDTO makeNextMove() {
         if (currentMana <= 0)
             return null;
 
@@ -34,9 +36,9 @@ public class MeleeEnemy extends Enemy {
         }
         BoardPosition playerPosition = playerTeamPosition.get(0);
 
-        var knightMove = new KnightMove(1, 1);
-        var move = new KingMove(1, 1);
-        if (knightMove.isMoveValid(this, playerPosition, board)) {
+        var knightMove = new KnightMove(1, 1, board);
+        var move = new KingMove(1, 1, board);
+        if (knightMove.isMoveValid(this, playerPosition)) {
             return new MoveDTO(knightMove, playerPosition, this);
         } else {
             var movePositionArr = Arrays.asList(new BoardPosition[]{
@@ -49,7 +51,7 @@ public class MeleeEnemy extends Enemy {
 
             var curDistance = distance(playerPosition, position);
             for (var newPosition : movePositionArr) {
-                if (distance(playerPosition, newPosition) < curDistance && move.isMoveValid(this, newPosition, board)) {
+                if (distance(playerPosition, newPosition) < curDistance && move.isMoveValid(this, newPosition)) {
                     return new MoveDTO(move, newPosition, this);
                 }
             }

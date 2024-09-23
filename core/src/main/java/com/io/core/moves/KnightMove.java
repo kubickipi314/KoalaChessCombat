@@ -17,14 +17,16 @@ public class KnightMove implements Move {
     private static final int[] DX = {1, 2, 2, 1, -1, -2, -2, -1};
     private static final int[] DY = {2, 1, -1, -2, -2, -1, 1, 2};
     private static final MoveType type = KNIGHT;
+    private final Board board;
 
-    public KnightMove(int cost, int damage) {
+    public KnightMove(int cost, int damage, Board board) {
         this.cost = cost;
         this.damage = damage;
+        this.board = board;
     }
 
     @Override
-    public boolean isMoveValid(Character character, BoardPosition endPosition, Board board) {
+    public boolean isMoveValid(Character character, BoardPosition endPosition) {
         var startPosition = character.getPosition();
         var attackedCharacter = board.getCharacter(endPosition);
         if (attackedCharacter != null && attackedCharacter.getTeam() == character.getTeam()) return false;
@@ -38,8 +40,8 @@ public class KnightMove implements Move {
     }
 
     @Override
-    public List<BoardPosition> getAccessibleCells(Character character, Board board) {
-        var position = character.getPosition();
+    public List<BoardPosition> getAccessibleCells(BoardPosition position) {
+        var character = board.getCharacter(position);
         var accessibleCells = new ArrayList<BoardPosition>();
 
         for (int i = 0; i < DX.length; i++) {

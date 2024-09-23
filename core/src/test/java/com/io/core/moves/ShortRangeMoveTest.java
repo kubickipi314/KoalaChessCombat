@@ -14,29 +14,31 @@ import static org.mockito.Mockito.when;
 class ShortRangeMoveTest {
 
     Board smallBoard;
+    Player player;
 
     @Test
     void testIsValidMove_NoObstacle() {
-        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2);
-
         var mockBoard = mock(Board.class);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2, mockBoard);
+
+
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         var startPosition = new BoardPosition(0, 0);
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(0, 3), mockBoard));
-        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(3, 0), mockBoard));
-        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(3, 3), mockBoard));
-        assertTrue(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(1, 1), mockBoard));
+        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(0, 3)));
+        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(3, 0)));
+        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(3, 3)));
+        assertTrue(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(1, 1)));
     }
 
     @Test
     void testIsValid_Obstacle() {
-        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 3);
-
         var mockBoard = mock(Board.class);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2, mockBoard);
+
         when(mockBoard.isValidCell(any(BoardPosition.class))).thenReturn(true);
         when(mockBoard.isValidCell(new BoardPosition(2, 2))).thenReturn(false);
         when(mockBoard.isValidCell(new BoardPosition(0, 1))).thenReturn(false);
@@ -46,11 +48,14 @@ class ShortRangeMoveTest {
         when(mockPlayer.getPosition()).thenReturn(startPosition);
 
 
-        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(2, 2), mockBoard));
-        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(1, 0), mockBoard));
+        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(2, 2)));
+        assertFalse(shortRangeMove.isMoveValid(mockPlayer, new BoardPosition(1, 0)));
     }
 
     void init() {
+        player = mock(Player.class);
+        when(player.getPosition()).thenReturn(new BoardPosition(0, 0));
+        when(player.getTeam()).thenReturn(0);
         smallBoard = mock(Board.class);
         when(smallBoard.isValidCell(any(BoardPosition.class))).thenReturn(false);
         for (int i = 0; i < 3; i++) {
@@ -60,17 +65,20 @@ class ShortRangeMoveTest {
         }
         when(smallBoard.getBoardHeight()).thenReturn(3);
         when(smallBoard.getBoardWidth()).thenReturn(3);
+        when(smallBoard.getCharacter(new BoardPosition(0, 0))).thenReturn(player);
     }
+
 
     @Test
     void testGetAccessibleCells_NoObstacle() {
-        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2);
         init();
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2, smallBoard);
+
 
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
 
-        var result = shortRangeMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = shortRangeMove.getAccessibleCells(new BoardPosition(0, 0));
 
         assertEquals(8, result.size(), "There should be nine accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 2)), "position should be accessible.");
@@ -80,8 +88,8 @@ class ShortRangeMoveTest {
 
     @Test
     void testGetAccessibleCells_Obstacle() {
-        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 1);
         init();
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 1, smallBoard);
         var mockEnemy = mock(MeleeEnemy.class);
         when(mockEnemy.getTeam()).thenReturn(1);
         when(smallBoard.getCharacter(new BoardPosition(0, 2))).thenReturn(mockEnemy);
@@ -89,7 +97,7 @@ class ShortRangeMoveTest {
         var mockPlayer = mock(Player.class);
         when(mockPlayer.getPosition()).thenReturn(new BoardPosition(0, 0));
 
-        var result = shortRangeMove.getAccessibleCells(mockPlayer, smallBoard);
+        var result = shortRangeMove.getAccessibleCells(new BoardPosition(0, 0));
 
         assertEquals(3, result.size(), "There should be five accessible cells.");
         assertTrue(result.contains(new BoardPosition(0, 1)), "position should be accessible.");
@@ -100,7 +108,7 @@ class ShortRangeMoveTest {
 
     @Test
     void getType() {
-        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2, smallBoard);
 
         var type = shortRangeMove.getType();
 
@@ -109,7 +117,7 @@ class ShortRangeMoveTest {
 
     @Test
     public void testGetCost() {
-        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2, null);
 
         int cost = shortRangeMove.getCost();
 
@@ -118,7 +126,7 @@ class ShortRangeMoveTest {
 
     @Test
     public void testGetDamage() {
-        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2);
+        ShortRangeMove shortRangeMove = new ShortRangeMove(10, 5, 2, null);
 
         int damage = shortRangeMove.getDamage();
 
