@@ -1,10 +1,10 @@
 package com.io.core.board;
 
-import com.io.core.character.*;
 import com.io.core.character.Character;
+import com.io.core.character.*;
 import com.io.core.moves.*;
-import com.io.service.snapshot.GameSnapshot;
 import com.io.service.game.BoardInterface;
+import com.io.service.snapshot.GameSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,11 +25,11 @@ public class Board implements BoardInterface {
         var cellEntityList = gameSnapshot.cellEntityList();
 
         var moves = List.of(
-            new KingMove(2, 1, this),
-            new KnightMove(3, 3, this),
-            new RookMove(5, 4, this),
-            new BishopMove(3, 2, this),
-            new QueenMove(7, 5, this)
+                new KingMove(2, 1, this),
+                new KnightMove(3, 3, this),
+                new RookMove(5, 4, this),
+                new BishopMove(3, 2, this),
+                new QueenMove(7, 5, this)
         );
 
         characters = new ArrayList<>();
@@ -60,11 +60,11 @@ public class Board implements BoardInterface {
         var height = snapshotEntity.getBoardHeight();
 
         var specialCells = cellEntityList.stream()
-            .map(ce -> new SpecialCell(
-                ce.getPositionX(),
-                ce.getPositionY(),
-                ce.isBlocked()
-            )).toList();
+                .map(ce -> new SpecialCell(
+                        ce.getPositionX(),
+                        ce.getPositionY(),
+                        ce.isBlocked()
+                )).toList();
         this.board = new Cell[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -106,6 +106,11 @@ public class Board implements BoardInterface {
         var movePosition = moveDTO.boardPosition();
         var characterI = moveDTO.character();
         var character = getCharacter(characterI.getPosition());
+
+        if (!isValidCell(movePosition)) {
+            return BoardMoveChange.FAIL();
+        }
+
         var destinationCell = getCell(movePosition);
         var startCell = getCell(characterI.getPosition());
         var attackedCharacter = destinationCell.getCharacter();
@@ -198,7 +203,7 @@ public class Board implements BoardInterface {
         return result;
     }
 
-    void decreaseTeamCount(int team) {
+    private void decreaseTeamCount(int team) {
         var count = teamCount.get(team) - 1;
         teamCount.remove(team);
         teamCount.put(team, count);
