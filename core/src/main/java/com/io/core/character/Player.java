@@ -5,7 +5,7 @@ import com.io.core.board.Board;
 import com.io.core.board.BoardPosition;
 import com.io.core.moves.Move;
 import com.io.db.entity.CharacterEntity;
-import com.io.service.PlayerInterface;
+import com.io.service.game.PlayerInterface;
 
 import java.util.List;
 

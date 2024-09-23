@@ -1,4 +1,4 @@
-package com.io.service;
+package com.io.service.level;
 
 import com.io.core.character.CharacterEnum;
 import com.io.db.DatabaseEngine;

@@ -1,4 +1,4 @@
-package com.io.service;
+package com.io.service.game;
 
 import com.io.core.GameResult;
 import com.io.core.board.BoardPosition;
@@ -11,6 +11,7 @@ import com.io.db.entity.CellEntity;
 import com.io.db.entity.CharacterEntity;
 import com.io.presenter.game.GameServiceInterface;
 import com.io.presenter.game.components.MoveData;
+import com.io.service.snapshot.SnapshotService;
 import com.io.service.utils.CharacterRegister;
 import com.io.service.utils.CharacterTypesMapper;
 import com.io.service.utils.MoveResult;

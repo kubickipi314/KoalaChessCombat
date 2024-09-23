@@ -1,4 +1,4 @@
-package com.io.service;
+package com.io.service.game;
 
 import com.io.core.board.SpecialCell;
 import com.io.core.character.Character;

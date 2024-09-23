@@ -1,4 +1,4 @@
-package com.io.service;
+package com.io.service.snapshot;
 
 import com.io.core.snapshot.GameSnapshot;
 import com.io.db.DatabaseEngine;

@@ -1,4 +1,4 @@
-package com.io.service;
+package com.io.service.game;
 
 import com.io.core.board.BoardPosition;
 import com.io.core.character.CharacterEnum;

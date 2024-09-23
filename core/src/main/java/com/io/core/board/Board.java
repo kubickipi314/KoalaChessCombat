@@ -6,7 +6,7 @@ import com.io.core.character.MeleeEnemy;
 import com.io.core.character.Player;
 import com.io.core.moves.*;
 import com.io.core.snapshot.GameSnapshot;
-import com.io.service.BoardInterface;
+import com.io.service.game.BoardInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
