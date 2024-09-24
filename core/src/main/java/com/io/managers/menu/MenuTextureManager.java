@@ -1,4 +1,4 @@
-package com.io.managers;
+package com.io.managers.menu;
 
 import com.badlogic.gdx.graphics.Texture;
 
@@ -25,6 +25,8 @@ public class MenuTextureManager {
         levels = new ArrayList<>();
         levels.add(getTextureList("textures/menu/level1", 2));
         levels.add(getTextureList("textures/menu/level2", 2));
+        levels.add(getTextureList("textures/menu/level3", 2));
+        levels.add(getTextureList("textures/menu/level3", 2));
         levels.add(getTextureList("textures/menu/level3", 2));
     }
 
