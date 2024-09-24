@@ -1,4 +1,4 @@
-package com.io.managers;
+package com.io.managers.menu;
 
 import com.badlogic.gdx.graphics.Texture;
 
@@ -26,6 +26,8 @@ public class MenuTextureManager {
         levels.add(getTextureList("textures/menu/level1", 2));
         levels.add(getTextureList("textures/menu/level2", 2));
         levels.add(getTextureList("textures/menu/level3", 2));
+        levels.add(getTextureList("textures/menu/level4", 2));
+        levels.add(getTextureList("textures/menu/level5", 2));
     }
 
     public List<Texture> getQuitButton() {

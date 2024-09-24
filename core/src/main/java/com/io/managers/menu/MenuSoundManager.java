@@ -1,4 +1,4 @@
-package com.io.managers;
+package com.io.managers.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
