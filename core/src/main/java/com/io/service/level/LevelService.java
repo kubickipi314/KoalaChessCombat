@@ -201,7 +201,6 @@ public class LevelService {
             );
             createLevel(levelEntity, snapshotEntity, characterEntityList, cellEntityList);
         }
-
     }
 
     private List<Long> getLevels() {

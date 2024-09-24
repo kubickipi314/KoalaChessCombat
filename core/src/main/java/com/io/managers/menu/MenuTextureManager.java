@@ -26,7 +26,7 @@ public class MenuTextureManager {
         levels.add(getTextureList("textures/menu/level1", 2));
         levels.add(getTextureList("textures/menu/level2", 2));
         levels.add(getTextureList("textures/menu/level3", 2));
-        levels.add(getTextureList("textures/menu/level3", 2));
+        levels.add(getTextureList("textures/menu/level4", 2));
         levels.add(getTextureList("textures/menu/level3", 2));
     }
 
