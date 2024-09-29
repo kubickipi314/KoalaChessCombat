@@ -1,4 +1,13 @@
-# io
+# io game
+
+## Appearance
+
+![photo-collage png](https://github.com/user-attachments/assets/51189eb6-2184-4051-8e68-2ffea98cb0d4)
+
+## Classes graph
+
+![Screenshot from 2024-09-27 19-07-03](https://github.com/user-attachments/assets/307524c7-4791-464b-b89f-3f83adc4455e)
+
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
@@ -31,3 +40,5 @@ Useful Gradle tasks and flags:
 
 Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
 For example, `core:clean` removes `build` folder only from the `core` project.
+
+
