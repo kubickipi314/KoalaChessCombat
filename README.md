@@ -1,4 +1,4 @@
-# IO game
+# Koala Chess Combat
 
 This is a team project of game made on the Software Ingineering course written in Java with libGDX. It is turn-based strategic game combining chess-like board moves and multiple enemy fight. The player needs to kill all the mobs spendning mana on moves of different attack power. Each turn all the enemies perform  moves based on their strategy.
 
