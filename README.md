@@ -24,6 +24,9 @@ Run with `./gradlew run`
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
+![koala_1](https://github.com/user-attachments/assets/9e9adc82-6faf-469f-aca4-e133339a1315)
+
+
 This project was generated with a template including simple application launchers and a main class extending `Game` that sets the first screen.
 
 ## Platforms
