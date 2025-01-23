@@ -7,15 +7,15 @@ This is a team project of game made on the Software Ingineering course written i
 Each character type has it's appearance and attack motive with simple animations. \
 Enemies referes to software-based animals logos.
 ![photo-collage png](https://github.com/user-attachments/assets/51189eb6-2184-4051-8e68-2ffea98cb0d4)
+![koala_menu](https://github.com/user-attachments/assets/2c671ba1-79ec-4168-9a4e-887cee7db934)
+![koala_game](https://github.com/user-attachments/assets/6f15db89-8bff-436f-8f6e-63f0de711648)
+
 
 ## Classes graph
 
 Project structure is as follows. Arrows means keeping reference, inheriting or implementing an interface.
 
 ![Screenshot from 2024-09-27 19-07-03](https://github.com/user-attachments/assets/307524c7-4791-464b-b89f-3f83adc4455e)
-
-![Kazam_00022 (online-video-cutter com)](https://github.com/user-attachments/assets/3453a5b5-560c-4a38-945b-0947f7bd61b6)
-
 
 ## Building and running
 
