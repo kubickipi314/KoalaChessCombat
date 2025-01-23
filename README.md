@@ -14,6 +14,9 @@ Project structure is as follows. Arrows means keeping reference, inheriting or i
 
 ![Screenshot from 2024-09-27 19-07-03](https://github.com/user-attachments/assets/307524c7-4791-464b-b89f-3f83adc4455e)
 
+![Kazam_00022 (online-video-cutter com)](https://github.com/user-attachments/assets/3453a5b5-560c-4a38-945b-0947f7bd61b6)
+
+
 ## Building and running
 
 After cloning the repository \
@@ -23,8 +26,6 @@ Run with `./gradlew run`
 ---
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
-
-![koala_1](https://github.com/user-attachments/assets/9e9adc82-6faf-469f-aca4-e133339a1315)
 
 
 This project was generated with a template including simple application launchers and a main class extending `Game` that sets the first screen.
